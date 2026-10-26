@@ -1,0 +1,107 @@
+---
+import DynamicIcon from "@/helpers/DynamicIcon";
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { features, homeVideo } = Astro.props;
+
+const mediaSrc = features?.image as string | undefined;
+const isVideo = !!mediaSrc && /\.(webm|mp4)(\?.*)?$/i.test(mediaSrc);
+---
+
+{
+  features.enable && (
+    <section class="section pt-10 pb-10">
+      <div class="container">
+        <div class="row">
+          <div
+            class="mx-auto text-center lg:col-12 xl:col-12"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+          >
+            {/* <div class="section-heading-shape" aria-label="shape" /> */}
+            <h2
+              class="mb-6 mx-auto text-center text-dark"
+              style="max-width: 700px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+              set:html={markdownify(features.title)}
+            />
+            <p
+              class="mx-auto text-[15px] md:text-[20px] lg:text-[20px]"
+              style="max-width: 920px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+              set:html={markdownify(features.description)}
+            />
+            {features.image && (
+              <div class="hero-webm mx-auto w-full mt-10" data-aos="fade-up-sm" data-aos-delay="200">
+                <div
+                  class="relative w-full overflow-hidden rounded-2xl md:rounded-3xl border-2 border-white/20 bg-white/5 shadow-sm"
+                  style="padding-bottom:56.25%"
+                >
+                  {
+                    homeVideo?.src ? (
+                      <iframe
+                        class="absolute left-0 top-0 h-full w-full"
+                        src={homeVideo.src}
+                        title={homeVideo?.title}
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                      ></iframe>
+                    ) : isVideo ? (
+                      <video
+                        class="absolute left-0 top-0 h-full w-full object-cover"
+                        src={mediaSrc}
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                      />
+                    ) : (
+                      <img
+                        class="absolute left-0 top-0 h-full w-full object-cover"
+                        src={mediaSrc}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )
+                  }
+                  {homeVideo?.overlayText && (
+                    <div class="absolute bottom-14 left-1/2 z-10 -translate-x-1/2 pointer-events-none rounded-[8px] bg-[#391F5C] px-3 py-2 text-center text-4xl text-white shadow">
+                      {homeVideo.overlayText}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            class="col-12 pt-5 md:pt-10"
+            data-aos="fade-up-sm"
+            data-aos-delay="250"
+          >
+            <div class="grid rounded-3xl md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {features?.items?.map(
+                (item: {
+                  icon: string;
+                  title: string;
+                  description: string;
+                }) => (
+                  <div class="after:bg-gradient-primary relative border p-7 transition-colors duration-300 after:absolute after:left-0 after:top-0 after:-z-10 after:h-full after:w-full after:opacity-0 after:duration-300 hover:border-transparent hover:text-white hover:after:opacity-100 sm:p-10">
+                    <div class="mb-6 h-[50px] w-[50px] rounded-full border text-center text-lg leading-[50px] sm:h-[64px] sm:w-[64px] sm:text-2xl sm:leading-[64px] flex items-center justify-center">
+                      <DynamicIcon icon={item.icon} />
+                    </div>
+                    <h3
+                      class="h4 mb-4 text-inherit"
+                      set:html={markdownify(item.title)}
+                    />
+                    <p class="text-lg" set:html={markdownify(item.description)} />
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

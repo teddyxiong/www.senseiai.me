@@ -1,0 +1,38 @@
+{
+  "globalEnabled": true,
+  "activeLocale": "en",
+  "defaultLocale": "en",
+  "supportedLocales": [
+    "en",
+    "zh",
+    "zh-hant",
+    "ja",
+    "ko",
+    "ar",
+    "it",
+    "pt",
+    "de",
+    "es",
+    "fr",
+    "ru",
+    "pl"
+  ],
+  "localeLabels": {
+    "en": "English",
+    "zh": "简体中文",
+    "zh-hant": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ar": "العربية",
+    "it": "Italiano",
+    "pt": "Português",
+    "de": "Deutsch",
+    "es": "Español",
+    "fr": "Français",
+    "ru": "Русский",
+    "pl": "Polski"
+  },
+  "publishedLocales": ["en","ja","es","it","ar","pt","zh-hant","pl","ko","fr"],
+  "switcherEnabled": true,
+  "switcherLocales": ["en","ja","es","it","ar","pt","zh-hant","pl","ko","fr"]
+}

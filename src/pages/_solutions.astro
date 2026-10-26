@@ -1,0 +1,267 @@
+---
+import DynamicIcon from "@/helpers/DynamicIcon";
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+const solutionsPageData = await getEntry("solutions", "-index");
+const { challenges_section, explore_section, inbound_solution, tools_section } =
+  solutionsPageData.data;
+---
+
+<Base {...solutionsPageData.data}>
+  <PageHeader title={solutionsPageData.data.title} />
+
+  <!-- challenges_section -->
+  <section class="section pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-8 xl:col-6">
+          <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div>
+          <h2
+            class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+            set:html={markdownify(challenges_section.title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            set:html={markdownify(challenges_section.description)}
+          />
+        </div>
+
+        <div
+          class="col-12 pt-5 md:pt-10"
+          data-aos="fade-up-sm"
+          data-aos-delay="250"
+        >
+          <div class="row rounded-3xl">
+            {
+              challenges_section.challenges.map(
+                (challenge: {
+                  title: string;
+                  description: string;
+                  icon: string;
+                }) => (
+                  <div class="after:bg-gradient-primary relative border p-7 transition-colors duration-300 after:absolute after:left-0 after:top-0 after:-z-10 after:h-full after:w-full after:opacity-0 after:duration-300 hover:border-transparent hover:text-white hover:after:opacity-100 sm:p-10 lg:col-6">
+                    <div class="flex flex-wrap items-center">
+                      <div class="mb-6 mr-3 h-[50px] w-[50px] rounded-full border text-center text-lg leading-[50px] sm:h-[56px] sm:w-[56px] sm:text-2xl sm:leading-[56px] flex items-center justify-center">
+                        <DynamicIcon icon={challenge.icon} />
+                      </div>
+                      <h3
+                        class="h4 mb-4 inline-block text-inherit"
+                        set:html={markdownify(challenge.title)}
+                      />
+                    </div>
+                    <p set:html={markdownify(challenge.description)} />
+                  </div>
+                )
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- explore_section  -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-8 xl:col-6">
+          <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div>
+          <h2
+            class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(explore_section.title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            set:html={markdownify(explore_section.description)}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    explore_section.features.map(
+      (
+        feature: {
+          title: string;
+          description: string;
+          image: string;
+          lists: string[];
+        },
+        i: number
+      ) => (
+        <section
+          class={`section ${
+            i === explore_section.features.length - 1 || i % 2 !== 0
+              ? ""
+              : "section-gradient pb-0"
+          }`}
+        >
+          <div class="container">
+            <div
+              class={`row items-center ${i % 2 === 0 ? "max-lg:gy-5 max-lg:flex-col-reverse" : "max-lg:gy-5"}`}
+            >
+              <div
+                class={`lg:col-6 ${i % 2 === 0 ? "" : "order-last"}`}
+                data-aos="fade-left-sm"
+                data-aos-delay="100"
+              >
+                <div class="section-heading-shape" aria-label="shape" />
+                <h2 class="mb-6" set:html={markdownify(feature.title)} />
+                <p class="mb-6" set:html={markdownify(feature.description)} />
+                <div
+                  class="gradient gradient-horizontal gradient-to-right w-full"
+                  aria-label="horizontal line"
+                />
+                <ul class="list list-check pt-6">
+                  {feature.lists.map((list: string) => (
+                    <li>{list}</li>
+                  ))}
+                </ul>
+              </div>
+              <div
+                class={`lg:col-6 ${i % 2 === 0 ? "order-last" : ""}`}
+                data-aos="fade-left-sm"
+                data-aos-delay="150"
+              >
+                <img
+                  width="576"
+                  class="mx-auto lg:mx-0 lg:pl-6 xl:pl-12"
+                  src={feature.image}
+                  alt={feature.title}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    )
+  }
+
+  <!-- Inbound Solution -->
+  <section class="section section-gradient">
+    <div class="container">
+      <div class="row items-center max-lg:gy-5 lg:pb-8">
+        <div class="lg:col-6">
+          <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div>
+          <h2
+            class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(inbound_solution.title)}
+          />
+          <p
+            class="mb-10"
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            set:html={markdownify(inbound_solution.description)}
+          />
+          {
+            inbound_solution.button.enable && (
+              <div data-aos="fade-up-sm" data-aos-delay="200">
+                <a href={inbound_solution.button.link} class="btn btn-primary">
+                  {inbound_solution.button.label}
+                </a>
+              </div>
+            )
+          }
+        </div>
+        <div class="lg:col-6">
+          <div
+            class="row g-3 items-center sm:g-4 max-lg:justify-center xl:justify-normal [&>div:last-child]:lg:translate-y-8 [&>div:nth-child(2)]:lg:translate-y-8"
+          >
+            {
+              inbound_solution.solutions.map((solution: any, i: number) => (
+                <div class="sm:col-6">
+                  <div
+                    class="bg-gradient-primary rounded-lg p-6 text-center text-white sm:p-8"
+                    data-aos={i % 2 === 0 ? "fade-up-sm" : "fade-down-sm"}
+                  >
+                    <div class="mx-auto mb-5 h-[50px] w-[50px] rounded-full bg-white/20 text-center text-lg leading-[50px] sm:h-[64px] sm:w-[64px] sm:text-2xl sm:leading-[64px] flex items-center justify-center">
+                      <DynamicIcon icon={solution.icon} />
+                    </div>
+                    <h3
+                      class="h4 mb-2 text-inherit"
+                      set:html={markdownify(solution.title)}
+                    />
+                    <p
+                      class="text-sm text-light"
+                      set:html={markdownify(solution.description)}
+                    />
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tools  -->
+  {
+    tools_section.enable && (
+      <section>
+        <div class="container">
+          <div class="row">
+            <div class="mx-auto text-center lg:col-9 xl:col-7">
+              <div
+                class="section-heading-shape"
+                aria-label="shape"
+                data-aos="fade-up-sm"
+              />
+              <h2 data-aos="fade-up-sm" data-aos-delay="50">
+                {markdownify(tools_section.title)}
+              </h2>
+            </div>
+            <div class="col-12" data-aos="fade-up-sm" data-aos-delay="150">
+              <div class="flex flex-wrap justify-center gap-5 pt-10 lg:gap-y-10">
+                {tools_section.tools.map(
+                  (tool: { name: string; logo: string }) => (
+                    <div class="group relative basis-[70px] rounded-xl py-4 shadow transition-all duration-300 hover:-translate-y-4 md:basis-[100px] md:py-5 lg:basis-[134px] lg:py-8">
+                      <img
+                        src={tool.logo}
+                        class="mx-auto block h-[36px] w-[36px] object-cover md:h-[56px] md:w-[56px]"
+                        alt="brand logo"
+                      />
+                      <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs opacity-0 transition-all duration-300 group-hover:-bottom-7 group-hover:opacity-100 sm:text-sm">
+                        {markdownify(tool.name)}
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <CallToAction />
+</Base>

@@ -1,0 +1,452 @@
+---
+import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import config from "@/config/config.json";
+import theme from "@/config/theme.json";
+import { plainify } from "@/lib/utils/textConverter";
+import Footer from "@/partials/Footer.astro";
+import FooterInterviewCopilot from "@/partials/FooterInterviewCopilot.astro";
+import Header from "@/partials/Header.astro";
+import "@/styles/main.scss";
+import { AstroFont } from "astro-font";
+import { ViewTransitions } from "astro:transitions";
+import "aos/dist/aos.css";
+import { getLocaleLabel, resolveLocaleFromPath } from "@/lib/i18n/config";
+
+// font families
+const pf = theme.fonts.font_family.primary;
+const sf = theme.fonts.font_family.secondary;
+
+let fontPrimary, fontSecondary;
+if (theme.fonts.font_family.primary) {
+  fontPrimary = theme.fonts.font_family.primary
+    .replace(/\+/g, " ")
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+}
+if (theme.fonts.font_family.secondary) {
+  fontSecondary = theme.fonts.font_family.secondary
+    .replace(/\+/g, " ")
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+}
+
+const assetBaseUrl = (config.site.asset_base_url || "").replace(/\/$/, "");
+const fontBaseUrl = assetBaseUrl;
+
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag?: (...args: any[]) => void;
+    $crisp?: any[];
+    CRISP_WEBSITE_ID?: string;
+    __crispLoading?: boolean;
+  }
+}
+
+// types for frontmatters
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  prev_url?: string;
+  next_url?: string;
+  hideHeader?: boolean;
+  hideFooter?: boolean;
+  headerVariant?: string;
+  footerVariant?: "default" | "home" | "interview-copilot";
+  preloadImage?: string;
+}
+
+// destructure frontmatter
+const {
+  title,
+  meta_title,
+  description,
+  image,
+  noindex,
+  prev_url,
+  next_url,
+  hideHeader = false,
+  hideFooter = false,
+  headerVariant,
+  footerVariant = "default",
+  preloadImage,
+} = Astro.props;
+
+const canonicalUrl = new URL(
+  Astro.url.pathname.endsWith("/")
+    ? Astro.url.pathname
+    : Astro.url.pathname + "/",
+  Astro.site,
+).href;
+const currentLocale = resolveLocaleFromPath(Astro.url.pathname);
+const currentLocaleLabel = getLocaleLabel(currentLocale);
+---
+
+<!doctype html>
+<html lang={currentLocale}>
+  <head>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = (...args) => window.dataLayer.push(args);
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-PPN46T5N");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href={config.site.favicon} />
+    <link
+      rel="preconnect"
+      href="https://images.senseiai.me"
+      crossorigin="anonymous"
+    />
+    {
+      preloadImage && (
+        <link
+          rel="preload"
+          as="image"
+          href={preloadImage}
+          type="image/webp"
+          fetchpriority="high"
+        />
+      )
+    }
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={`${fontBaseUrl}/fonts/primary/font-primary-regular.woff2`}
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={`${fontBaseUrl}/fonts/secondary/font-secondary-bold.woff2`}
+      crossorigin="anonymous"
+    />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#fff"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#000"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <AstroFont
+      config={[
+        {
+          name: fontPrimary!,
+          fallback: "sans-serif",
+          cssVariable: "font-primary",
+          preload: false,
+          display: "swap",
+          src: [
+            {
+              style: "normal",
+              weight: "400",
+              path: `${fontBaseUrl}/fonts/primary/font-primary-regular.woff2`,
+            },
+            {
+              style: "normal",
+              weight: "500",
+              path: `${fontBaseUrl}/fonts/primary/font-primary-medium.woff2`,
+            },
+            {
+              style: "normal",
+              weight: "700",
+              path: `${fontBaseUrl}/fonts/primary/font-primary-bold.woff2`,
+            },
+          ],
+        },
+        {
+          name: fontSecondary!,
+          fallback: "sans-serif",
+          cssVariable: "font-secondary",
+          preload: false,
+          display: "swap",
+          src: [
+            {
+              style: "normal",
+              weight: "400",
+              path: `${fontBaseUrl}/fonts/secondary/font-secondary-regular.woff2`,
+            },
+            {
+              style: "normal",
+              weight: "700",
+              path: `${fontBaseUrl}/fonts/secondary/font-secondary-bold.woff2`,
+            },
+          ],
+        },
+      ]}
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=5"
+    />
+
+    <!-- title -->
+    <title>
+      {plainify(meta_title ? meta_title : title ? title : config.site.title)}
+    </title>
+
+    <!-- canonical url -->
+    <link rel="canonical" href={canonicalUrl} item-prop="url" />
+
+    <!-- pagination navigation links for SEO -->
+    {prev_url && <link rel="prev" href={prev_url} />}
+    {next_url && <link rel="next" href={next_url} />}
+
+    <!-- noindex robots -->
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <!-- meta-description -->
+    <meta
+      name="description"
+      content={plainify(
+        description ? description : config.metadata.meta_description,
+      )}
+    />
+
+    <ViewTransitions />
+
+    <!-- author from config.json -->
+    <meta name="author" content={config.metadata.meta_author} />
+
+    <!-- og-title -->
+    <meta
+      property="og:title"
+      content={plainify(
+        meta_title ? meta_title : title ? title : config.site.title,
+      )}
+    />
+
+    <!-- og-description -->
+    <meta
+      property="og:description"
+      content={plainify(
+        description ? description : config.metadata.meta_description,
+      )}
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content={`${config.site.base_url}${Astro.url.pathname.replace("/", "")}`}
+    />
+
+    <!-- twitter-title -->
+    <meta
+      name="twitter:title"
+      content={plainify(
+        meta_title ? meta_title : title ? title : config.site.title,
+      )}
+    />
+
+    <!-- twitter-description -->
+    <meta
+      name="twitter:description"
+      content={plainify(
+        description ? description : config.metadata.meta_description,
+      )}
+    />
+
+    <!-- og-image -->
+    <meta
+      property="og:image"
+      content={`${config.site.base_url}${
+        image ? image : config.metadata.meta_image
+      }`}
+    />
+
+    <!-- twitter-image -->
+    <meta
+      name="twitter:image"
+      content={`${config.site.base_url}${
+        image ? image : config.metadata.meta_image
+      }`}
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-PPN46T5N"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe></noscript
+    >
+    <!-- End Google Tag Manager (noscript) -->
+    <TwSizeIndicator />
+    {
+      !hideHeader && (
+        <Header
+          currentLocale={currentLocale}
+          currentLocaleLabel={currentLocaleLabel}
+          variant={headerVariant}
+        />
+      )
+    }
+    <main id="main-content">
+      <slot />
+    </main>
+    {
+      !hideFooter && footerVariant === "interview-copilot" && (
+        <FooterInterviewCopilot />
+      )
+    }
+    {
+      !hideFooter && footerVariant !== "interview-copilot" && (
+        <Footer variant={footerVariant} />
+      )
+    }
+
+    <script>
+      import AOS from "aos";
+      import "@/lib/account/manageSubscriptionClient";
+      import "@/lib/utils/autoDownloadClient";
+      import { rememberExplicitLocaleFromPath } from "@/lib/i18n/localePreference";
+
+      function aosInit() {
+        AOS.init({
+          duration: 600,
+          once: true,
+        });
+      }
+
+      function rememberPageLocale() {
+        rememberExplicitLocaleFromPath(window.location.pathname);
+      }
+
+      aosInit();
+      rememberPageLocale();
+      document.addEventListener("astro:after-swap", aosInit);
+      document.addEventListener("astro:page-load", rememberPageLocale);
+    </script>
+    <script>
+      function loadCrisp() {
+        if (window.__crispLoading) return;
+        window.__crispLoading = true;
+        window.$crisp = window.$crisp || [];
+        window.CRISP_WEBSITE_ID = "12e9447c-01ff-4ed3-97f1-40600072046c";
+        const script = document.createElement("script");
+        script.src = "https://client.crisp.chat/l.js";
+        script.async = true;
+        document.head.appendChild(script);
+      }
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(loadCrisp, { timeout: 4000 });
+      } else {
+        window.setTimeout(loadCrisp, 4000);
+      }
+      window.addEventListener("pointerdown", loadCrisp, {
+        once: true,
+        passive: true,
+      });
+      window.addEventListener("keydown", loadCrisp, { once: true });
+    </script>
+    <script>
+      (function () {
+        function shouldSkipIntercept(e: MouseEvent, link: Element) {
+          const isBlankTarget =
+            link instanceof HTMLAnchorElement && link.target === "_blank";
+          return (
+            e.defaultPrevented ||
+            e.button !== 0 ||
+            e.metaKey ||
+            e.ctrlKey ||
+            e.shiftKey ||
+            e.altKey ||
+            isBlankTarget
+          );
+        }
+
+        document.addEventListener(
+          "click",
+          function (e: MouseEvent) {
+            const target = e.target;
+            const link =
+              target instanceof Element
+                ? target.closest('a[data-gads-conv="pricing-cta"]')
+                : null;
+
+            if (
+              !(link instanceof HTMLAnchorElement) ||
+              shouldSkipIntercept(e, link)
+            )
+              return;
+
+            const href = link.getAttribute("href");
+            if (!href) return;
+
+            e.preventDefault();
+
+            let navigated = false;
+            const navigate = () => {
+              if (navigated) return;
+              navigated = true;
+              window.location.href = href;
+            };
+
+            const label =
+              link.getAttribute("data-gads-label") || "7DLwCJHa0qQcENu29LVD";
+
+            if (typeof window.gtag === "function") {
+              window.gtag("event", "conversion", {
+                send_to: `AW-18098232155/${label}`,
+                value: 1.0,
+                currency: "CNY",
+                transaction_id: "",
+                event_callback: navigate,
+              });
+              setTimeout(navigate, 800);
+            } else {
+              navigate();
+            }
+          },
+          true,
+        );
+      })();
+    </script>
+
+    <!-- Fix: allow mailto: links to bypass ViewTransitions -->
+    <script>
+      document.addEventListener("astro:page-load", () => {
+        document.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+          link.setAttribute("data-astro-reload", "");
+        });
+      });
+    </script>
+
+    <script>
+      import { initSourceTracker } from "@/lib/utils/sourceTracker";
+
+      // Listen to 'astro:page-load' event
+      // This fires on initial load and after ViewTransitions page swaps
+      // Ensures correct tracking regardless of entry point or navigation method
+      document.addEventListener("astro:page-load", () => {
+        initSourceTracker();
+      });
+    </script>
+  </body>
+</html>

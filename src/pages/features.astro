@@ -1,0 +1,87 @@
+---
+import Base from "@/layouts/Base.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import FeaturesSection from "@/partials/FeaturesSection.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+const featuresPageData = await getEntry("features", "-index");
+const featuresData = await getEntry("sections", "features");
+
+---
+
+<Base {...(featuresPageData?.data || {})}>
+  <PageHeader title={featuresPageData?.data?.title || ''} />
+  <FeaturesSection features={featuresData?.data} />
+
+  <!-- feature -->
+  {
+    featuresPageData?.data?.enable && featuresPageData?.data?.feature_items && (
+      <section class="section">
+        <div class="container">
+          <div class="flex flex-col gap-16 md:gap-24">
+            {featuresPageData.data?.feature_items?.map((feature: any, i: number) => (
+              <div
+                class={`row items-center ${i % 2 === 0 ? "max-lg:gy-5 max-lg:flex-col-reverse" : "max-lg:gy-5"}`}
+              >
+                <div class={`lg:col-6 ${i % 2 === 0 ? "" : "order-last"}`}>
+                  <h2
+                    class="mb-6 text-left"
+                    style="max-width: 700px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+                    data-aos="fade-up-sm"
+                    data-aos-delay="50"
+                  >
+                    {feature.title}
+                  </h2>
+                  <p class="mb-6 text-xl" data-aos="fade-up-sm" data-aos-delay="150">
+                    {feature.description}
+                  </p>
+                  <div
+                    class="gradient gradient-horizontal gradient-to-right w-full"
+                    aria-label="horizontal line"
+                  />
+                  {feature.lists && (
+                    <ul
+                      class="list list-check pt-6"
+                      data-aos="fade-up-sm"
+                      data-aos-delay="50"
+                    >
+                      {feature.lists.map((listItem: any) => (
+                        <li>{listItem}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {/* {feature.button!.enable && (
+                    <div data-aos="fade-up-sm" data-aos-delay="150">
+                      <a
+                        href={feature.button!.link}
+                        class="btn btn-primary mt-8"
+                      >
+                        {feature.button!.label}
+                      </a>
+                    </div>
+                  )} */}
+                </div>
+                <div
+                  class={`lg:col-6 ${i % 2 === 0 ? "order-last" : ""}`}
+                  data-aos="fade-down-sm"
+                  data-aos-delay="250"
+                >
+                  <img
+                    width="576"
+                    class="mx-auto lg:mx-0 lg:pl-8 xl:pl-16"
+                    src={feature.image}
+                    alt={feature.title}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+  <!-- /.feature -->
+
+  <CallToAction />
+</Base>

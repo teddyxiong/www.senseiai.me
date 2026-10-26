@@ -1,0 +1,59 @@
+---
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import { humanize } from "@/lib/utils/textConverter";
+
+const { title = "" }: { title?: string } = Astro.props;
+---
+
+<section
+  class="bg-index-hero bg-index-hero--pageheader relative overflow-hidden pb-10 pt-10"
+>
+  <div class="container text-center" data-aos="fade-up-sm">
+    <div class="px-4 sm:px-8">
+      <Breadcrumbs className="mt-6" />
+      <h1 class="mb-2 text-white" set:text={humanize(title)} />
+      <!-- <div class="section-heading-shape shape-white mb-0"></div> -->
+    </div>
+  </div>
+
+  <!-- Shapes -->
+  <div class="shapes -z-10 select-none">
+    <!-- Left Top -->
+    <!-- <div
+      class="-top-30 absolute -left-12 hidden h-44 w-44 rounded-3xl bg-white/5 pr-16 pt-16 sm:-top-24 sm:block"
+      aria-label="shape"
+      data-aos="fade-down"
+    >
+    </div> -->
+    <!-- Left Bottom  -->
+    <!-- <div
+      class="absolute -bottom-10 left-0 h-44 w-52 rounded-r-3xl bg-white/5 pr-10 pt-10"
+      aria-label="shape"
+      data-aos="fade-up"
+    >
+      <div
+        class="h-44 w-full rounded-r-3xl bg-white/5"
+        data-aos="fade-up"
+        data-aos-delay="50"
+      >
+        <span class="sr-only">shape</span>
+      </div>
+    </div> -->
+
+    <!-- Right Top  -->
+    <!-- <div
+      class="slide-in slide-in-page-header first absolute -top-32 right-[4%] h-[140%] w-5 rotate-[-55deg] bg-white/5 pr-16 pt-16 md:right-[5%] md:w-10"
+      aria-label="shape"
+      data-aos=""
+      data-aos-duration="800"
+    >
+    </div>
+    <div
+      class="slide-in slide-in-page-header second absolute -top-20 right-[4%] h-[190%] w-5 rotate-[30deg] bg-white/5 pr-16 pt-16 sm:-top-40 md:right-[5%] md:w-10"
+      aria-label="shape"
+      data-aos=""
+      data-aos-duration="800"
+    >
+    </div> -->
+  </div>
+</section>

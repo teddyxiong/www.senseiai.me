@@ -1,0 +1,171 @@
+---
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import FAQ from "@/partials/FAQ.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import PricingSection from "@/partials/_PricingSection.astro";
+import { getEntry } from "astro:content";
+import { FaInfo } from "react-icons/fa6";
+
+const pricingIndex = await getEntry("_pricing", "-index");
+if (!pricingIndex) {
+  throw new Error("Pricing data not found");
+}
+const { meta_title, meta_description, pricing, pricing_table_data } = pricingIndex.data;
+const { tableHead, tableBody, title, tableFooter } = pricing_table_data;
+---
+
+<Base title={meta_title} description={meta_description}>
+  <PageHeader title="Pricing | Linkjob AI" />
+  <PricingSection pricing={pricing} />
+
+  <!-- pricing compare -->
+  <section class="section">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="mx-auto text-center lg:col-6">
+          <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div>
+          <h2
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(title)}
+          />  
+        </div>
+
+        <div
+          class="col-12 scroll-mt-8 text-center md:scroll-mt-0"
+          data-aos="fade-up-sm"
+          data-aos-delay="150"
+        >
+          <div
+            class="sticky-element bg-gradient-primary sticky top-20 z-20 rounded-t-xl text-white lg:top-[90px] [&.sticky-active]:rounded-t-none"
+          >
+            <div class="row gx-0 md:items-center md:py-3">
+              {
+                tableHead.name === "" && (
+                  <div class="hidden text-start lg:block lg:col-4">
+                    <div class="flex min-h-full items-center justify-center md:block">
+                      <div class="py-3 pl-4 text-[12px] font-semibold sm:text-base md:pl-8">
+                        features
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+              <div class="lg:col-12">
+                <div class="row gx-0 divide-x">
+                  {
+                    Object.entries(tableHead)
+                      .filter(([key, value]) => key !== "info")
+                      .map(([key, value], index) => (
+                        <div class="w-1/5">
+                          <div class="flex min-h-full items-center justify-center ">
+                            <div class="px-1.5 py-3 text-xs font-semibold sm:text-base ">
+                               {value} 
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-hidden">
+            <!-- Repeat with different data -->
+            {
+              tableBody.map((item: any) => (
+                <div class="border-x border-border">
+                  <div class="flex md:items-stretch">
+                    <div class="w-1/5 border-b border-border border-r-dark/30 text-start text-dark md:py-3">
+                      <div class="flex h-full items-center justify-center">
+                        <div
+                          class="px-3 py-2 sm:px-4 sm:py-2 text-xs font-medium capitalize sm:text-base leading-5 min-h-[3.75rem]"
+                          style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;"
+                        >
+                          {item.name}
+                        </div>
+                        <div class="group relative cursor-text">
+                          {/* <div class="relative">
+                            <div class="invisible absolute left-[-15px] top-1/2 z-10 h-0 w-0 -translate-y-1/2 border-b-[10px] border-l-[15px] border-t-[10px] border-b-transparent border-l-white border-r-transparent border-t-transparent opacity-0 transition-opacity duration-500 ease-in-out group-hover:visible group-hover:opacity-100" />
+                            <div class="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-primary/10 text-primary">
+                              <FaInfo className="text-xs" />
+                            </div>
+                          </div> */}
+                          <div class="invisible absolute right-[140%] top-1/2 z-30 w-[200px] -translate-y-1/2 rounded-md border border-border bg-white p-3 text-[10px] text-dark/70 opacity-0 drop-shadow-xl transition-opacity duration-500 ease-in-out group-hover:visible group-hover:opacity-100">
+                            {item.info}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {Object.keys(item)
+                      .filter((key: string) => key !== "name" && key !== "info")
+                      .map((key: string) => (
+                        <div class="w-1/5 border-b border-l border-border md:py-3">
+                          <div class="flex h-full items-center justify-center py-2">
+                            <div
+                              class="px-3 py-2 sm:px-4 sm:py-2 text-xs font-medium capitalize sm:text-base whitespace-pre-line leading-5 min-h-[5rem]"
+                              style="-webkit-line-clamp:5;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;"
+                              set:html={markdownify(item[key])}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ))
+            }
+
+            <!-- Plan Buttons -->
+            <div
+              class="rounded-b-xl border border-t-0 border-border bg-[#F5F7FF]"
+            > 
+              <div class="row g-0">
+                <div class="hidden w-1/5 lg:block"></div>
+                <div class="lg:col-9">
+                  <div class="row g-0">
+                    {
+                      Object.keys(tableFooter).map((item, i) => {
+                        const footerItem = tableFooter[item as keyof typeof tableFooter];
+                        return (
+                          <div class="w-1/4">
+                            <div class="flex min-h-full items-center justify-center">
+                              <div class="px-1.5 py-3 text-xs font-semibold sm:text-base md:px-3">
+                                <a
+                                  href={footerItem.link}
+                                  class={`btn ${i === 0 ? "btn-primary" : "btn-outline-sky"} btn-sm`}
+                                  data-gads-conv="pricing-cta"
+                                  data-gads-label="7DLwCJHa0qQcENu29LVD"
+                                  >
+                                  {footerItem.label}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /.pricing compare -->
+
+  <!-- Lifetime Plan Section -->
+  <!-- <PricingSection pricing={pricing} showLifetime={true} /> -->
+
+  <FAQ />
+  <CallToAction />
+</Base>

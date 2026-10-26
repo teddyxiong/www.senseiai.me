@@ -1,0 +1,178 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+type FAQSectionData = {
+  title: string;
+  description: string;
+  accordion: {
+    enable: boolean;
+    items: {
+      enable?: boolean;
+      accordion_header: string;
+      accordion_content: string;
+    }[];
+  };
+};
+
+const {
+  variant = "default",
+  data,
+  entryId,
+  videoDialog = false,
+} = Astro.props as {
+  variant?: "default" | "home";
+  data?: FAQSectionData;
+  entryId?: string;
+  videoDialog?: boolean;
+};
+
+const faqData =
+  data ??
+  (
+    (await getEntry("sections", entryId ?? "faq")) as unknown as {
+      data: FAQSectionData;
+    }
+  )?.data;
+
+if (!faqData) {
+  throw new Error("FAQ data not found");
+}
+
+const { title, description, accordion } = faqData;
+---
+
+<section
+  data-video-dialog-scope={videoDialog || undefined}
+  class={`section pb-0 ${
+    variant === "home"
+      ? "faq-home pt-10 md:pt-12 bg-[#EEF2F7] rounded-t-[20px] md:rounded-t-[40px] overflow-hidden"
+      : "section-gradient"
+  }`}
+>
+  <div class="container">
+    <div class={variant === "home" ? "md:px-6" : "md:px-6"}>
+      <div class="row gy-4 justify-between">
+        <div class="lg:col-5 xl:col-4">
+          <div class="mb-2 h-10" data-aos="fade-up-sm" aria-hidden="true"></div>
+          <h2
+            class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            style="color: #253B80;"
+            set:html={markdownify(description)}
+          />
+        </div>
+        <div
+          class="lg:col-6 xl:col-7"
+          data-aos="fade-up-sm"
+          data-aos-delay="150"
+        >
+          {
+            accordion.enable && (
+              <div>
+                {accordion.items.map((item, index) => (
+                  <div class="accordion scroll-mt-24" id={`faq-${index + 1}`}>
+                    <button class="accordion-header" data-accordion>
+                      {item?.accordion_header}
+                      <svg
+                        class="accordion-icon"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 512 512"
+                        xml-space="preserve"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M505.755,123.592c-8.341-8.341-21.824-8.341-30.165,0L256.005,343.176L36.421,123.592c-8.341-8.341-21.824-8.341-30.165,0 s-8.341,21.824,0,30.165l234.667,234.667c4.16,4.16,9.621,6.251,15.083,6.251c5.462,0,10.923-2.091,15.083-6.251l234.667-234.667 C514.096,145.416,514.096,131.933,505.755,123.592z"
+                        />
+                      </svg>
+                    </button>
+                    <div
+                      class="accordion-content"
+                      set:html={markdownify(item?.accordion_content)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Accordion
+  function setupAccordion() {
+    const accordion = document.querySelectorAll("[data-accordion]");
+    accordion.forEach((header) => {
+      if ((header as HTMLElement).dataset.bound === "true") return;
+      (header as HTMLElement).dataset.bound = "true";
+      header.addEventListener("click", () => {
+        const accordionItem = header.parentElement;
+        accordionItem!.classList.toggle("active");
+      });
+    });
+  }
+
+  setupAccordion();
+  document.addEventListener("astro:page-load", setupAccordion);
+
+  function goToFaq(hash: string) {
+    const target = document.querySelector(hash) as HTMLElement | null;
+    if (!target) return;
+    target.classList.remove("active");
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    let opened = false;
+    const open = () => {
+      if (opened) return;
+      opened = true;
+      target.animate(
+        [
+          { backgroundColor: "transparent" },
+          { backgroundColor: "rgba(37, 99, 235, 0.12)" },
+          { backgroundColor: "rgba(37, 99, 235, 0.12)" },
+          { backgroundColor: "transparent" },
+        ],
+        { duration: 2000, easing: "ease-in-out" },
+      );
+      setTimeout(() => target.classList.add("active"), 600);
+    };
+
+    const fallback = setTimeout(open, 900);
+    document.addEventListener(
+      "scrollend",
+      () => {
+        clearTimeout(fallback);
+        open();
+      },
+      { once: true },
+    );
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    if (location.hash.startsWith("#faq-")) goToFaq(location.hash);
+  });
+
+  window.addEventListener(
+    "click",
+    (event) => {
+      const link = (event.target as HTMLElement).closest?.('a[href^="#faq-"]');
+      if (!link) return;
+      const hash = link.getAttribute("href");
+      if (!hash) return;
+      event.preventDefault();
+      history.pushState(null, "", hash);
+      goToFaq(hash);
+    },
+    true,
+  );
+</script>

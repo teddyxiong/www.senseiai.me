@@ -1,0 +1,27 @@
+---
+title: "Changelog"
+meta_title: "Latest Product Updates and Feature Improvements | Linkjob AI"
+description: "Discover new features, upgrades, and real-time improvements that help you level up your interview preparation with Linkjob AI."
+draft: false
+updates:
+  - date: "Sep 7, 2026"
+    title: "GPT 5.1 Integration (Major Update)"
+    tag: "Improvement"
+    description: "Upgraded the entire assistant to GPT 5.1 for faster response times, higher accuracy, and more human-like reasoning across all product experiences."
+  - date: "Sep 5, 2026"
+    title: "Mobile Onboarding Released"
+    tag: "New Feature"
+    description: "A brand-new mobile onboarding flow is now live, focused on a smoother and more guided mock interview experience."
+  - date: "Sep 2, 2026"
+    title: "Pricing Page Now Fully Un-Gated"
+    tag: "New Feature"
+    description: "All visitors can now browse full plan details and pricing information without signing in or creating an account."
+  - date: "Aug 28, 2026"
+    title: "New Mock Interview Prompt Released"
+    tag: "Improvement"
+    description: "A highly optimized mock interview prompt is live, delivering sharper, more structured, and more personalized feedback."
+  - date: "Aug 25, 2026"
+    title: "Hero Banner Updated"
+    tag: "Improvement"
+    description: "Refreshed the homepage hero banner with a cleaner layout, updated visuals, and improved copy for better clarity and engagement."
+---

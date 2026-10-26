@@ -1,0 +1,55 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import Social from "./Social.astro";
+// Data source import { tags } from "../data/tags";
+
+const { member } = Astro.props;
+---
+
+// Function to calculate font size
+const calculateFontSize = (count, minSize = 12, maxSize = 32) => {
+  const maxCount = Math.max(...tags.map((tag) => tag.count));
+  const minCount = Math.min(...tags.map((tag) => tag.count));
+  return ((count - minCount) / (maxCount - minCount)) * (maxSize - minSize) + minSize;
+};
+
+// Function to calculate color
+const calculateColor = (count) => {
+  const maxCount = Math.max(...tags.map((tag) => tag.count));
+  const minCount = Math.min(...tags.map((tag) => tag.count));
+  const normalized = (count - minCount) / (maxCount - minCount);
+  const hue = 200 - normalized * 120; // 200 (blue) to 80 (yellow)
+  return `hsl(${hue}, 70%, 50%)`;
+};
+---
+
+<div class="tag-cloud">
+  {tags.map((tag) => (
+    <a
+      href={`/tags/${tag.name.toLowerCase()}`}
+      style={{
+        fontSize: `${calculateFontSize(tag.count)}px`,
+        color: `${calculateColor(tag.count)}`,
+      }}
+      class="tag"
+    >
+      {tag.name}
+    </a>
+  ))}
+</div>
+
+<style>
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tag {
+    text-decoration: none;
+    transition: transform 0.2s, color 0.2s;
+  }
+  .tag:hover {
+    transform: scale(1.2);
+  }
+</style>
+

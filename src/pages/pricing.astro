@@ -1,0 +1,118 @@
+---
+import Base from "@/layouts/Base.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import FAQ from "@/partials/FAQ.astro";
+import PricingSection from "@/partials/PricingSection.astro";
+import Testimonialpricing from "@/partials/Testimonialpricing.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+import "../styles/home-video-dialog.css";
+
+const pricingIndex = await getEntry("pricing", "-index");
+if (!pricingIndex) {
+  throw new Error("Price data not found");
+}
+
+const { meta_title, meta_description, pricing, promotions, secure_payments: securePayments } = pricingIndex.data;
+const testimonialpricing = await getEntry("sections", "testimonialpricing");
+---
+
+<Base title={meta_title} description={meta_description} footerVariant="home">
+  {pricing.enable && (
+    <section class="section pt-12">
+      <div class="container px-2">
+        <div class="mx-auto max-w-[72ch] text-center">
+          <h1
+            class="mb-4 font-['Asul',serif] text-balance text-[28px] font-bold leading-tight text-dark sm:text-[34px]"
+            set:html={markdownify(pricing.header?.title)}
+          />
+          <p
+            class="mb-6 mx-auto w-full max-w-[54ch] text-center font-['DM Sans',sans-serif] text-balance text-[15px] font-normal leading-[1.35] sm:max-w-[60ch] md:max-w-[66ch] md:text-[20px] lg:max-w-[70ch] lg:text-[20px]"
+          >
+            <span>
+              Stay ahead with the
+              <span class="font-medium text-[#58ACF2]">latest top-tier AI models</span>.
+            </span>
+            <br />
+            <span>
+              We continuously add the newest high-performing models for
+              <span class="font-medium text-[#58ACF2]">better answers</span>.
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <PricingSection pricing={pricing} />
+
+      {securePayments?.gateways?.length ? (
+        <div class="container pt-16">
+          <div class="flex flex-col items-center">
+            <div class="mb-8 flex items-center gap-2">
+              {securePayments.icon && (
+                <img
+                  src={securePayments.icon}
+                  alt=""
+                  class="h-6 w-6 object-contain"
+                  loading="lazy"
+                />
+              )}
+              <span class="text-base font-medium text-dark/70">{securePayments.label}</span>
+            </div>
+            <div class="grid grid-cols-4 gap-4 sm:grid-cols-6 md:grid-cols-8">
+              {securePayments.gateways.map((gateway: any) => (
+                <div class="flex items-center justify-center rounded-lg border border-border bg-white p-3">
+                  {gateway.image ? (
+                    <img
+                      src={gateway.image}
+                      alt=""
+                      class="h-8 w-auto object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="h-8 w-16 rounded bg-slate-100" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <Testimonialpricing testimonial={testimonialpricing} />
+
+      {/* {promotions && (
+        <div class="container pt-24">
+          <h2 class="mb-10 text-center">{promotions.title}</h2>
+          <div class="flex flex-col items-center justify-center gap-8 md:flex-row md:items-start md:gap-4">
+            {promotions.steps.map((step: any) => (
+              <div class="flex max-w-sm flex-1 flex-col items-center text-center md:max-w-none">
+                <img src={step.image} alt="" class="w-full object-contain" />
+                <p
+                  class="mt-4 text-center text-base md:text-[19px]"
+                  set:html={markdownify(step.caption)}
+                />
+              </div>
+            ))}
+          </div>
+          {!!promotions.footer_text && (
+            <p
+              class="promotion-footer mt-12 text-center text-lg md:mt-16 md:text-xl xl:mt-20 xl:text-2xl"
+              set:html={markdownify(promotions.footer_text ?? "")}
+            />
+          )}
+        </div>
+      )} */}
+    </section>
+  )}
+  <FAQ variant="home" entryId="faqpricing" videoDialog />
+  <CallToAction variant="home" />
+</Base>
+
+<style>
+  :global(.promotion-footer a) {
+    color: #253B80;
+    text-decoration: underline;
+  }
+</style>
+
+<script is:inline type="module" src="/js/home-video-dialog.js"></script>

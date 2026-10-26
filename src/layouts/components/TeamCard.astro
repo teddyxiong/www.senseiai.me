@@ -1,0 +1,24 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import Social from "./Social.astro";
+
+const { member } = Astro.props;
+---
+
+<div class="md:col-6 lg:col-4 xl:col-3">
+  <div
+    class="rounded-lg border border-transparent p-4 text-center shadow hover:border-border"
+  >
+    <div
+      class="flex h-[250px] items-center justify-center rounded-lg bg-primary/50"
+    >
+      <img src={member.image} alt={member.name} />
+    </div>
+    <div class="pb-4 pt-5">
+      <h3 class="h4 mb-2" set:html={markdownify(member.name)} />
+      <p class="mb-4" set:html={markdownify(member.profession)} />
+
+      <Social source={member.socials} className="social-icons-2" />
+    </div>
+  </div>
+</div>

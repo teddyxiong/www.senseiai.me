@@ -1,0 +1,136 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+
+export async function getStaticPaths() {
+  const CASE_FOLDER = "case-study";
+  const posts = await getSinglePage(CASE_FOLDER);
+
+  const paths = posts.map((post) => ({
+    params: {
+      single: post.slug,
+    },
+    props: { post },
+  }));
+  return paths;
+}
+
+const { post } = Astro.props;
+const {
+  title,
+  meta_title,
+  description,
+  service,
+  company,
+  location,
+  image,
+  logo,
+} = post.data;
+const { Content } = await post.render();
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <PageHeader title={title} />
+
+  <section class="section-sm pb-0">
+    <div class="container">
+      <div class="mb-16 rounded-lg border bg-white pb-4 pt-6 lg:py-5">
+        <div class="row gx-4">
+          <div class="lg:col-5" data-aos="fade-left-sm">
+            <div
+              class="mx-5 flex h-[150px] min-h-full items-center rounded-lg bg-primary/5 px-10 md:h-[200px] lg:h-full"
+            >
+              <img
+                src={logo}
+                width="200"
+                class="mx-auto block"
+                alt="{meta_title}"
+              />
+            </div>
+          </div>
+          <div class="lg:col-7" data-aos="fade-left-sm" data-aos-delay="50">
+            <div
+              class="gradient gradient-sky max-lg:gradient-to-right lg:gradient-to-bottom max-lg:gradient-horizontal lg:gradient-vertical relative me-5 max-lg:ms-5 max-lg:mt-10 max-lg:pt-8 max-lg:after:top-0 md:me-16 lg:me-0 lg:py-8 lg:pe-16 lg:ps-10 after:lg:left-0"
+            >
+              <h2 class="h3 mb-4" set:html={markdownify(title)} />
+              <div class="content">
+                <p set:html={markdownify(description)} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-gradient-primary rounded-2xl px-7 py-10 text-white md:px-10"
+        data-aos="fade-up-sm"
+        data-aos-offset="100"
+      >
+        <div class="counter row gy-4 gx-5 md:justify-around">
+          <div class="sm:col-6 md:col-5 lg:col-3 max-md:mx-auto">
+            <div
+              class="gradient gradient-to-left sm:gradient-to-bottom max-sm:gradient-horizontal sm:gradient-vertical max-sm:after:-bottom-3 max-sm:after:via-white/50 sm:after:right-0"
+            >
+              <h3
+                class="h3 bottom-line-shape mb-4 pb-4 font-medium text-inherit after:bg-white"
+              >
+                Client
+              </h3>
+              <p set:html={markdownify(title)} />
+            </div>
+          </div>
+          <div class="sm:col-6 md:col-5 lg:col-3 max-md:mx-auto">
+            <div
+              class="gradient gradient-to-left sm:gradient-to-bottom max-sm:gradient-horizontal sm:gradient-vertical max-sm:after:-bottom-3 max-sm:after:via-white/50 sm:after:right-0"
+            >
+              <h3
+                class="h3 bottom-line-shape mb-4 pb-4 font-medium text-inherit after:bg-white"
+              >
+                Service
+              </h3>
+              <p set:html={markdownify(service)} />
+            </div>
+          </div>
+          <div class="sm:col-6 md:col-5 lg:col-3 max-md:mx-auto">
+            <div
+              class="gradient gradient-to-left sm:gradient-to-bottom max-sm:gradient-horizontal sm:gradient-vertical max-sm:after:-bottom-3 max-sm:after:via-white/50 sm:after:right-0"
+            >
+              <h3
+                class="h3 bottom-line-shape mb-4 pb-4 font-medium text-inherit after:bg-white"
+              >
+                Location
+              </h3>
+              <p set:html={markdownify(location)} />
+            </div>
+          </div>
+          <div class="sm:col-6 md:col-5 lg:col-3 max-md:mx-auto">
+            <div>
+              <h3
+                class="h3 bottom-line-shape mb-4 pb-4 font-medium text-inherit after:bg-white"
+              >
+                Company
+              </h3>
+              <p set:html={markdownify(company)} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pt-16" data-aos="fade-up-sm" data-aos-offset="150">
+        <div class="mx-auto lg:col-10">
+          <div class="content">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>

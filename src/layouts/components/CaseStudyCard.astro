@@ -1,0 +1,57 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { data } = Astro.props;
+const { title, service, website, logo, location, company,meta_title,description } = data.data;
+---
+
+<div class="md:col-6 xl:col-4">
+  <div class="min-h-full rounded-xl border border-border p-5">
+    <div
+      class="flex h-[150px] md:h-[200px] w-full max-w-full items-center justify-center rounded-xl bg-primary/5 px-10"
+    >
+      <a href={`/categories/${location}/`}  title={meta_title}> 
+        <img src={logo} width="200" alt={meta_title} title={meta_title}/></a>
+    </div>
+    <div class="mt-6">
+      <h2 class="h4 mb-4">
+        <a
+          href={`/categories/${location}/`}
+          class="hover:underline text-center"
+          set:html={markdownify(meta_title)}
+           title={meta_title}
+        />
+      </h2>
+      <ul class="flex flex-col gap-y-2 mb-8 border-t pt-4">
+        <li class="flex capitalize">
+          <div class="flex-[40px] opacity-70">Industry</div>
+          <div class="flex-[15px]">:</div>
+          <div class="w-full text-black" set:html={markdownify(service)} />
+        </li>
+        <li class="flex capitalize">
+          <div class="flex-[40px] opacity-70">Website</div>
+          <div class="flex-[15px]">:</div>
+          <a
+            href={website}
+            title={meta_title}
+            target="_blank"
+            class="w-full underline text-black break-all lowercase">{description}</a
+          >
+        </li>
+       <!-- <li class="flex capitalize">
+          <div class="flex-[140px] opacity-70">Articles</div>
+          <div class="flex-[15px]">:</div>
+          <div class="w-full text-black" set:html={markdownify(location)} />
+        </li>  -->
+        <li class="flex capitalize">
+          <div class="flex-[40px] opacity-70">Articles</div>
+            <div class="flex-[15px]">:</div>
+          <div class="w-full text-black" set:html={markdownify(company)} />
+        </li>
+      </ul>
+      <a href={`/categories/${location}/`}  class="btn btn-primary"  title={meta_title}>
+        {meta_title}
+      </a>
+    </div>
+  </div>
+</div>

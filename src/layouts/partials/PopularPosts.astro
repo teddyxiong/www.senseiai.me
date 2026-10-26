@@ -1,0 +1,104 @@
+---
+import { getEntry } from "astro:content";
+import type { PopularPostsData } from "@/content/config";
+import { markdownify } from "@/lib/utils/textConverter";
+
+const entry = await getEntry("sections", "popular-posts");
+if (!entry) {
+  throw new Error("Popular posts data not found");
+}
+
+const data = entry.data as PopularPostsData;
+const { title, featured_post, posts } = data;
+---
+
+<section class="section pt-0 pb-16 md:pb-32">
+  <div class="container">
+    <div class="row">
+      <div class="mx-auto text-center col-12 sm:px-0" data-aos="fade-up-sm">
+        <h2
+          class="mb-8 text-left text-[#58ACF2] text-[30px] md:text-[35px] lg:text-[40px]"
+          style="max-width: 640px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+        >
+          {title}
+        </h2>
+
+        <div class="flex flex-col gap-8 lg:flex-row lg:gap-0">
+          {/* Featured Post (left) */}
+          <div class="flex-shrink-0 lg:w-[40%] lg:pr-4">
+            <a href={featured_post.link} class="group block">
+              <div class="mb-5 overflow-hidden rounded-lg">
+                <img
+                  src={featured_post.image}
+                  alt={featured_post.title}
+                  class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  width="487"
+                  height="325"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                />
+              </div>
+              <h3
+                class="mt-12 mb-6 mx-auto text-center font-semibold leading-snug text-dark transition-colors group-hover:text-[#58ACF2] text-[20px] md:text-[22px] lg:text-[25px]"
+                style="font-family: Asul, serif; max-width: 450px;"
+                set:html={markdownify(featured_post.title)}
+              />
+              <p
+                class="mx-auto text-center leading-relaxed text-dark/65 text-[14px] md:text-[15px] lg:text-[17px]"
+                style="font-family: 'DM Sans', sans-serif; max-width: 450px;"
+              >
+                {featured_post.description}
+              </p>
+            </a>
+          </div>
+
+          {/* Divider (small/medium screens) */}
+          <div class="block lg:hidden border-t border-border" />
+          {/* Divider (large screens) */}
+          <div class="hidden lg:block lg:w-px lg:bg-border lg:flex-shrink-0" />
+
+          {/* Post List (right) */}
+          <div class="text-left lg:flex-1 lg:pl-4">
+            <ul class="flex flex-col">
+              {posts.map((post: any, idx: number) => (
+                <li
+                  class={`group ${
+                    idx > 0 ? "border-t border-border pt-3" : "pt-0"
+                  } ${idx < posts.length - 1 ? "pb-3" : "pb-0"}`}
+                >
+                  <a href={post.link} class="flex w-full items-start gap-3 sm:gap-2">
+                    <div class="min-w-0 flex-1">
+                      <h3
+                        class="mb-1 font-bold leading-snug text-dark transition-colors group-hover:text-[#58ACF2] text-[16px] md:text-[17px] lg:text-[18px]"
+                        style="font-family: Asul, serif;"
+                      >
+                        {post.title}
+                      </h3>
+                      <p
+                        class="leading-relaxed text-dark/60 text-[13px] md:text-[14px] lg:text-[16px]"
+                        style="font-family: 'DM Sans', sans-serif;"
+                      >
+                        {post.description}
+                      </p>
+                    </div>
+                    <div class="w-20 flex-shrink-0 self-stretch sm:w-[84px] md:w-[88px]">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        class="h-full w-full rounded-md object-cover"
+                        width="224"
+                        height="150"
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority="low"
+                      />
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+  </div>
+</section>

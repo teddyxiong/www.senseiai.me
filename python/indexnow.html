@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndexNow API 提交工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .result.warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+        .response-details {
+            margin-top: 15px;
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .status-table th, .status-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .status-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IndexNow API 提交工具</h1>
+        <div style="background-color: #e7f3ff; border: 1px solid #b3d9ff; color: #0066cc; padding: 10px; margin-bottom: 20px; border-radius: 4px; text-align: center;">
+            ℹ️ 日常部署已通过 <code>deploy.sh</code> → <code>scripts/indexnow_submit.py</code> 自动提交 IndexNow。此工具仅用于手动补交。
+        </div>
+        
+        <form id="indexnowForm">
+            <div class="form-group">
+                <label for="host">主机域名:</label>
+                <input type="text" id="host" value="www.senseiai.me" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="key">API Key:</label>
+                <input type="text" id="key" value="5b59ea84565f422aafbde7848274090a" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="keyLocation">Key Location URL:</label>
+                <input type="url" id="keyLocation" value="https://www.senseiai.me/5b59ea84565f422aafbde7848274090a.txt" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="urlList">URL 列表 (每行一个URL):</label>
+                <textarea id="urlList" placeholder="请输入要提交的URL，每行一个" required></textarea>
+            </div>
+            
+            <button type="submit" id="submitBtn">提交到 IndexNow</button>
+            <button type="button" id="viewHistoryBtn" style="background-color: #28a745; margin-top: 10px;">查看提交历史</button>
+            <button type="button" id="downloadLogBtn" style="background-color: #17a2b8; margin-top: 10px;">下载日志文件</button>
+            <button type="button" id="fetchSitemapBtn" style="background-color: #fd7e14; margin-top: 10px;">从Sitemap自动获取URL</button>
+        </form>
+        
+        <div id="result" class="result">
+            <div id="resultContent"></div>
+        </div>
+        
+        <div class="status-table-container">
+            <h3>HTTP 状态码说明</h3>
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>HTTP Code</th>
+                        <th>Response</th>
+                        <th>Reasons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>200</td>
+                        <td>Ok</td>
+                        <td>URL submitted successfully</td>
+                    </tr>
+                    <tr>
+                        <td>400</td>
+                        <td>Bad request</td>
+                        <td>Invalid format</td>
+                    </tr>
+                    <tr>
+                        <td>403</td>
+                        <td>Forbidden</td>
+                        <td>In case of key not valid (e.g. key not found, file found but key not in the file)</td>
+                    </tr>
+                    <tr>
+                        <td>422</td>
+                        <td>Unprocessable Entity</td>
+                        <td>In case of URLs don't belong to the host or the key is not matching the schema in the protocol</td>
+                    </tr>
+                    <tr>
+                        <td>429</td>
+                        <td>Too Many Requests</td>
+                        <td>Too Many Requests (potential Spam)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="status-table-container">
+            <h3>✅ 密钥文件状态</h3>
+            <div style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <p><strong>🔑 密钥文件已创建:</strong> 密钥文件 <code>5b59ea84565f422aafbde7848274090a.txt</code> 已在网站根目录创建，内容为密钥值。</p>
+                <p><strong>🤖 Robots.txt 已更新:</strong> 已在 robots.txt 中添加允许搜索引擎访问密钥文件的规则。</p>
+                <p><strong>🔍 验证密钥文件:</strong> <a href="https://www.senseiai.me/5b59ea84565f422aafbde7848274090a.txt" target="_blank">点击此处</a> 验证密钥文件是否可以访问。</p>
+            </div>
+            
+            <h3>🔧 CORS问题解决方案</h3>
+            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <p><strong>⚠️ 注意:</strong> 由于浏览器CORS安全策略，直接访问IndexNow API可能会被阻止。本工具已集成多种解决方案：</p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li><strong>方法1:</strong> Bing IndexNow端点 (推荐)</li>
+                    <li><strong>方法2:</strong> CORS代理服务器 (已更新为更可靠的代理)</li>
+                    <li><strong>方法2.1:</strong> 备用CORS代理服务器</li>
+                    <li><strong>方法3:</strong> Yandex IndexNow端点</li>
+                    <li><strong>方法4:</strong> 直接提交（无代理）</li>
+                </ul>
+                <p><strong>如果所有方法都失败，可以使用以下替代方案:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>使用服务器端脚本提交</li>
+                    <li>安装CORS浏览器扩展</li>
+                    <li>使用curl命令行工具手动提交</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查URL参数，如果包含's'参数则自动提交
+        function checkAutoSubmit() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('s')) {
+                // 延迟一秒后自动提交，确保页面完全加载
+                setTimeout(() => {
+                    const form = document.getElementById('indexnowForm');
+                    const submitBtn = document.getElementById('submitBtn');
+                    
+                    // 添加自动提交提示
+                    const autoSubmitNotice = document.createElement('div');
+                    autoSubmitNotice.style.cssText = 'background-color: #e7f3ff; border: 1px solid #b3d9ff; color: #0066cc; padding: 10px; margin-bottom: 20px; border-radius: 4px; text-align: center;';
+                    autoSubmitNotice.innerHTML = '🤖 检测到自动提交参数，正在自动提交...';
+                    form.parentNode.insertBefore(autoSubmitNotice, form);
+                    
+                    // 触发提交事件
+                    submitBtn.click();
+                }, 1000);
+            }
+        }
+        
+        // 查看提交历史
+         function viewSubmissionHistory() {
+             try {
+                 const stored = localStorage.getItem('indexnow_submissions');
+                 let submissions = [];
+                 if (stored) {
+                     submissions = JSON.parse(stored);
+                 }
+                 
+                 const resultDiv = document.getElementById('result');
+                 const resultContent = document.getElementById('resultContent');
+                 
+                 if (submissions.length === 0) {
+                     resultDiv.className = 'result';
+                     resultDiv.style.display = 'block';
+                     resultContent.innerHTML = '<h3>提交历史</h3><p>暂无提交记录</p>';
+                 } else {
+                     const historyHtml = submissions.map((s, index) => 
+                         `<div style="padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                             <span>${s.timestamp}</span>
+                             <span style="color: ${s.type === 'auto' ? '#007bff' : '#28a745'}; font-weight: bold;">${s.type === 'auto' ? '自动' : '手动'}</span>
+                         </div>`
+                     ).join('');
+                     
+                     resultDiv.className = 'result';
+                     resultDiv.style.display = 'block';
+                     resultContent.innerHTML = `
+                         <h3>提交历史 (共 ${submissions.length} 次)</h3>
+                         <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px;">
+                             ${historyHtml}
+                         </div>
+                         <p style="margin-top: 10px; font-size: 12px; color: #666;">记录保存在浏览器本地存储中</p>
+                     `;
+                 }
+             } catch (e) {
+                 console.error('无法读取提交历史:', e);
+                 alert('读取提交历史失败');
+             }
+         }
+         
+         // 下载日志文件
+         function downloadLogFile() {
+             try {
+                 const stored = localStorage.getItem('indexnow_submissions');
+                 let submissions = [];
+                 if (stored) {
+                     submissions = JSON.parse(stored);
+                 }
+                 
+                 if (submissions.length === 0) {
+                     alert('暂无提交记录可下载');
+                     return;
+                 }
+                 
+                 const logContent = submissions.map(s => `${s.timestamp} (${s.type})`).join('\n');
+                 const blob = new Blob([logContent], { type: 'text/plain' });
+                 const url = URL.createObjectURL(blob);
+                 
+                 const downloadLink = document.createElement('a');
+                 downloadLink.href = url;
+                 downloadLink.download = 'indexnow_submission_log.txt';
+                 downloadLink.style.display = 'none';
+                 
+                 document.body.appendChild(downloadLink);
+                 downloadLink.click();
+                 document.body.removeChild(downloadLink);
+                 
+                 URL.revokeObjectURL(url);
+             } catch (e) {
+                 console.error('下载日志文件失败:', e);
+                 alert('下载日志文件失败');
+             }
+         }
+         
+         // 从Sitemap获取URL列表
+          async function fetchFromSitemap() {
+              const resultDiv = document.getElementById('result');
+              const resultContent = document.getElementById('resultContent');
+              const fetchBtn = document.getElementById('fetchSitemapBtn');
+              
+              try {
+                  fetchBtn.disabled = true;
+                  fetchBtn.textContent = '获取中...';
+                  
+                  // 显示加载状态
+                  resultDiv.className = 'result';
+                  resultDiv.style.display = 'block';
+                  resultContent.innerHTML = '<div class="loading">正在从Sitemap获取URL列表...</div>';
+                  
+                  // 获取最后提交时间
+                  let lastSubmissionTime = null;
+                  try {
+                      const stored = localStorage.getItem('indexnow_submissions');
+                      if (stored) {
+                          const submissions = JSON.parse(stored);
+                          if (submissions.length > 0) {
+                              // 获取最新的提交时间
+                              lastSubmissionTime = new Date(submissions[submissions.length - 1].timestamp);
+                          }
+                      }
+                  } catch (e) {
+                      console.warn('无法读取最后提交时间:', e);
+                  }
+                  
+                  // 如果没有提交记录，使用7天前作为基准时间
+                  if (!lastSubmissionTime) {
+                      lastSubmissionTime = new Date();
+                      lastSubmissionTime.setDate(lastSubmissionTime.getDate() - 7);
+                  }
+                  
+                  // 获取主站点 sitemap.xml，然后递归获取所有子 sitemap
+                  const sitemapIndexUrl = 'https://www.senseiai.me/sitemap.xml';
+                  const response = await fetch(sitemapIndexUrl, {
+                      mode: 'cors',
+                      headers: {
+                          'Accept': 'application/xml, text/xml, */*'
+                      }
+                  });
+                  
+                  if (!response.ok) {
+                      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                  }
+                  
+                  const xmlText = await response.text();
+                  
+                  // 解析XML
+                  const parser = new DOMParser();
+                  const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                  
+                  // 检查解析错误
+                  const parseError = xmlDoc.querySelector('parsererror');
+                  if (parseError) {
+                      throw new Error('XML解析失败: ' + parseError.textContent);
+                  }
+                  
+                  // 获取所有URL节点
+                  const urlNodes = xmlDoc.querySelectorAll('url');
+                  const newUrls = [];
+                  let totalUrls = 0;
+                  let updatedUrls = 0;
+                  
+                  urlNodes.forEach(urlNode => {
+                      const locElement = urlNode.querySelector('loc');
+                      const lastmodElement = urlNode.querySelector('lastmod');
+                      
+                      if (locElement && lastmodElement) {
+                          totalUrls++;
+                          const url = locElement.textContent.trim();
+                          const lastmod = new Date(lastmodElement.textContent.trim());
+                          
+                          // 比较时间，如果sitemap中的时间比最后提交时间晚，则添加到列表
+                          if (lastmod > lastSubmissionTime) {
+                              newUrls.push(url);
+                              updatedUrls++;
+                          }
+                      }
+                  });
+                  
+                  // 更新URL列表
+                  const urlListTextarea = document.getElementById('urlList');
+                  if (newUrls.length > 0) {
+                      // 获取现有的URL列表
+                      const existingUrls = urlListTextarea.value.trim().split('\n')
+                          .map(url => url.trim())
+                          .filter(url => url.length > 0);
+                      
+                      // 合并去重
+                      const allUrls = [...new Set([...existingUrls, ...newUrls])];
+                      urlListTextarea.value = allUrls.join('\n');
+                      
+                      resultDiv.className = 'result success';
+                      resultContent.innerHTML = `
+                          <h3>Sitemap获取成功</h3>
+                          <p><strong>总URL数量:</strong> ${totalUrls}</p>
+                          <p><strong>更新的URL数量:</strong> ${updatedUrls}</p>
+                          <p><strong>最后提交时间:</strong> ${lastSubmissionTime.toISOString()}</p>
+                          <p><strong>新增URL:</strong></p>
+                          <div style="max-height: 200px; overflow-y: auto; background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px;">
+                              ${newUrls.map(url => `<div>${url}</div>`).join('')}
+                          </div>
+                      `;
+                  } else {
+                      resultDiv.className = 'result warning';
+                      resultContent.innerHTML = `
+                          <h3>Sitemap获取完成</h3>
+                          <p><strong>总URL数量:</strong> ${totalUrls}</p>
+                          <p><strong>更新的URL数量:</strong> 0</p>
+                          <p><strong>最后提交时间:</strong> ${lastSubmissionTime.toISOString()}</p>
+                          <p>没有发现比最后提交时间更新的URL。</p>
+                      `;
+                  }
+                  
+              } catch (error) {
+                  console.error('获取Sitemap失败:', error);
+                  resultDiv.className = 'result error';
+                  resultContent.innerHTML = `
+                      <h3>获取Sitemap失败</h3>
+                      <p><strong>错误信息:</strong> ${error.message}</p>
+                      <p>可能的原因：</p>
+                      <ul>
+                          <li>网络连接问题</li>
+                          <li>CORS跨域限制</li>
+                          <li>Sitemap文件格式错误</li>
+                          <li>服务器响应异常</li>
+                      </ul>
+                      <p><strong>建议:</strong> 请检查网络连接或手动访问sitemap文件。</p>
+                  `;
+              } finally {
+                  fetchBtn.disabled = false;
+                  fetchBtn.textContent = '从Sitemap自动获取URL';
+              }
+          }
+          
+          // 检查密钥文件是否可访问
+        async function checkKeyFileAccess() {
+            const keyLocation = document.getElementById('keyLocation').value.trim();
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            try {
+                // 显示加载状态
+                resultDiv.className = 'result';
+                resultDiv.style.display = 'block';
+                resultContent.innerHTML = '<div class="loading">正在检查密钥文件是否可访问...</div>';
+                
+                // 尝试访问密钥文件
+                const response = await fetch(keyLocation, {
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const content = await response.text();
+                    const key = document.getElementById('key').value.trim();
+                    
+                    if (content.trim() === key) {
+                        resultDiv.className = 'result success';
+                        resultContent.innerHTML = `
+                            <h3>密钥文件检查成功</h3>
+                            <p><strong>状态:</strong> 可访问 (HTTP ${response.status})</p>
+                            <p><strong>内容:</strong> 正确 (匹配密钥值)</p>
+                            <p>密钥文件配置正确，可以继续提交URL。</p>
+                        `;
+                    } else {
+                        resultDiv.className = 'result warning';
+                        resultContent.innerHTML = `
+                            <h3>密钥文件内容不匹配</h3>
+                            <p><strong>状态:</strong> 可访问 (HTTP ${response.status})</p>
+                            <p><strong>内容:</strong> 不匹配</p>
+                            <p><strong>期望值:</strong> ${key}</p>
+                            <p><strong>实际值:</strong> ${content.trim()}</p>
+                            <p>密钥文件内容与API Key不匹配，请确保文件中只包含密钥值。</p>
+                        `;
+                    }
+                } else {
+                    resultDiv.className = 'result error';
+                    resultContent.innerHTML = `
+                        <h3>密钥文件不可访问</h3>
+                        <p><strong>状态:</strong> 不可访问 (HTTP ${response.status})</p>
+                        <p><strong>错误:</strong> ${response.statusText}</p>
+                        <p>无法访问密钥文件，请确保文件已上传到正确位置并且可以公开访问。</p>
+                        <p><strong>建议:</strong></p>
+                        <ul>
+                            <li>确认文件路径正确</li>
+                            <li>确认文件已上传到网站根目录</li>
+                            <li>确认服务器配置允许访问该文件</li>
+                            <li>确认robots.txt未阻止访问该文件</li>
+                        </ul>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultContent.innerHTML = `
+                    <h3>检查密钥文件失败</h3>
+                    <p><strong>错误信息:</strong> ${error.message}</p>
+                    <p>无法检查密钥文件，可能是由于网络问题或CORS限制。</p>
+                `;
+            }
+        }
+        
+        // 页面加载完成后检查自动提交和绑定事件
+          document.addEventListener('DOMContentLoaded', function() {
+              checkAutoSubmit();
+              
+              // 绑定按钮事件
+              document.getElementById('viewHistoryBtn').addEventListener('click', viewSubmissionHistory);
+              document.getElementById('downloadLogBtn').addEventListener('click', downloadLogFile);
+              document.getElementById('fetchSitemapBtn').addEventListener('click', fetchFromSitemap);
+              
+              // 添加检查密钥文件按钮
+              const keyLocationInput = document.getElementById('keyLocation');
+              const checkKeyBtn = document.createElement('button');
+              checkKeyBtn.type = 'button';
+              checkKeyBtn.id = 'checkKeyBtn';
+              checkKeyBtn.textContent = '检查密钥文件';
+              checkKeyBtn.style.cssText = 'background-color: #6c757d; margin-top: 5px;';
+              checkKeyBtn.addEventListener('click', checkKeyFileAccess);
+              
+              // 将按钮添加到keyLocation输入框后面
+              keyLocationInput.parentNode.appendChild(checkKeyBtn);
+          });
+        
+        // 记录提交时间的函数
+         function recordSubmissionTime() {
+             let timestamp;
+             try {
+                 timestamp = new Date().toISOString();
+             } catch (e) {
+                 console.warn('无法获取当前时间，使用默认时间（7天前）:', e);
+                 // 默认时间为当前时间前7天
+                 const defaultDate = new Date();
+                 defaultDate.setDate(defaultDate.getDate() - 7);
+                 timestamp = defaultDate.toISOString();
+             }
+            
+            // 获取现有的提交记录
+            let submissions = [];
+            try {
+                const stored = localStorage.getItem('indexnow_submissions');
+                if (stored) {
+                    submissions = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.warn('无法读取现有提交记录:', e);
+            }
+            
+            // 添加新的提交时间
+            submissions.push({
+                timestamp: timestamp,
+                type: new URLSearchParams(window.location.search).has('s') ? 'auto' : 'manual'
+            });
+            
+            // 保存到localStorage
+            try {
+                localStorage.setItem('indexnow_submissions', JSON.stringify(submissions));
+                console.log('提交时间已记录:', timestamp);
+            } catch (e) {
+                console.error('无法保存提交记录:', e);
+            }
+            
+            // 同时尝试下载记录文件（用户可选择保存）
+            try {
+                const logContent = submissions.map(s => `${s.timestamp} (${s.type})`).join('\n');
+                const blob = new Blob([logContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                
+                // 创建隐藏的下载链接
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'indexnow_submission_log.txt';
+                downloadLink.style.display = 'none';
+                
+                // 添加到页面并触发下载（静默，用户可选择保存位置）
+                document.body.appendChild(downloadLink);
+                // 注释掉自动下载，避免每次都弹出保存对话框
+                // downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                console.warn('无法创建下载文件:', e);
+            }
+        }
+        
+        document.getElementById('indexnowForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 记录提交时间
+            recordSubmissionTime();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            // 禁用提交按钮
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            
+            // 显示加载状态
+            resultDiv.className = 'result';
+            resultDiv.style.display = 'block';
+            resultContent.innerHTML = '<div class="loading">正在提交到 IndexNow API...</div>';
+            
+            try {
+                // 获取表单数据
+                const host = document.getElementById('host').value.trim();
+                const key = document.getElementById('key').value.trim();
+                const keyLocation = document.getElementById('keyLocation').value.trim();
+                const urlListText = document.getElementById('urlList').value.trim();
+                
+                // 处理URL列表
+                const urlList = urlListText.split('\n')
+                    .map(url => url.trim())
+                    .filter(url => url.length > 0);
+                
+                if (urlList.length === 0) {
+                    throw new Error('请至少输入一个URL');
+                }
+                
+                // 构建请求数据
+                const requestData = {
+                    host: host,
+                    key: key,
+                    keyLocation: keyLocation,
+                    urlList: urlList
+                };
+                
+                // 尝试多种方式提交到 IndexNow API
+                let response;
+                let submitMethod = '';
+                
+                // 方法1: 尝试直接提交到Bing的IndexNow端点
+                try {
+                    submitMethod = 'Bing IndexNow';
+                    response = await fetch('https://www.bing.com/indexnow', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                } catch (bingError) {
+                    console.log('Bing IndexNow失败，尝试CORS代理:', bingError.message);
+                    
+                    // 方法2: 使用CORS代理
+                    try {
+                        submitMethod = 'CORS代理';
+                        // 使用更可靠的CORS代理
+                        response = await fetch('https://corsproxy.io/?https://api.indexnow.org/indexnow', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(requestData)
+                        });
+                    } catch (proxyError) {
+                        console.log('CORS代理失败，尝试备用CORS代理:', proxyError.message);
+                        
+                        // 方法2.1: 尝试备用CORS代理
+                        try {
+                            submitMethod = '备用CORS代理';
+                            response = await fetch('https://api.allorigins.win/raw?url=https://api.indexnow.org/indexnow', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json; charset=utf-8',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify(requestData)
+                            });
+                        } catch (backupProxyError) {
+                            console.log('备用CORS代理失败，尝试Yandex端点:', backupProxyError.message);
+                            
+                            // 方法3: 尝试Yandex的IndexNow端点
+                            try {
+                                submitMethod = 'Yandex IndexNow';
+                                response = await fetch('https://yandex.com/indexnow', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json; charset=utf-8'
+                                    },
+                                    body: JSON.stringify(requestData)
+                                });
+                            } catch (yandexError) {
+                                console.log('Yandex端点失败，尝试直接提交:', yandexError.message);
+                                
+                                // 方法4: 尝试直接提交（无代理）
+                                try {
+                                    submitMethod = '直接提交（无代理）';
+                                    // 尝试直接提交，可能会因CORS策略失败
+                                    response = await fetch('https://api.indexnow.org/indexnow', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json; charset=utf-8',
+                                            'Origin': window.location.origin,
+                                            'Access-Control-Request-Method': 'POST',
+                                            'Access-Control-Request-Headers': 'Content-Type'
+                                        },
+                                        mode: 'cors',
+                                        body: JSON.stringify(requestData)
+                                    });
+                                } catch (directError) {
+                                    // 如果所有方法都失败，提供手动提交指导
+                                    throw new Error(`所有提交方法都失败了。CORS错误通常是因为浏览器安全策略阻止跨域请求或者验证密钥问题。\n\n可能的原因：\n1. 密钥文件不存在或无法访问 (请确认 ${keyLocation} 可以公开访问)\n2. 密钥文件内容不正确 (应只包含密钥值 ${key})\n3. robots.txt 阻止了搜索引擎访问密钥文件\n\n解决方案：\n1. 确认密钥文件已正确上传到网站根目录\n2. 确认密钥文件内容正确\n3. 确认 robots.txt 允许访问密钥文件\n4. 使用服务器端脚本提交\n5. 使用浏览器扩展禁用CORS\n6. 手动使用curl命令提交：\n\ncurl -X POST "https://api.indexnow.org/indexnow" \\\n  -H "Content-Type: application/json" \\\n  -d ${JSON.stringify(JSON.stringify(requestData))}\n\n原始错误: ${directError.message}`);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // 处理响应
+                let responseText = '';
+                try {
+                    responseText = await response.text();
+                } catch (e) {
+                    responseText = '无法读取响应内容';
+                }
+                
+                // 根据状态码显示结果
+                let resultClass = 'error';
+                let statusMessage = '';
+                let reasonMessage = '';
+                
+                switch (response.status) {
+                    case 200:
+                        resultClass = 'success';
+                        statusMessage = 'Ok';
+                        reasonMessage = 'URL submitted successfully';
+                        break;
+                    case 400:
+                        statusMessage = 'Bad request';
+                        reasonMessage = 'Invalid format';
+                        break;
+                    case 403:
+                        statusMessage = 'Forbidden';
+                        reasonMessage = 'In case of key not valid (e.g. key not found, file found but key not in the file)';
+                        break;
+                    case 422:
+                        statusMessage = 'Unprocessable Entity';
+                        reasonMessage = 'In case of URLs don\'t belong to the host or the key is not matching the schema in the protocol';
+                        break;
+                    case 429:
+                        resultClass = 'warning';
+                        statusMessage = 'Too Many Requests';
+                        reasonMessage = 'Too Many Requests (potential Spam)';
+                        break;
+                    default:
+                        statusMessage = 'Unknown Error';
+                        reasonMessage = 'Unexpected response from server';
+                }
+                
+                try {
+                    resultDiv.className = `result ${resultClass}`;
+                    resultContent.innerHTML = `
+                        <h3>提交结果</h3>
+                        <p><strong>提交方法:</strong> ${submitMethod}</p>
+                        <p><strong>HTTP 状态码:</strong> ${response.status}</p>
+                        <p><strong>响应状态:</strong> ${statusMessage}</p>
+                        <p><strong>说明:</strong> ${reasonMessage}</p>
+                        <div class="response-details">
+                            <strong>请求数据:</strong><br>
+                            <pre>${JSON.stringify(requestData, null, 2)}</pre>
+                            <strong>响应内容:</strong><br>
+                            <pre>${responseText || '(空响应)'}</pre>
+                        </div>
+                    `;
+                } catch (displayError) {
+                    console.error('显示结果时出错:', displayError);
+                    resultDiv.className = 'result error';
+                    resultContent.innerHTML = `
+                        <h3>显示结果时出错</h3>
+                        <p>在显示结果时发生错误，但您的URL可能已成功提交。</p>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultContent.innerHTML = `
+                    <h3>请求失败</h3>
+                    <p><strong>错误信息:</strong> ${error.message}</p>
+                    <p>请检查网络连接或输入的数据格式是否正确。</p>
+                `;
+            } finally {
+                // 恢复提交按钮
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交到 IndexNow';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+---
+import BlogCard from "@/components/BlogCard.astro";
+import Brands from "@/components/Brands.astro";
+import Counter from "@/helpers/Counter";
+import DynamicIcon from "@/helpers/DynamicIcon";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import FAQ from "@/partials/FAQ.astro";
+import FeaturesSection from "@/layouts/partials/FeaturesSectionV2.astro";
+import PricingSection from "@/partials/PricingSection.astro";
+import Testimonial from "@/partials/Testimonial.astro";
+import Undetectable from "@/partials/undetectable.astro";
+import RSSFeed from "@/components/RSSFeed.astro";
+import PopularPosts from "@/partials/PopularPosts.astro";
+import { getEntry } from "astro:content";
+import { FaCirclePlay } from "react-icons/fa6";
+import PlatformStatusList from "@/layouts/components/PlatformStatusList.astro";
+import HeroCapabilitySwitcher from "@/partials/HeroCapabilitySwitcher.astro";
+import "../styles/home-video-dialog.css";
+
+const BLOG_FOLDER = "blog";
+const homepage = await getEntry("homepage", "-index");
+const {
+  banner,
+  brands,
+  company_logos: companyLogos = [],
+  experience,
+  hero_stats: heroStats = [],
+  nav_buttons: navButtons = [],
+} = (homepage?.data as any) || {}; // Add empty object as default to prevent undefined errors
+const testimonial = await getEntry("sections", "testimonial");
+const undetectable = await getEntry("sections", "undetectable");
+const postIndex = await getEntry(BLOG_FOLDER, "-index");
+const posts = await getSinglePage(BLOG_FOLDER);
+
+const pricingIndex = await getEntry("pricing", "-index");
+const { pricing } = pricingIndex?.data || {}; // Add empty object as default to prevent undefined errors
+---
+
+<Base>
+  <!-- banner -->
+  <!-- 1. navbar -->
+  <!-- 2. webm demo -->
+  <section
+    class="home-hero section pb-16 md:pb-32 bg-index-hero bg-index-hero--home bg-index-hero-overlay relative rounded-t-[10px] text-white md:rounded-t-[10px]"
+  >
+    <div class="container relative z-10">
+      <div class="row gy-4 items-center">
+        <div class="lg:col-12 flex flex-col items-center">
+          <div
+            class="mb-5 mx-8 flex items-center justify-center text-center sm:mx-12 lg:mx-16 rounded-[20px] border border-[#3157A6] bg-white/5 px-3 py-px text-[#3157A6] max-[400px]:text-sm sm:px-4"
+          >
+            <img
+              src="/images/shield.svg"
+              alt=""
+              class="me-2 h-6 w-6 shrink-0"
+              width="24"
+              height="24"
+            />
+            <span class="min-w-0" set:html={markdownify(banner?.badge)} />
+          </div>
+          <h1
+            class="home-hero-title mt-6 mb-7 w-full max-w-[1000px] text-center text-[30px] leading-[1.2] text-black md:text-[36px] lg:text-[45px]"
+            set:html={markdownify(banner.title)}
+          />
+
+          <p
+            class="mb-0 w-full max-w-[58ch] text-center text-base font-regular text-[#454A52] sm:max-w-[60ch] md:max-w-[64ch] md:text-lg lg:text-xl"
+            style="text-wrap: balance;"
+            set:html={markdownify(banner.content)}
+          />
+
+          <div class="hero-actions flex flex-col">
+            <div class="flex justify-center">
+              {
+                banner.video_button.enable && (
+                  <button
+                    class="btn btn-outline-white"
+                    data-src={banner.video_button.link}
+                    data-modal
+                    data-target="video-modal"
+                    aria-label="play-button"
+                    aria-labelledby="video-modal"
+                  >
+                    <FaCirclePlay className="me-1 -mt-1 inline" />
+                    {banner.video_button.label}
+                  </button>
+                )
+              }
+            </div>
+
+            <div class="download-buttons">
+              {
+                banner.button.enable && (
+                  <a
+                    href={banner.button.link}
+                    class="btn btn-download btn-download-primary"
+                  >
+                    {banner.button.label}
+                    <img
+                      src="/images/icons/download-white.png"
+                      alt=""
+                      class="inline-block h-3 w-auto scale-150"
+                      width="48"
+                      height="48"
+                    />
+                  </a>
+                )
+              }
+              {
+                banner.button2?.enable && (
+                  <a
+                    href={banner.button2.link}
+                    class="btn btn-download btn-download-secondary"
+                  >
+                    {banner.button2.label}
+                    <img
+                      src="/images/icons/arrow-right.png"
+                      alt=""
+                      class="inline-block h-3 w-auto"
+                      width="44"
+                      height="30"
+                    />
+                  </a>
+                )
+              }
+            </div>
+          </div>
+
+          {
+            heroStats.length > 0 && (
+              <div
+                class="home-hero-stats"
+                data-home-hero-stats
+                role="list"
+                aria-label="Linkjob AI results"
+              >
+                {heroStats.map((item: any, index: number) => (
+                  <>
+                    <div class="home-hero-stat" role="listitem">
+                      <span class="home-hero-stat-value">{item.value}</span>
+                      <span class="home-hero-stat-label">{item.label}</span>
+                    </div>
+                    {index < heroStats.length - 1 && (
+                      <span class="home-hero-stat-divider" aria-hidden="true" />
+                    )}
+                  </>
+                ))}
+              </div>
+            )
+          }
+
+          <div class="hero-webm hero-webm--capabilities w-full">
+            <HeroCapabilitySwitcher />
+          </div>
+        </div>
+        <!-- <div
+          class="hidden lg:col-7 lg:block"
+          data-aos="fade-down-sm"
+          data-aos-delay="300"
+        >
+          <img src="./images/banner.png" class="ml-auto block" alt="banner" />
+        </div> -->
+      </div>
+    </div>
+
+    {
+      companyLogos.length > 0 && (
+        <div
+          class="w-full px-4 sm:px-6 md:px-10 lg:px-20 mt-8 md:mt-12"
+          data-company-logo-marquee
+        >
+          <div
+            class="company-logo-marquee mx-auto max-w-[1440px]"
+            aria-label="Companies where Linkjob AI users have received offers"
+          >
+            <div class="company-logo-marquee-track" data-company-logo-track>
+              {[...companyLogos, ...companyLogos].map((logo, index) => (
+                <div
+                  class="company-logo-item"
+                  aria-hidden={
+                    index >= companyLogos.length ? "true" : undefined
+                  }
+                >
+                  <img
+                    src={logo.image}
+                    alt={index < companyLogos.length ? logo.alt : ""}
+                    width="140"
+                    height="40"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )
+    }
+  </section>
+  <!-- /.banner -->
+
+  <!-- 3. features -->
+  <FeaturesSection />
+
+  <!-- Explore real-time AI interview assistant -->
+  {
+    navButtons[0] && (
+      <div class="flex justify-center pb-16 md:pb-32">
+        <a
+          href={navButtons[0].link}
+          class="btn btn-nav-capsule"
+          data-home-video-dialog
+        >
+          {navButtons[0].label}
+          <img
+            src="/images/icons/arrow-white.png"
+            alt=""
+            class="inline-block h-3 w-auto"
+            width="54"
+            height="30"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
+    )
+  }
+
+  <!-- 4. undetectable -->
+  <Undetectable undetectable={undetectable?.data} videoButton={navButtons[1]} />
+
+  <!-- 5. testimonial -->
+  <Testimonial testimonial={testimonial} />
+
+  <!-- 6. platforms -->
+  <!-- Features -->
+  {
+    experience.enable && (
+      <section class="section pt-0 pb-16 md:pb-32 bg-gradient-secondary relative overflow-hidden rounded-t-[20px] md:rounded-t-[40px]">
+        <div class="container">
+          <div class="md:px-6">
+            <div class="row gy-4 items-center lg:gx-5">
+              <div class="lg:col-12">
+                {/* <div
+                  class="section-heading-shape"
+                  data-aos="fade-up-sm"
+                  aria-label="shape"
+                /> */}
+                <h2
+                  class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px]"
+                  style="max-width: 760px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+                  data-aos="fade-up-sm"
+                >
+                  <span class="break-words md:whitespace-nowrap">
+                    Linkjob AI Interview Helper:
+                  </span>{" "}
+                  <span class="break-words text-[#58ACF2] md:whitespace-nowrap">
+                    Tested Daily on Every Platform
+                  </span>
+                </h2>
+                <p
+                  class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+                  style="max-width: 1000px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="150"
+                >
+                  Get AI support for live coding and technical discussions, with
+                  daily compatibility checks across supported interview
+                  platforms. Explore the demos below to see how Linkjob AI works
+                  with your interview setup.
+                </p>
+                <div class="mt-8">
+                  {experience?.items.map((item: any) => (
+                    <div>
+                      <span
+                        class="gradient gradient-sky gradient-horizontal gradient-to-right block"
+                        aria-label="horizontal line"
+                      />
+                      <div
+                        class="flex py-6 max-[400px]:flex-wrap max-[400px]:gap-4"
+                        data-aos="fade-up-sm"
+                        data-aos-delay="150"
+                      >
+                        <div class="mr-6 h-[58px] min-w-[58px] rounded-full border text-center text-2xl leading-[58px] flex justify-center items-center">
+                          <DynamicIcon icon={item.icon} />
+                        </div>
+                        <div>
+                          <h3
+                            class="h4 mb-2 text-inherit text-[20px] lg:text-[24px]"
+                            set:html={markdownify(item.title)}
+                          />
+                          <p
+                            class="font-medium text-[14px] md:text-[16px] lg:text-[18px]"
+                            set:html={markdownify(item.description)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* <div
+                    class="gradient gradient-sky gradient-horizontal gradient-to-right block"
+                    aria-label="horizontal line"
+                  /> */}
+                </div>
+              </div>
+              {/* <div
+                class="hidden lg:col-12 lg:block"
+                data-aos="fade-down-sm"
+                data-aos-delay="350"
+              >
+                <img
+                  id="experience-image"
+                  src={experience.image}
+                  class="ml-auto block cursor-pointer transition-all duration-300 hover:scale-105"
+                  alt="feature"
+                  onclick="toggleImageSize(this)"
+                />
+              </div> */}
+            </div>
+            <div class="row pt-8 md:pt-10">
+              <div class="mx-auto text-center lg:col-12 xl:col-12">
+                <PlatformStatusList />
+              </div>
+            </div>
+
+            {/* <!--add addtional section from origin theme--> */}
+            {/*
+            <div class="md:px-5 mt-10 pt-10 pb-10">
+              <div class="row gy-4 items-center lg:gx-5">
+                <div class="lg:col-12">
+                  <h2
+                    class="mb-6 lg:col-12 text-center"
+                    data-aos="fade-up-sm"
+                    set:html={markdownify(experience.title2)}
+                  />
+                  <p
+                    class="mb-6 lg:col-12 text-center text-xl font-semibold"
+                    data-aos="fade-up-sm"
+                    data-aos-delay="150"
+                    set:html={markdownify(experience.description2)}
+                  />
+                  <div class="mt-8 row">
+                    <div class="lg:col-5">
+                      {experience?.items2.map((item: any) => (
+                        <div>
+                          <span
+                            class="gradient gradient-sky gradient-horizontal gradient-to-right block"
+                            aria-label="horizontal line"
+                          />
+                          <div
+                            class="flex mb-10 py-6 max-[400px]:flex-wrap max-[400px]:gap-4"
+                            data-aos="fade-up-sm"
+                            data-aos-delay="150"
+                          >
+                            <div class="mr-6 h-[58px] min-w-[58px] rounded-full border text-center text-2xl leading-[58px] flex justify-center items-center">
+                              <DynamicIcon icon={item.icon} />
+                            </div>
+                            <div>
+                              <h3
+                                class="h4 mb-2 text-inherit"
+                                set:html={markdownify(item.title)}
+                              />
+                              <p
+                                class="font-medium"
+                                set:html={markdownify(item.description)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
+                      <div
+                        class="gradient gradient-sky gradient-horizontal gradient-to-right block"
+                        aria-label="horizontal line"
+                      />
+                    </div>
+                    <div
+                      class="lg:col-1"
+                      data-aos="fade-down-sm"
+                      data-aos-delay="350"
+                    ></div>
+                    <div
+                      class="lg:col-6"
+                      data-aos="fade-down-sm"
+                      data-aos-delay="350"
+                    >
+                      <img
+                        src={experience.image2}
+                        class="ml-pointer block cursor-pointer transition-all duration-300 hover:scale-105"
+                        alt="feature"
+                        onclick="toggleImageSize(this)"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            */}
+          </div>
+        </div>
+
+        {/* Counter  */}
+        {/* <div class="mt-10 md:mt-20">
+          <div class="container">
+            <div
+              class="bg-gradient-primary rounded-2xl px-7 py-10 text-white md:px-10"
+              data-aos="fade-up-sm"
+            >
+              <div class="counter row gy-4 gx-5 md:justify-around">
+                {experience?.counter?.stats?.map(
+                  (item: { title: string; value: number; suffix: string }) => (
+                    <div class="sm:col-6 md:col-5 lg:col-3 max-md:mx-auto">
+                      <div class="gradient gradient-to-left sm:gradient-to-bottom max-sm:gradient-horizontal sm:gradient-vertical max-sm:after:-bottom-3 max-sm:after:via-[#ffffff4b] sm:after:right-0">
+                        <div class="h2 bottom-line-shape mb-4 pb-4 text-inherit after:bg-white">
+                          <h3>
+                            <span class="sr-only">{item.value}{item.suffix} {item.title}</span>
+                          </h3>
+                          <Counter
+                            client:idle
+                            count={item.value}
+                            suffix={item.suffix}
+                            duration={2}
+                          />
+                        </div>
+                        <p class="text-lg" set:html={markdownify(item.title)} />
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </div> */}
+        {/* /.Counter  */}
+
+        {/*
+        <div class="">
+          <div class="container">
+            <h2 class="text-center text-4xl font-bold mt-10 mb-5" set:html={markdownify(brands.title)} />
+            <div class="md:gradient md:gradient-to-left gradient-horizontal h-px w-full" />
+            <p
+              class="pb-4 tracking-wide text-xl  font-semibold  sm:mx-8 sm:pb-0  text-center "
+              set:html={markdownify(brands.brandall)}
+            />
+            <div class="gradient gradient-to-center md:gradient-to-right gradient-horizontal h-px w-full" />
+          </div>
+          <div class="row justify-center">
+            <div class="lg:col-12">
+              <img 
+                class="mt-10 rounded-lg md:rounded-3xl mx-auto block cursor-pointer transition-all duration-300 hover:scale-105" 
+                src={brands.brandallimg} 
+                alt="" 
+                onclick="toggleImageSize(this)"
+              >
+            </div>
+          </div>
+        </div>
+        */}
+      </section>
+    )
+  }
+  <!-- /.Features -->
+  {/* <PricingSection pricing={pricing} /> */}
+
+  <!-- 7. blog -->
+  <!-- blog -->
+  <section class="section pt-0">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12" data-aos="fade-up-sm">
+          {/* <div class="section-heading-shape" aria-label="shape"></div> */}
+          <h2
+            class="mb-6 mx-auto text-[30px] md:text-[35px] lg:text-[40px]"
+            style="max-width: 900px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+          >
+            <span class="text-black"
+              >The Latest and Most In-Depth Blog on
+            </span>
+            <span class="text-[#58ACF2]"
+              >Interview Questions and AI Interview Tools</span
+            >
+          </h2>
+          <p
+            class="mb-8 mx-auto w-full max-w-[60ch] text-[15px] md:max-w-[70ch] md:text-[18px] lg:max-w-[80ch] lg:text-[20px]"
+            style="font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35; text-wrap: balance;"
+            set:html={markdownify(
+              "Explore interview questions, company interview processes, and online assessment guides, plus AI interview assistant reviews, comparisons, and alternatives.",
+            )}
+          />
+        </div>
+      </div>
+
+      <div class="row g-4 pt-10" data-aos="fade-up-sm" data-aos-delay="150">
+        <RSSFeed />
+      </div>
+
+      <div class="row">
+        <div class="col-12 lg:px-0 pt-10 pb-12 md:pb-16">
+          <div
+            class="flex flex-col gap-5 rounded-lg px-5 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-6"
+            style="background-color: #EEF2FA;"
+          >
+            <span
+              class="text-sm font-semibold md:text-base"
+              style="color: #253B80;"
+            >
+              View all articles
+            </span>
+            <div
+              class="flex w-full min-w-0 flex-col gap-3 lg:w-auto lg:flex-row lg:items-center"
+            >
+              <a
+                href="/interview-questions/"
+                class="btn btn-nav-capsule flex w-full min-w-0 items-center justify-center !px-4 !py-2.5 !text-[13px] sm:!text-sm lg:w-auto lg:whitespace-nowrap lg:!px-6 lg:!py-3 lg:!text-base"
+              >
+                <span class="min-w-0 text-center">
+                  Interview Questions, Answers & Process Guides
+                </span>
+                <img
+                  src="/images/icons/arrow-white.png"
+                  alt=""
+                  class="ml-2 hidden h-2.5 w-auto shrink-0 xl:block xl:h-3"
+                  width="54"
+                  height="30"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+              <a
+                href="/hub/"
+                class="btn btn-nav-capsule flex w-full min-w-0 items-center justify-center !px-4 !py-2.5 !text-[13px] sm:!text-sm lg:w-auto lg:whitespace-nowrap lg:!px-6 lg:!py-3 lg:!text-base"
+              >
+                <span class="min-w-0 text-center">
+                  AI Interview Tools & Online Assessment Guides
+                </span>
+                <img
+                  src="/images/icons/arrow-white.png"
+                  alt=""
+                  class="ml-2 hidden h-2.5 w-auto shrink-0 xl:block xl:h-3"
+                  width="54"
+                  height="30"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /.blog -->
+
+  <!-- 7.5 popular posts -->
+  <PopularPosts />
+
+  <!-- 8. faq -->
+  <FAQ variant="home" />
+  <!-- 9. download -->
+  <CallToAction variant="home" />
+  <!-- 10.  -->
+  <style>
+    .home-hero-stats {
+      display: flex;
+      width: min(100%, 959px);
+      margin-top: 32px;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      font-family: "DM Sans", sans-serif;
+    }
+
+    .home-hero-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      line-height: 20.4px;
+      white-space: nowrap;
+    }
+
+    .home-hero-stat-value {
+      color: #4f8fef;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .home-hero-stat-label {
+      color: #454a52;
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .home-hero-stat-divider {
+      width: 1px;
+      height: 20px;
+      flex: 0 0 auto;
+      background: #454a52;
+    }
+
+    @keyframes companyLogoMarquee {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .company-logo-marquee {
+      --company-logo-edge-fade-width: clamp(48px, 8vw, 120px);
+      position: relative;
+      overflow: hidden;
+      padding: 4px 0;
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--company-logo-edge-fade-width),
+        #000 calc(100% - var(--company-logo-edge-fade-width)),
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--company-logo-edge-fade-width),
+        #000 calc(100% - var(--company-logo-edge-fade-width)),
+        transparent 100%
+      );
+    }
+
+    .company-logo-marquee-track {
+      display: flex;
+      width: max-content;
+      align-items: center;
+      gap: clamp(2rem, 4vw, 4rem);
+      animation: companyLogoMarquee var(--company-logo-marquee-duration, 25s)
+        linear infinite;
+      will-change: transform;
+    }
+
+    .company-logo-item {
+      display: flex;
+      width: clamp(100px, 12vw, 140px);
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .company-logo-item img {
+      display: block;
+      width: auto;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    @media (max-width: 1023px) {
+      .home-hero-stats {
+        display: grid;
+        grid-template-columns: repeat(2, max-content);
+        column-gap: 24px;
+        row-gap: 12px;
+      }
+
+      .home-hero-stat-divider {
+        display: none;
+      }
+    }
+
+    @media (max-width: 479px) {
+      .home-hero-stats {
+        grid-template-columns: 1fr;
+        row-gap: 10px;
+      }
+
+      .home-hero-stat {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 849px) {
+      .company-logo-marquee {
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+    }
+  </style>
+  <script>
+    const setupCompanyLogoMarquee = () => {
+      const track = document.querySelector<HTMLElement>(
+        "[data-company-logo-track]",
+      );
+      if (!track) return;
+
+      const halfWidth = track.scrollWidth / 2;
+      if (halfWidth <= 0) return;
+
+      track.style.setProperty(
+        "--company-logo-marquee-duration",
+        `${Math.max(halfWidth / 50, 8)}s`,
+      );
+    };
+
+    document.addEventListener("astro:page-load", setupCompanyLogoMarquee);
+
+    function toggleImageSize(img: HTMLImageElement) {
+      // Check if overlay already exists
+      const existingOverlay = document.getElementById("image-overlay");
+
+      if (existingOverlay) {
+        // Close overlay
+        existingOverlay.remove();
+      } else {
+        // Create full-page overlay
+        const overlay = document.createElement("div");
+        overlay.id = "image-overlay";
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+        overlay.style.zIndex = "9999";
+        overlay.style.cursor = "pointer";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.padding = "20px";
+
+        // Create image clone
+        const imgClone = img.cloneNode(true) as HTMLImageElement;
+        imgClone.style.maxWidth = "90vw";
+        imgClone.style.maxHeight = "90vh";
+        imgClone.style.objectFit = "contain";
+        imgClone.style.borderRadius = "8px";
+        imgClone.style.boxShadow = "0 20px 60px rgba(0, 0, 0, 0.5)";
+        imgClone.style.cursor = "pointer";
+
+        // Close overlay on click anywhere
+        overlay.onclick = () => {
+          overlay.remove();
+        };
+
+        // Add image to overlay
+        overlay.appendChild(imgClone);
+
+        // Add overlay to page
+        document.body.appendChild(overlay);
+
+        // Prevent page scrolling
+        document.body.style.overflow = "hidden";
+
+        // Restore page scrolling when overlay is closed
+        const originalRemove = overlay.remove;
+        overlay.remove = function () {
+          document.body.style.overflow = "";
+          originalRemove.call(this);
+        };
+      }
+    }
+
+    // Run after page has loaded
+    document.addEventListener("DOMContentLoaded", function () {
+      // Trial code popup feature has been removed
+    });
+  </script>
+  <script is:inline type="module" src="/js/home-video-dialog.js"></script>
+</Base>

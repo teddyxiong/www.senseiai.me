@@ -1,0 +1,243 @@
+---
+type FeaturesMockData = {
+  enable: boolean;
+  section_description?: string;
+  header: {
+    title_line_1: string;
+    title_line_2: string;
+  };
+  hero_card: {
+    title: string;
+    description: string;
+    image?: string;
+    image_alt?: string;
+    video: {
+      src: string;
+      title: string;
+      min_height_px?: number;
+    };
+  };
+  cards: {
+    pressure: {
+      title: string;
+      description: string;
+      image?: string;
+      image_alt?: string;
+    };
+    personalized: {
+      title: string;
+      description: string;
+      image?: string;
+      image_alt?: string;
+    };
+    platform: {
+      title: string;
+      description: string;
+      image?: string;
+      image_alt?: string;
+    };
+    interview_types: {
+      title: string;
+      description: string;
+      image?: string;
+      image_alt?: string;
+    };
+  };
+};
+
+const { featuresMock } = Astro.props as { featuresMock?: FeaturesMockData };
+---
+
+{
+featuresMock?.enable && (
+<section class="features-mock-section w-full bg-white py-6 md:py-10">
+  <div class="container max-w-[1440px] mx-auto px-4 sm:px-6">
+    <div class="row">
+      <!-- Title section -->
+      <div class="mx-auto text-center lg:col-12 xl:col-12 mb-6 md:mb-12">
+        <h2
+          class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+        >
+          <span>{featuresMock?.header.title_line_1}</span>
+          <br />
+          <span class="text-[#58ACF2]">{featuresMock?.header.title_line_2}</span>
+        </h2>
+        {featuresMock?.section_description && (
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            class="mb-6 text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+          >
+            {featuresMock.section_description}
+          </p>
+        )}
+      </div>
+
+      <!-- Card section -->
+      <div class="col-12 flex flex-col gap-6">
+        <!-- Row 1: large card -->
+        <div
+          class="flex flex-col xl:flex-row gap-6 xl:gap-8 p-4 sm:p-6 md:p-10 rounded-[20px] md:rounded-[30px] md:min-h-[500px]"
+          style="background: rgba(236, 245, 253, 0.3); border: 1px solid rgba(150, 200, 255, 0.3);"
+        >
+          <!-- Left side: text takes 2/5 -->
+          <div class="flex flex-col gap-5 flex-[2]">
+            <h3
+              class="text-[#1A1A1A] text-[22px] sm:text-[24px] md:text-[30px]"
+              style="font-family: Asul, serif; font-weight: 700; line-height: 1.2; margin: 0;"
+            >
+              {featuresMock?.hero_card.title}
+            </h3>
+            <p
+              class="text-[#4A4A4A] text-[15px] sm:text-[16px] md:text-[20px]"
+              style="font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.5; margin: 0;"
+            >
+              {featuresMock?.hero_card.description}
+            </p>
+          </div>
+          <!-- Right side: video/image takes 3/5 -->
+          <div class="flex items-center justify-center flex-[3]">
+            <div class="w-full h-full min-h-[140px] sm:min-h-[180px] md:min-h-[420px] aspect-[16/9] bg-[#1A1A1A] rounded-[20px] overflow-hidden flex items-center justify-center relative">
+              <img
+                  src={featuresMock?.hero_card.image || ""}
+                  alt={featuresMock?.hero_card.image_alt || featuresMock?.hero_card.title || ""}
+                  loading="lazy"
+                  class="w-full h-full object-cover"
+                />
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: card two and card three -->
+        <div class="flex flex-col xl:flex-row gap-6">
+          <!-- Card two: takes 3/5, text on top, image below -->
+          <div
+            class="flex flex-col gap-5 p-4 sm:p-5 md:p-8 rounded-[20px] md:rounded-[30px] md:min-h-[420px] flex-[3]"
+            style="background: rgba(236, 245, 253, 0.3); border: 1px solid rgba(150, 200, 255, 0.3);"
+          >
+            <h3
+              class="text-[#1A1A1A] text-[22px] sm:text-[24px] md:text-[30px]"
+              style="font-family: Asul, serif; font-weight: 700; line-height: 1.2; margin: 0;"
+            >
+              {featuresMock?.cards.pressure.title}
+            </h3>
+            <p
+              class="text-[#4A4A4A] text-[15px] sm:text-[16px] md:text-[20px]"
+              style="font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.5; margin: 0; flex-shrink: 0;"
+            >
+              {featuresMock?.cards.pressure.description}
+            </p>
+            {featuresMock?.cards.pressure.image && (
+              <div class="flex-1 flex items-center justify-center pt-2">
+                <img
+                  src={featuresMock.cards.pressure.image}
+                  alt={featuresMock.cards.pressure.image_alt || featuresMock.cards.pressure.title}
+                  loading="lazy"
+                  class="w-full h-auto object-contain"
+                  style="max-height: 260px;"
+                />
+              </div>
+            )}
+          </div>
+
+          <!-- Card three: takes 2/5, text on top, image below -->
+          <div
+            class="flex flex-col gap-5 p-4 sm:p-5 md:p-8 rounded-[20px] md:rounded-[30px] md:min-h-[420px] flex-[2]"
+            style="background: rgba(236, 245, 253, 0.3); border: 1px solid rgba(150, 200, 255, 0.3);"
+          >
+            <h3
+              class="text-[#1A1A1A] text-[22px] sm:text-[24px] md:text-[30px]"
+              style="font-family: Asul, serif; font-weight: 700; line-height: 1.2; margin: 0;"
+            >
+              {featuresMock?.cards.personalized.title}
+            </h3>
+            <p
+              class="text-[#4A4A4A] text-[15px] sm:text-[16px] md:text-[20px]"
+              style="font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.5; margin: 0; flex-shrink: 0;"
+            >
+              {featuresMock?.cards.personalized.description}
+            </p>
+            {featuresMock?.cards.personalized.image && (
+              <div class="flex-1 flex items-center justify-center pt-2">
+                <img
+                  src={featuresMock.cards.personalized.image}
+                  alt={featuresMock.cards.personalized.image_alt || featuresMock.cards.personalized.title}
+                  loading="lazy"
+                  class="w-full h-auto object-contain"
+                  style="max-height: 260px;"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- Row 3: card four and card five -->
+        <div class="flex flex-col xl:flex-row gap-6">
+          <!-- Card four: takes 2/5, text on top, image below -->
+          <div
+            class="flex flex-col gap-5 p-4 sm:p-5 md:p-8 rounded-[20px] md:rounded-[30px] md:min-h-[420px] flex-[2]"
+            style="background: rgba(236, 245, 253, 0.3); border: 1px solid rgba(150, 200, 255, 0.3);"
+          >
+            <h3
+              class="text-[#1A1A1A] text-[22px] sm:text-[24px] md:text-[30px]"
+              style="font-family: Asul, serif; font-weight: 700; line-height: 1.2; margin: 0;"
+            >
+              {featuresMock?.cards.platform.title}
+            </h3>
+            <p
+              class="text-[#4A4A4A] text-[15px] sm:text-[16px] md:text-[20px]"
+              style="font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.5; margin: 0; flex-shrink: 0;"
+            >
+              {featuresMock?.cards.platform.description}
+            </p>
+            {featuresMock?.cards.platform.image && (
+              <div class="mt-auto flex items-center justify-center pt-2">
+                <img
+                  src={featuresMock.cards.platform.image}
+                  alt={featuresMock.cards.platform.image_alt || featuresMock.cards.platform.title}
+                  loading="lazy"
+                  class="w-full h-auto object-contain"
+                  style="max-height: 260px;"
+                />
+              </div>
+            )}
+          </div>
+
+          <!-- Card five: takes 3/5, text on top, image below -->
+          <div
+            class="flex flex-col gap-5 p-4 sm:p-5 md:p-8 rounded-[20px] md:rounded-[30px] md:min-h-[420px] flex-[3]"
+            style="background: rgba(236, 245, 253, 0.3); border: 1px solid rgba(150, 200, 255, 0.3);"
+          >
+            <h3
+              class="text-[#1A1A1A] text-[22px] sm:text-[24px] md:text-[30px]"
+              style="font-family: Asul, serif; font-weight: 700; line-height: 1.2; margin: 0;"
+            >
+              {featuresMock?.cards.interview_types.title}
+            </h3>
+            <p
+              class="text-[#4A4A4A] text-[15px] sm:text-[16px] md:text-[20px]"
+              style="font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.5; margin: 0; flex-shrink: 0;"
+            >
+              {featuresMock?.cards.interview_types.description}
+            </p>
+            {featuresMock?.cards.interview_types.image && (
+              <div class="mt-auto flex items-center justify-center pt-2">
+                <img
+                  src={featuresMock.cards.interview_types.image}
+                  alt={featuresMock.cards.interview_types.image_alt || featuresMock.cards.interview_types.title}
+                  loading="lazy"
+                  class="w-full h-auto object-contain"
+                  style="max-height: 260px;"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+)
+}

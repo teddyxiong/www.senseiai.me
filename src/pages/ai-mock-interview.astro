@@ -1,0 +1,320 @@
+---
+import DynamicIcon from "@/helpers/DynamicIcon";
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import FAQ from "@/partials/FAQ.astro";
+import FeaturesMock from "@/layouts/partials/FeaturesMock.astro";
+import Testimonial from "@/partials/Testimonial.astro";
+const testimonial = await getEntry("sections", "testimonial");
+import { getEntry } from "astro:content";
+import videos from "@/config/video.json";
+
+const featuresMock = await getEntry("features", "-index");
+
+const aimockinterviewPageData = await getEntry("ai-mock-interview", "-index");
+if (!aimockinterviewPageData) {
+  throw new Error("aimockinterview page data not found");
+}
+const { challenges_section, explore_section, inbound_solution, tools_section } =
+  aimockinterviewPageData.data;
+
+const faqEntry = await getEntry("sections", "faqaimockinterview");
+if (!faqEntry) {
+  throw new Error("faqaimockinterview data not found");
+}
+
+const ctaEntry = await getEntry("sections", "call-to-action-mock");
+if (!ctaEntry) {
+  throw new Error("call-to-action-mock data not found");
+}
+
+const video = videos.aiMockInterview;
+---
+
+<Base {...aimockinterviewPageData.data}>
+  <PageHeader title={aimockinterviewPageData.data.title} />
+
+  <!-- features -->
+  <FeaturesMock featuresMock={featuresMock?.data?.features_mock} />
+
+  <!-- challenges_section -->
+  <!-- <section class="section pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-8 xl:col-6">
+          <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div>
+          <h2
+            class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+            set:html={markdownify(challenges_section.title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            set:html={markdownify(challenges_section.description)}
+          />
+        </div>
+
+        <div
+          class="col-12 pt-5 md:pt-10"
+          data-aos="fade-up-sm"
+          data-aos-delay="250"
+        >
+          <div class="row rounded-3xl">
+            {
+              challenges_section.challenges.map(
+                (challenge: {
+                  title: string;
+                  description: string;
+                  icon: string;
+                }) => (
+                  <div class="after:bg-gradient-primary relative border p-7 transition-colors duration-300 after:absolute after:left-0 after:top-0 after:-z-10 after:h-full after:w-full after:opacity-0 after:duration-300 hover:border-transparent hover:text-white hover:after:opacity-100 sm:p-10 lg:col-6">
+                    <div class="flex flex-wrap items-center">
+                      <div class="mb-6 mr-3 h-[50px] w-[50px] rounded-full border text-center text-lg leading-[50px] sm:h-[56px] sm:w-[56px] sm:text-2xl sm:leading-[56px] flex items-center justify-center">
+                        <DynamicIcon icon={challenge.icon} />
+                      </div>
+                      <h3
+                        class="h4 mb-4 inline-block text-inherit"
+                        set:html={markdownify(challenge.title)}
+                      />
+                    </div>
+                    <p set:html={markdownify(challenge.description)} />
+                  </div>
+                )
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- youtube video here  -->
+
+  <section class="section pb-0">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="lg:col-12">
+          <div class="relative w-full rounded-xl border border-gray-200 bg-white/50 shadow-sm" style="padding-bottom:56.25%">
+            <iframe
+              class="absolute top-0 left-0 h-full w-full rounded-xl"
+              src={video.src}
+              title={video.title}
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+            <div class="absolute left-1/2 -translate-x-1/2 bottom-14 z-10 pointer-events-none bg-[#391F5C] text-white text-4xl rounded-[8px] px-3 py-2 shadow text-center">
+              {video.overlayText}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- explore_section  -->
+  <section class="section pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12 xl:col-12">
+          <!-- <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div> -->
+          <h2
+            class="mb-6 mx-auto text-center"
+            style="max-width: 800px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(explore_section.title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            class="mb-0 text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+            set:html={markdownify(explore_section.description)}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    explore_section.features.map((feature, i) => (
+      <section
+        class={`section ${
+          i === explore_section.features.length - 1 || i % 2 !== 0
+            ? ""
+            : "section-gradient pt-10 pb-10"
+        }`}
+      >
+        <div class="container">
+          <div
+            class={`row items-center ${i % 2 === 0 ? "max-lg:gy-5 max-lg:flex-col-reverse" : "max-lg:gy-5"}`}
+          >
+            <div
+              class={`lg:col-5 ${i % 2 === 0 ? "" : "order-last"}`}
+              data-aos="fade-left-sm"
+              data-aos-delay="100"
+            >
+              {/* <div class="section-heading-shape" aria-label="shape" /> */}
+              <h3 class="mb-6" set:html={markdownify(feature.title)} />
+              <p class="mb-6" set:html={markdownify(feature.description)} />
+              <div
+                class="gradient gradient-horizontal gradient-to-right w-full"
+                aria-label="horizontal line"
+              />
+
+              {feature.lists && feature.lists.length > 0 && (
+                <ul class="list list-check pt-6">
+                  {feature.lists.map((list) => (
+                    <li>{list}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div
+              class={`lg:col-7 ${i % 2 === 0 ? "order-last" : ""}`}
+              data-aos="fade-left-sm"
+              data-aos-delay="150"
+            >
+              <img
+                width="576"
+                class="mx-auto lg:mx-0 lg:pl-6 xl:pl-12"
+                src={feature.image}
+                alt={feature.title}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- Inbound Solution -->
+  <section class="section" style="background-color: #ecf5fd;">
+    <div class="container">
+      <!-- Title and Description Section -->
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12 xl:col-12">
+          <!-- <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div> -->
+          <h2
+            class="mb-6 mx-auto text-center"
+            style="max-width: 800px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(inbound_solution.title)}
+          />
+          <p
+            class="mx-auto mb-0 text-center text-[15px] md:text-[18px] lg:text-[20px] aos-init aos-animate text-dark"
+            style="max-width: 800px;"
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            set:html={markdownify(inbound_solution.description)}
+          />
+          <!-- {
+            inbound_solution.button.enable && (
+              <div data-aos="fade-up-sm" data-aos-delay="200">
+                <a href={inbound_solution.button.link} class="btn btn-primary">
+                  {inbound_solution.button.label}
+                </a>
+              </div>
+            )
+          } -->
+        </div>
+      </div>
+      
+      <!-- Solution Cards Section -->
+      <div class="row pt-10">
+        <div class="col-12">
+          <div class="row g-3 sm:g-4 justify-center">
+            {
+              inbound_solution.solutions.map((solution: any, i: number) => (
+                <div class="sm:col-6 lg:col-3 flex">
+                  <div
+                    class="bg-white rounded-2xl p-6 text-center text-dark sm:p-8 w-full"
+                    data-aos="fade-up-sm"
+                    data-aos-delay={100 + i * 50}
+                  >
+                    <div class="mx-auto mb-5 h-[50px] w-[50px] rounded-full bg-sky-100 text-center text-lg leading-[50px] sm:h-[64px] sm:w-[64px] sm:text-2xl sm:leading-[64px] flex items-center justify-center">
+                      <DynamicIcon icon={solution.icon} />
+                    </div>
+                    <h3
+                      class="h4 mb-2 text-inherit"
+                      set:html={markdownify(solution.title)}
+                    />
+                    <p
+                      class="text-[#4A4A4A] text-center flex-1"
+                      set:html={markdownify(solution.description)}
+                    />
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tools  -->
+  {
+    tools_section.enable && (
+      <section>
+        <div class="container pb-12">
+          <div class="row">
+            <div class="mx-auto text-center lg:col-9 xl:col-7 pt-24">
+              {/* <div
+                class="section-heading-shape"
+                aria-label="shape"
+                data-aos="fade-up-sm"
+              /> */}
+              <h2 data-aos="fade-up-sm" data-aos-delay="50">
+                {markdownify(tools_section.title)}
+              </h2>
+            </div>
+            <div class="col-12" data-aos="fade-up-sm" data-aos-delay="150">
+              <div class="flex flex-wrap justify-center gap-5 pt-10 lg:gap-y-10">
+                {tools_section.tools.map(
+                  (tool: { name: string; logo: string }) => (
+                    <div class="group relative basis-[70px] rounded-xl py-4 shadow transition-all duration-300 hover:-translate-y-4 md:basis-[100px] md:py-5 lg:basis-[134px] lg:py-8">
+                      <img
+                        src={tool.logo}
+                        class="mx-auto block h-[36px] w-[36px] object-cover md:h-[56px] md:w-[56px]"
+                        alt="brand logo"
+                      />
+                      <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs opacity-0 transition-all duration-300 group-hover:-bottom-7 group-hover:opacity-100 sm:text-sm">
+                        {markdownify(tool.name)}
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+  <Testimonial testimonial={testimonial} />
+<FAQ variant="home" data={faqEntry.data} />
+  <CallToAction variant="home" data={ctaEntry.data} />
+</Base>

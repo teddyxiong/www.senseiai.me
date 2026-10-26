@@ -1,0 +1,110 @@
+---
+import { FaXmark } from "react-icons/fa6";
+---
+
+<div id="video-modal" class="overlay">
+  <div class="modal-body max-w-3xl xl:max-w-4xl">
+    <button class="modal-close-btn" modal-close>
+      <FaXmark />
+    </button>
+    <div
+      class="relative h-auto max-h-screen w-full flex-grow-0 overflow-hidden rounded bg-white shadow"
+    >
+      <iframe
+        class="aspect-video w-full bg-gray-50"
+        src=""
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Video Modal
+  document.addEventListener("astro:page-load", () => {
+    function showModal(modalElement: HTMLElement, src: string | null) {
+      const iframe = modalElement.querySelector(
+        "iframe"
+      ) as HTMLIFrameElement | null;
+      if (iframe && src) {
+        iframe.src = src;
+      }
+      modalElement.classList.add("active");
+
+      function closeModal(e: MouseEvent) {
+        const targetElement = e.target as HTMLElement;
+        const isInsideModal = !!targetElement.closest(".modal-body");
+        const isModalOpenButton = targetElement.hasAttribute("data-target");
+
+        if (!isModalOpenButton && !isInsideModal) {
+          if (src && iframe) {
+            iframe.src = "";
+          }
+          modalElement.classList.remove("active");
+          modalElement.style.marginRight = "0px";
+          document.body.style.paddingRight = "";
+          document.body.classList.remove("overflow-hidden");
+          window.removeEventListener("click", closeModal);
+        }
+      }
+
+      function handleKeydown(e: KeyboardEvent) {
+        if (e.key === "Escape") {
+          if (src && iframe) {
+            iframe.src = "";
+          }
+          modalElement.classList.remove("active");
+          modalElement.style.marginRight = "0px";
+          document.body.style.paddingRight = "";
+          document.body.classList.remove("overflow-hidden");
+          window.removeEventListener("click", closeModal);
+          window.removeEventListener("keydown", handleKeydown);
+        }
+      }
+
+      window.addEventListener("keydown", handleKeydown);
+      window.addEventListener("click", closeModal);
+    }
+
+    (function modal() {
+      const modalButtons = document.querySelectorAll(
+        "[data-modal]"
+      ) as NodeListOf<HTMLElement>;
+      modalButtons.forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault(); // Prevent the default behavior of anchor/button click
+          const target = this.getAttribute("data-target");
+          const src = this.getAttribute("data-src");
+          const modalElement = document.querySelector(
+            "#" + target
+          ) as HTMLElement | null;
+
+          const modalClose = modalElement?.querySelector(
+            "[modal-close]"
+          ) as HTMLElement | null;
+
+          modalClose?.addEventListener("click", function () {
+            if (!modalElement) {
+              return;
+            }
+            modalElement.classList.remove("active");
+            document.body.style.paddingRight = "0px";
+            modalElement.style.marginRight = "0px";
+            document.body.classList.remove("overflow-hidden");
+          });
+
+          if (modalElement) {
+            const scrollWidth =
+              window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = `${scrollWidth}px`;
+            modalElement.style.marginRight = `${scrollWidth}px`;
+            document.body.classList.add("overflow-hidden");
+            showModal(modalElement, src);
+          }
+        });
+      });
+    })();
+  });
+</script>

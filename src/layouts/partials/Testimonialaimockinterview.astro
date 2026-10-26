@@ -1,0 +1,92 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+const testimonialaimockinterview = await getEntry("sections", "testimonialaimockinterview");
+const data = testimonialaimockinterview?.data as {
+  enable: boolean;
+  title: string;
+  description: string;
+  testimonials: {
+    name: string;
+    designation: string;
+    avatar: string;
+    content: string;
+  }[];
+};
+const { enable, title, description, testimonials } = data;
+---
+
+{
+  enable && (
+    <section class="section pt-20">
+      <div class="container">
+        <div class="row">
+          <div class="mx-auto text-center lg:col-7" data-aos="fade-up-sm">
+            <div class="section-heading-shape" aria-label="shape" />
+            <h2 class="mb-6" set:html={markdownify(title)} />
+            <p set:html={markdownify(description)} />
+          </div>
+
+          <div class="col-12" data-aos="fade-up-sm" data-aos-delay="150">
+            <div class="bg-gradient-secondary relative mb-12 mt-5 rounded-t-3xl border px-[10%] pb-10 pt-20 sm:mt-10 md:mb-6">
+              <div class="swiper testimonial-slider">
+                <div class="swiper-wrapper text-center">
+                  {testimonials?.map((item: any) => (
+                    <div class="swiper-slide">
+                      <p class="text-lg" set:html={markdownify(item.content)} />
+                      <div class="mt-6">
+                        <div class="mx-auto mb-4 h-14 w-14 overflow-hidden rounded-full border-2 border-primary/50">
+                          <img src={item.avatar} alt={item.name} />
+                        </div>
+                        <h3 class="h5 mb-1" set:html={markdownify(item.name)} />
+                        <p class="text-dark/70">
+                          <i>{item.designation}</i>
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div class="testimonial-slider-pagination" />
+              <div class="absolute left-1/2 top-8 w-20 -translate-x-1/2 lg:w-auto">
+                {/* <img src="./images/quote.png" alt="icon" /> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  import { Swiper } from "swiper";
+  import "swiper/css";
+  import "swiper/css/pagination";
+  import { Autoplay, Pagination } from "swiper/modules";
+
+  // astro:page-load event is fired when the page is loaded
+  document.addEventListener("astro:page-load", () => {
+    new Swiper(".testimonial-slider", {
+      modules: [Pagination, Autoplay],
+      spaceBetween: 24,
+      loop: true,
+      centeredSlides: true,
+      autoplay: {
+        delay: 6000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".testimonial-slider-pagination",
+        type: "bullets",
+        clickable: true,
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 1,
+        },
+      },
+    });
+  });
+</script>

@@ -1,0 +1,68 @@
+---
+import config from "@/config/config.json";
+import dateFormat from "@/lib/utils/dateFormat";
+import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
+import { FaRegFolder } from "react-icons/fa";
+import { FaRegCalendar } from "react-icons/fa6";
+
+const { blog_folder } = config.settings;
+const { data } = Astro.props;
+const { title, image, date, categories,description,tags } = data.data;
+---
+
+<div class="md:col-6 xl:col-4">
+  <div class="rounded-xl border border-sky p-5 min-h-full flex flex-col">
+    <img class="mb-6 rounded-xl" src={image} alt={title} loading="lazy" decoding="async" />
+    <div>
+      <div class="mb-4 flex flex-wrap items-center gap-y-2 gap-x-4">
+        
+            <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
+            {
+              categories.map((category: string, index: number) => (
+        <div
+          class="inline-block rounded bg-secondary px-3 py-1 text-sm font-medium capitalize"
+        >
+          <li class="mr-4 inline-block">
+                <a href={`/categories/${slugify(category)}/`}>
+                  {humanize(category)}
+                  {/* {index !== categories.length - 1 && ","} */}
+                </a> </li>
+              </div>
+              ))
+            }
+         
+        <div class="inline-block">
+          <FaRegCalendar className="mr-1 -mt-1 inline-block" />
+          <span class="text-sm">{dateFormat(date)}</span>
+        </div>
+      </div>
+
+      <h3 class="min-[400px]:h4 mb-5">
+         <a
+          href={`/${blog_folder}/${data.slug}`}
+          class="hover:underline"
+          set:html={markdownify(title)}
+        /> 
+        
+      </h3>
+      <h5>
+        <a
+         href={`/${blog_folder}/${data.slug}`}
+         class="hover:underline"
+         set:html={markdownify(description)}
+       /> 
+     </h5> 
+      <!-- <div class="mt-auto">
+        tags:
+        <span class="text-sm">{tags.slice(0, 5)}</span>
+      </div>
+    </div> -->
+    </div>
+    
+     <!-- <div class="mt-auto">
+      <a href={`/${blog_folder}/${data.slug}`} class="btn btn-outline-sky"
+        >Read more <div class="sr-only">details</div></a
+      >
+    </div>  -->
+  </div>
+</div>

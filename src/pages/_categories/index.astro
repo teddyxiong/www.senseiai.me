@@ -1,0 +1,51 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { humanize } from "@/lib/utils/textConverter";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+const BLOG_FOLDER = "blog";
+
+// Get SEO info for category pages
+const categoryIndex = await getEntry("category", "-index");
+const categoryTitle = categoryIndex ? categoryIndex.data.title : "Categories";
+const categoryDescription = categoryIndex ? categoryIndex.data.description : "";
+const categoryMetaTitle = categoryIndex ? categoryIndex.data.meta_title : "Categories";
+const categoryImage = categoryIndex ? categoryIndex.data.image : "";
+
+const categories = await getTaxonomy(BLOG_FOLDER, "categories");
+const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
+
+---
+
+<Base 
+  title={categoryTitle}
+  meta_title={categoryMetaTitle}
+  description={categoryDescription}
+  image={categoryImage}
+>
+  <PageHeader title={categoryTitle} />
+  <section class="section">
+    <div class="container text-center">
+      <ul>
+        {
+          categories.map((category: string) => {
+            const count = allCategories.filter((c) => c === category).length;
+            return (
+              <li class="m-3 inline-block">
+                <a
+                  href={`/categories/${category}/`}
+                  class="block rounded bg-theme-light px-4 py-2 text-xl text-dark  "
+                >
+                  {humanize(category)}{" "}
+                  <span class="ml-2 rounded bg-body px-2 ">{count}</span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+</Base>

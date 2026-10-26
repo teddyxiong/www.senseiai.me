@@ -1,0 +1,33 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+const membershipIndex = await getEntry("membership", "-index");
+if (!membershipIndex) {
+  throw new Error("Membership data not found");
+}
+
+const { title, meta_title, description, image } = membershipIndex.data;
+const { Content } = await membershipIndex.render();
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <PageHeader title={title} />
+  <section class="section-sm">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="lg:col-10">
+          <div class="content content-membership">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

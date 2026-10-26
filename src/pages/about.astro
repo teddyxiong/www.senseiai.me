@@ -1,0 +1,313 @@
+---
+import TeamCard from "@/components/TeamCard.astro";
+import StarRatings from "@/helpers/StarRatings";
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import FAQ from "@/partials/FAQ.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+import "../styles/home-video-dialog.css";
+
+const about = await getEntry("about", "-index");
+const {
+  title,
+  description,
+  meta_title,
+  image,
+  hero_section,
+  counter_section,
+  feature_section,
+  team_section,
+} = about.data;
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+
+>
+  <PageHeader title={title} />
+
+  <!-- about -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="row justify-between">
+        <div class="lg:col-6" data-aos="fade-up-sm">
+          <div class="section-heading-shape" aria-label="shape"></div>
+          <h2 set:html={markdownify(hero_section.title)} />
+        </div>
+        <div class="lg:col-5" data-aos="fade-down-sm">
+          <p
+            class="mb-8 mt-4 lg:mt-11"
+            set:html={markdownify(hero_section.description)}
+          />
+
+          <!-- {
+            hero_section.button.enable && (
+              <a href={hero_section.button.link} class="btn btn-primary">
+                {hero_section.button.label}
+              </a>
+            ) 
+          }-->
+        </div>
+        <div class="col-12" data-aos="fade-up-sm" data-aos-delay="50">
+          <img
+            class="mt-10 rounded-lg md:mt-20 md:rounded-3xl"
+            src={hero_section.image}
+            alt="about"
+          />
+        </div>
+
+        {
+          counter_section.enable && (
+            <div class="col-12" data-aos="fade-up-sm" data-aos-delay="150">
+              <div class="bg-gradient-primary mt-10 rounded-2xl p-7 text-white md:mt-20 md:p-14">
+                <div class="row justify-between">
+                  <div class="self-center md:col-6">
+                    <div>
+                      <h2
+                        class="mb-5 text-inherit md:mb-7"
+                        set:html={markdownify(counter_section.title)}
+                      />
+                      <p
+                        class="text-inherit"
+                        set:html={markdownify(counter_section.description)}
+                      />
+                    </div>
+                  </div>
+                  <div class="md:col-auto">
+                    <div class="gradient gradient-to-right md:gradient-to-bottom max-md:gradient-horizontal md:gradient-vertical h-full max-md:py-6 max-md:after:via-[#ffffff4b] md:after:right-0" />
+                  </div>
+                  <div class="self-center md:col-5">
+                    <div class="flex flex-wrap gap-5 lg:justify-around">
+                      {counter_section.counters.map(
+                        (counter: { ratings: number; title: string }) => (
+                          <div class="inline-block">
+                            <div
+                              class="h2"
+                              set:html={markdownify(counter.ratings.toString())}
+                            />
+                            <span class="mb-5 flex gap-1 text-inherit text-yellow-400">
+                              <StarRatings
+                                client:load
+                                stars={counter.ratings}
+                              />
+                            </span>
+                            <p set:html={markdownify(counter.title)} />
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+  <!-- /.about -->
+
+  <!-- feature -->
+  {
+    feature_section.enable && (
+      <>
+        <section class="section section-gradient pb-0">
+          <div class="container">
+            <div class="row gy-4 items-center">
+              <div class="lg:col-6" data-aos="fade-up-sm">
+                <img
+                  class="w-full rounded-xl"
+                  src={feature_section.items[0].image}
+                  alt="feature"
+                />
+              </div>
+              <div class="lg:col-6">
+                <div class="lg:pl-8 xl:pl-16">
+                  <div
+                    class="section-heading-shape"
+                    data-aos="fade-up-sm"
+                    data-aos-delay="50"
+                    aria-label="shape"
+                  />
+                  <h2
+                    class="mb-6"
+                    data-aos="fade-up-sm"
+                    data-aos-delay="150"
+                    set:html={markdownify(feature_section.items[0].title)}
+                  />
+                  <p
+                    data-aos="fade-up-sm"
+                    data-aos-delay="150"
+                    set:html={markdownify(feature_section.items[0].description)}
+                  />
+
+                  <div class="mt-2">
+                    {feature_section.items[0].slider.map(
+                      (item: { title: string; percent: number }, index: number) => (
+                        <div class="mt-4"  data-aos="fade-up" data-aos-delay={index * 100}>
+                          <div class="flex justify-between">
+                            <span>
+                              {item.title}
+                            </span>
+                            <span>{item.percent}%</span>
+                          </div>
+                          <div class="mt-2 h-3 w-full rounded-full bg-primary/20">
+                            <div
+                               class={`bg-gradient-primary h-full w-0 rounded-full !transition-[width] !duration-1000 [&.aos-animate]:w-[${item.percent}%] aos-init  aos-animate`} 
+                               data-aos="fade-slide"
+                               data-aos-delay={150 + (index * 100)}
+                               data-aos-duratio="1000"
+                               data-aos-easing="ease-in-out"
+
+                            />
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="section pb-0">
+          <div class="container">
+            <div class="row items-center max-lg:gy-5 max-lg:flex-col-reverse">
+              <div class="lg:col-6">
+                <div
+                  class="section-heading-shape"
+                  aria-label="shape"
+                  data-aos="fade-up-sm"
+                />
+                <h2
+                  class="mb-6"
+                  data-aos="fade-up-sm"
+                  set:html={markdownify(feature_section.items[1].title)}
+                />
+                <p
+                  class="mb-8"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="50"
+                  set:html={markdownify(feature_section.items[1].description)}
+                />
+                {feature_section.items[1].button.enable && (
+                  <div data-aos="fade-up-sm" data-aos-delay="150">
+                    <a
+                      href={feature_section.items[1].button.link}
+                      class="btn btn-primary"
+                    >
+                      {feature_section.items[1].button.label}
+                    </a>
+                  </div>
+                )}
+              </div>
+              <div class="lg:col-6">
+                <div class="row g-3 items-center sm:g-4 xl:justify-normal [&>div:first-child]:sm:ml-auto [&>div:last-child]:lg:translate-y-16 [&>div:nth-child(2)]:lg:translate-y-16 [&>div]:xl:!translate-y-0">
+                  <div
+                    
+                    data-aos="fade-right-sm"
+                  >
+                    <img
+                      class="rounded-lg shadow max-sm:w-full"
+                      src={feature_section.items[1].image[0]}
+                      alt="feature"
+                    />
+                  </div>
+                  {/* <div
+                    class="col-6 md:col-5 lg:col-6 xl:col-5"
+                    data-aos="fade-right-sm"
+                    data-aos-delay="50"
+                  >
+                    <img
+                      class="rounded-lg shadow max-sm:w-full"
+                      src={feature_section.items[1].image[1]}
+                      alt="feature"
+                    />
+                  </div>
+                  <div
+                    class="col-6 md:col-5 lg:col-6 xl:col-5"
+                    data-aos="fade-left-sm"
+                    data-aos-delay="100"
+                  >
+                    <img
+                      class="rounded-lg shadow max-sm:w-full"
+                      src={feature_section.items[1].image[2]}
+                      alt="feature"
+                    />
+                  </div>
+                  <div
+                    class="col-6 md:col-5 lg:col-6 xl:col-5"
+                    data-aos="fade-left-sm"
+                    data-aos-delay="150"
+                  >
+                    <img
+                      class="rounded-lg shadow max-sm:w-full"
+                      src={feature_section.items[1].image[3]}
+                      alt="feature"
+                    />
+                  </div> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    )
+  }
+  <!-- /.feature -->
+
+  <!-- <div class="container">
+    <div class="row">
+      <div class="mx-auto text-center lg:col-6">
+        <div
+          class="section-heading-shape"
+          aria-label="shape"
+          data-aos="fade-up-sm"
+        />
+        <h2
+          data-aos="fade-up-sm"
+          data-aos-delay="50"
+          
+        />
+      </div>
+    </div> -->
+  <!-- our team -->
+  <!-- {
+    team_section.enable && (
+      <section class="section" id="team-member">
+        <div class="container">
+          <div class="row">
+            <div class="mx-auto text-center lg:col-6">
+              <div
+                class="section-heading-shape"
+                aria-label="shape"
+                data-aos="fade-up-sm"
+              />
+              <h2
+                data-aos="fade-up-sm"
+                data-aos-delay="50"
+                set:html={markdownify(team_section.title)}
+              />
+            </div>
+          </div>
+          <div class="row gy-4 pt-10" data-aos="fade-in" data-aos-delay="150">
+            {team_section.members.map((member: any) => (
+              <TeamCard member={member} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  } -->
+  <!-- /.our team -->
+
+  <FAQ variant="home" videoDialog />
+  <CallToAction />
+</Base>
+
+<script is:inline type="module" src="/js/home-video-dialog.js"></script>

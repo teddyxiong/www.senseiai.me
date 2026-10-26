@@ -1,0 +1,189 @@
+{
+  "$ref": "#/definitions/lynccontainer",
+  "definitions": {
+    "lynccontainer": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "meta_title": {
+          "type": "string"
+        },
+        "meta_description": {
+          "type": "string"
+        },
+        "last_updated": {
+          "type": "string"
+        },
+        "current_version": {
+          "type": "string"
+        },
+        "canonical": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "size_label": {
+          "type": "string"
+        },
+        "download_icon": {
+          "type": "string"
+        },
+        "check_icon": {
+          "type": "string"
+        },
+        "system_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "windows_guide": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tip_label": {
+              "type": "string"
+            },
+            "tip_question": {
+              "type": "string"
+            },
+            "tip_assurance": {
+              "type": "string"
+            },
+            "tip_reason": {
+              "type": "string"
+            },
+            "tip_action": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
+            },
+            "image_alt": {
+              "type": "string"
+            },
+            "video_url": {
+              "type": "string"
+            },
+            "video_title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "tip_label",
+            "tip_question",
+            "tip_assurance",
+            "tip_reason",
+            "tip_action",
+            "image",
+            "image_alt",
+            "video_url",
+            "video_title"
+          ],
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "image": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "file_size": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "button_text": {
+                "type": "string"
+              },
+              "download_notice": {
+                "type": "string"
+              },
+              "linux_packages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "file_size": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "button_text": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "video_url": {
+                "type": "string"
+              },
+              "tips": {
+                "type": "string"
+              },
+              "tips2": {
+                "type": "string"
+              },
+              "teminal": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "image",
+              "name",
+              "description",
+              "file_size",
+              "url"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "items"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

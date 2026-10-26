@@ -1,0 +1,153 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+type UndetectableItem = {
+  title?: string;
+  description?: string;
+  image?: string;
+};
+
+const { undetectable } = Astro.props as {
+  undetectable?: {
+    enable?: boolean;
+    title?: string;
+    description?: string;
+    image?: string;
+    items?: Record<string, UndetectableItem>;
+    background?: Array<{ image?: string }>;
+  };
+};
+
+const items = Object.entries(undetectable?.items || {})
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([key, item]) => ({ key, item }));
+
+const bgBlue = undetectable?.background?.[0]?.image;
+const bgGray = undetectable?.background?.[1]?.image;
+
+const rawTitle = undetectable?.title || "";
+
+const normalizeItemTitle = (title: string) => title.replace(/Proofh\b/g, "Proof");
+---
+
+{
+  undetectable?.enable && (
+    <section class="section pt-25 pb-25 overflow-hidden">
+      <div class="container">
+        <div class="row">
+          <div
+            class="mx-auto text-center lg:col-12 xl:col-12"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+          >
+            <div class="mb-2 h-10" aria-hidden="true"></div>
+            <h2
+              class="mb-4 mx-auto text-center"
+              style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            >
+              <span set:html={markdownify(rawTitle)} />
+            </h2>
+            <p
+              class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+              style="max-width: 1050px;"
+              set:html={markdownify(undetectable.description || "")}
+            />
+            {/* {
+              undetectable.image && (
+                <div
+                  class="mx-auto mt-[clamp(40px,7vw,75px)] w-full"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="200"
+                >
+                  <img
+                    src={undetectable.image}
+                    alt=""
+                    class="block w-full"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              )
+            } */}
+          </div>
+        </div>
+
+        {items.length > 0 && (
+          <div class="row pt-12 md:pt-16" data-aos="fade-up-sm" data-aos-delay="250">
+            <div class="col-12">
+              <div class="grid gap-6 md:grid-cols-2">
+                {items.map(({ key, item }, idx) => {
+                  const title = normalizeItemTitle(item.title || "");
+                  const bgImage = idx === 0 ? bgBlue : bgGray;
+                  const isTextBelowImage = key === "item1" || key === "item4";
+                  const cardHeight =
+                    idx < 2
+                      ? "height:clamp(360px,37.42vw,455px);"
+                      : "height:clamp(460px,46.05vw,560px);";
+                  return (
+                    <div
+                      class="relative text-dark"
+                      style={cardHeight}
+                    >
+                      {bgImage ? (
+                        <img
+                          src={bgImage}
+                          alt=""
+                          class="block h-full w-full"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        <div class="w-full rounded-[28px] bg-white" style="aspect-ratio: 1 / 1;" />
+                      )}
+
+                      <div class="absolute inset-0 flex h-full w-full flex-col p-[30px] overflow-hidden rounded-[28px]">
+                        {isTextBelowImage ? (
+                          <>
+                            {item.image && (
+                              <div class={key === "item1" ? "ml-[-30px]" : ""}>
+                                <img
+                                  src={item.image}
+                                  alt=""
+                                  class="block"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              </div>
+                            )}
+                            <div class="mt-auto">
+                              <h3 class="mb-3 text-2xl font-bold text-inherit" set:html={markdownify(title)} />
+                              <p class="text-base font-medium text-inherit/80" set:html={markdownify(item.description || "")} />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div>
+                              <h3 class="mb-3 text-2xl font-bold text-inherit" set:html={markdownify(title)} />
+                              <p class="text-base font-medium text-inherit/80" set:html={markdownify(item.description || "")} />
+                            </div>
+                            {item.image && (
+                              <div class={key === "item2" ? "mt-auto mb-[-30px]" : "mt-auto"}>
+                                <img
+                                  src={item.image}
+                                  alt=""
+                                  class="block"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

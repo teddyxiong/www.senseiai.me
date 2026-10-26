@@ -1,0 +1,87 @@
+---
+import Base from "@/layouts/Base.astro";
+---
+
+<Base
+  title="Preparing secure checkout"
+  description="Preparing your secure payment session."
+  hideHeader
+  hideFooter
+  noindex
+>
+  <main class="flex min-h-screen items-center justify-center bg-[#F8F9FB] px-4 py-12">
+    <section class="w-full max-w-md rounded-xl border border-[#E2E4E9] bg-white px-6 py-10 text-center shadow-sm">
+      <div
+        class="mx-auto mb-5 h-9 w-9 animate-spin rounded-full border-4 border-[#DCE6F5] border-t-[#315FBD]"
+        aria-hidden="true"
+      ></div>
+      <h1 class="mb-2 text-2xl font-bold text-dark">Preparing your secure checkout</h1>
+      <p id="checkout-status" class="text-base text-dark/75" aria-live="polite">
+        You will be redirected to the payment provider shortly.
+      </p>
+      <div id="checkout-actions" class="mt-6 hidden items-center justify-center gap-4">
+        <button
+          id="retry-checkout"
+          type="button"
+          class="rounded-md bg-[#315FBD] px-4 py-2 text-sm font-semibold text-white hover:bg-[#264D99]"
+        >
+          Try again
+        </button>
+        <a
+          id="return-to-pricing"
+          href="/pricing/"
+          class="text-sm font-semibold text-[#315FBD] hover:underline"
+        >
+          Return to pricing
+        </a>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  import {
+    getPricingCheckoutReturnTo,
+    resumePricingCheckout,
+  } from "@/lib/account/pricingCheckout";
+
+  const returnTo = getPricingCheckoutReturnTo() ?? "/pricing/";
+  const actions = document.querySelector<HTMLElement>("#checkout-actions");
+  const retryButton = document.querySelector<HTMLButtonElement>("#retry-checkout");
+  const returnLink = document.querySelector<HTMLAnchorElement>("#return-to-pricing");
+  const status = document.querySelector<HTMLElement>("#checkout-status");
+  if (returnLink) returnLink.href = returnTo;
+
+  const continueCheckout = () => {
+    actions?.classList.add("hidden");
+    actions?.classList.remove("flex");
+    if (status) status.textContent = "You will be redirected to the payment provider shortly.";
+
+    const checkout = resumePricingCheckout();
+    if (!checkout) {
+      window.location.replace(returnTo);
+      return;
+    }
+
+    void checkout.then((result) => {
+      if (result.kind === "success" || result.kind === "redirecting") return;
+      if (status) {
+        status.textContent = result.kind === "verificationRequired"
+          ? "Verify your email before purchasing."
+          : "Payment is temporarily unavailable. Please return to pricing and try again.";
+      }
+      if (retryButton) retryButton.hidden = result.kind === "verificationRequired";
+      actions?.classList.remove("hidden");
+      actions?.classList.add("flex");
+    });
+  };
+
+  retryButton?.addEventListener("click", continueCheckout);
+  continueCheckout();
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted && !getPricingCheckoutReturnTo()) {
+      window.location.replace(returnTo);
+    }
+  });
+</script>

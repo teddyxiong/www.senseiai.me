@@ -1,0 +1,58 @@
+[
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "icon": "/images/platforms/zoom.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/IXwMPIPaxEc?si=ZmR6j54p8RB9bLVP"
+  } ,
+  {
+    "id": "google-meet",
+    "name": "Google Meet",
+    "icon": "/images/platforms/google.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/TWt5IB2aVdE?si=PGfT8wRU67anPFw5"
+  },
+  {
+    "id": "Lark",
+    "name": "Lark",
+    "icon": "/images/platforms/lark.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/G86iSoAka7E?si=t3uquAV1oGr298uN"
+  },
+  {
+    "id": "Cisco Webex",
+    "name": "Cisco Webex",
+    "icon": "/images/platforms/webex.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/IYktavXfNZA?si=wldiKEyBQ0j6hyFj"
+  },
+  {
+    "id": "coderpad",
+    "name": "CoderPad",
+    "icon": "/images/platforms/coderpad.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/ZSHaq09Mo74?si=9NoElzkHxFVvA_In"
+  },
+  {
+    "id": "codesignal",
+    "name": "CodeSignal",
+    "icon": "/images/platforms/codesignal.png",
+    "status": "Undetectable",
+    "video": ""
+  },
+  {
+    "id": "hackerrank",
+    "name": "HackerRank",
+    "icon": "/images/platforms/hackerrank.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/qHJxJ2IdAa8?si=orozUsNoeGVmIfMo"
+  },
+  {
+    "id": "microsoft-teams",
+    "name": "Microsoft Teams",
+    "icon": "/images/platforms/teams.png",
+    "status": "Undetectable",
+    "video": "https://www.youtube.com/embed/xN0lU4SbeNo?si=GrHxiRZk-kmenohr"
+  }
+]

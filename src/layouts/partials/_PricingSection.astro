@@ -1,0 +1,282 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { pricing, showLifetime = false } = Astro.props;
+const { enable, title, pricing_tabs, pricing_tables } = pricing;
+
+const oneTimeTabLabel = pricing_tabs?.one_time ?? pricing_tabs?.monthly ?? "One-time payment";
+const subscriptionTabLabel = pricing_tabs?.subscription ?? pricing_tabs?.annually ?? "Subscription";
+
+const resolvedTables = (pricing_tables ?? []).map((table: any) => {
+  const normalizedTitle = String(table?.title || "").toLowerCase();
+  const isLifetime = normalizedTitle.includes("lifetime");
+  const isFree = normalizedTitle.includes("free");
+  const switchable = table?.switchable ?? !(isLifetime || isFree);
+  const fixedPrice = table?.fixed_price ?? table?.annually_price ?? table?.monthly_price ?? 0;
+  const subscriptionPrice = table?.billing?.subscription?.price ?? table?.annually_price ?? fixedPrice;
+  const oneTimePrice = table?.billing?.one_time?.price ?? table?.monthly_price ?? fixedPrice;
+  const fixedLink = table?.button?.link ?? "#";
+  const subscriptionLink = switchable ? (table?.billing?.subscription?.link ?? "#") : fixedLink;
+  const oneTimeLink = switchable ? (table?.billing?.one_time?.link ?? "#") : fixedLink;
+  const defaultPrice = switchable ? subscriptionPrice : fixedPrice;
+  const defaultLink = switchable ? subscriptionLink : fixedLink;
+
+  return {
+    ...table,
+    isLifetime,
+    switchable,
+    fixedPrice,
+    subscriptionPrice,
+    oneTimePrice,
+    subscriptionLink,
+    oneTimeLink,
+    defaultPrice,
+    defaultLink,
+  };
+});
+---
+
+{
+  enable && (
+    <section class={`section section-gradient pb-0 ${showLifetime ? "pt-0" : ""}`}>
+      <div class="container">
+        {!showLifetime && (
+        <div class="row justify-center text-center">
+          <div class="lg:col-7" data-aos="fade-up-sm">
+            <div class="section-heading-shape" aria-label="shape" />
+            <h2 class="mb-6" set:html={markdownify(title)} />
+          </div>
+        </div>
+        )}
+
+        <div class="row gy-5 justify-center">
+          {!showLifetime && (
+            <div
+              class="sticky-pricing-type sticky-element col-12"
+              data-aos="fade-up-sm"
+              data-aos-delay="50"
+            >
+              <div class="pricing-switcher-wrapper bg-white sm:rounded-lg">
+              <div class="rounded-full border border-theme-dark/10">
+                <div class="pricing-switcher">
+                  <div class="fieldset">
+                    <input
+                      type="radio"
+                      name="group-a"
+                      class="toggler-switcher-m"
+                      value="one_time"
+                      id="one-time-1"
+                    />
+                    <label
+                      for="one-time-1"
+                      set:html={markdownify(oneTimeTabLabel)}
+                    />
+                    <input
+                      type="radio"
+                      name="group-a"
+                      class="toggler-switcher-y"
+                      value="subscription"
+                      id="subscription-1"
+                      checked
+                    />
+                    <label
+                      for="subscription-1"
+                      set:html={markdownify(subscriptionTabLabel)}
+                    />
+                    <span class="switch" />
+                  </div>
+                </div>
+              </div>
+             
+                <span class="ml-2 inline-block font-secondary text-2xl font-bold text-red-500">
+                  Cancel Anytime
+                </span>
+              
+            </div>
+            </div>
+          )}
+          {resolvedTables?.map((table: any) => {
+            if (showLifetime && !table.isLifetime) return null;
+            return (
+              <div class="col-12" data-aos="fade-in" data-aos-delay="100">
+                <div
+                  class={`${table.popular && "bg-gradient-primary text-white border-none"} text-dark relative mx-px overflow-hidden rounded-3xl px-6 sm:mx-0 sm:px-10 border border-primary/20`}
+                >
+                  <div class="row">
+                    <div class="lg:col-6">
+                      <div
+                        class={`gradient ${table.popular ? "gradient-light " : "gradient-sky"} max-lg:gradient-to-center lg:gradient-to-bottom max-lg:gradient-horizontal lg:gradient-vertical py-10 text-center after:right-0 max-lg:after:bottom-0 lg:py-20 lg:after:from-70%`}
+                      >
+                        <h3
+                          class="mb-2 text-inherit"
+                          set:html={markdownify(table.title)}
+                        />
+                        <p
+                          class="text-inherit/30 mb-5"
+                          set:html={markdownify(table.description)}
+                        />
+                        <div
+                          class={`h1 bottom-line-shape mb-8 pb-2 font-secondary after:left-1/2 after:-translate-x-1/2 ${table.popular ? "after:bg-white" : "after:bg-primary"}`}
+                        >
+                          {table.prefix}
+                          <span
+                            class="data-count"
+                          data-fixed={table.switchable ? "false" : "true"}
+                          data-price-one-time={table.switchable ? table.oneTimePrice : undefined}
+                          data-price-subscription={table.switchable ? table.subscriptionPrice : undefined}
+                          >
+                          {table.defaultPrice}
+                          </span>
+                      </div>
+                        {table.button.enable && (
+                          <a
+                            href={table.defaultLink}
+                            class={`btn ${table.popular ? "btn-white" : "btn-outline-sky"}`}
+                            data-switchable-button={table.switchable ? "true" : "false"}
+                            data-link-one-time={table.switchable ? table.oneTimeLink : undefined}
+                            data-link-subscription={table.switchable ? table.subscriptionLink : undefined}
+                            data-gads-conv="pricing-cta"
+                            data-gads-label="7DLwCJHa0qQcENu29LVD"
+                          >
+                            {table.button.label}
+                          </a>
+                        )}
+                        {(() => {
+                          const aiModels = table.ai_models?.items?.filter(
+                            (model: { name: string; logo: string }) => model.name && model.logo
+                          );
+                          const title = table.ai_models?.title;
+                          if (!aiModels?.length || !title) return null;
+                          return (
+                            <div class="mt-6 flex flex-col items-center gap-3">
+                              <div class="text-xs font-semibold uppercase tracking-wide text-inherit/70">
+                                {title}
+                              </div>
+                              <ul class="flex flex-col items-start gap-2">
+                                {aiModels.map((model: { name: string; logo: string }) => (
+                                  <li class="flex items-center gap-2 text-sm text-inherit">
+                                    <img src={model.logo} alt={model.name} class="h-5 w-5 object-contain" loading="lazy" />
+                                    <span>{model.name}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                    <div class="lg:col-6">
+                      <div class="py-10 lg:py-20">
+                        <p
+                          class="mb-8"
+                          set:html={markdownify(table?.features.title)}
+                        />
+                        <ul
+                          class={`list list-check mb-8 ${table.popular && "list-color-white"}`}
+                        >
+                          {table.features?.list.map((l: string) => (
+                            <li set:html={markdownify(l)} />
+                          ))}
+                        </ul>
+                        {table.features?.button.enable && table.popular && (
+                          <a
+                            href={table.features.button.link}
+                            class="btn btn-outline-white"
+                            set:html={markdownify(table.features.button.label)}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {table?.popular && (
+                    <div class="absolute left-[-55px] top-[15px] mb-0 w-[200px] rotate-[-25deg] bg-secondary px-4 py-1 text-center text-[10px] font-bold uppercase tracking-[3px] text-dark sm:-left-10 sm:top-10 sm:-rotate-45 sm:text-sm sm:tracking-[6px]">
+                      POPULAR
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  (function() {
+    setupPricingSwitcher();
+
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        setupPricingSwitcher();
+      }
+    });
+
+    window.addEventListener('load', function() {
+      setupPricingSwitcher();
+    });
+
+    function setupPricingSwitcher() {
+      const oneTimeInput = document.getElementById('one-time-1') as HTMLInputElement | null;
+      const subscriptionInput = document.getElementById('subscription-1') as HTMLInputElement | null;
+      const oneTimeLabel = document.querySelector('label[for="one-time-1"]') as HTMLLabelElement | null;
+      const subscriptionLabel = document.querySelector('label[for="subscription-1"]') as HTMLLabelElement | null;
+
+      if (!oneTimeInput || !subscriptionInput || !oneTimeLabel || !subscriptionLabel) {
+        return;
+      }
+
+      if (!oneTimeInput.checked && !subscriptionInput.checked) {
+        subscriptionInput.checked = true;
+      }
+
+      updatePricingByMode(oneTimeInput.checked ? 'one_time' : 'subscription');
+
+      (oneTimeLabel as HTMLElement).onclick = function() {
+        oneTimeInput.checked = true;
+        subscriptionInput.checked = false;
+        updatePricingByMode('one_time');
+      };
+
+      (subscriptionLabel as HTMLElement).onclick = function() {
+        subscriptionInput.checked = true;
+        oneTimeInput.checked = false;
+        updatePricingByMode('subscription');
+      };
+
+      oneTimeInput.onclick = function() {
+        updatePricingByMode(oneTimeInput.checked ? 'one_time' : 'subscription');
+      };
+
+      subscriptionInput.onclick = function() {
+        updatePricingByMode(oneTimeInput.checked ? 'one_time' : 'subscription');
+      };
+    }
+
+    function updatePricingByMode(mode: "one_time" | "subscription") {
+      const priceElements = document.querySelectorAll(".data-count");
+      priceElements.forEach((element) => {
+        const htmlElement = element as HTMLElement;
+        if (htmlElement.dataset.fixed === "true") return;
+        const finalValue =
+          mode === "one_time"
+            ? htmlElement.dataset.priceOneTime
+            : htmlElement.dataset.priceSubscription;
+        if (finalValue !== undefined) {
+          htmlElement.textContent = finalValue;
+        }
+      });
+
+      const buttonElements = document.querySelectorAll('[data-switchable-button="true"]');
+      buttonElements.forEach((button) => {
+        const anchor = button as HTMLAnchorElement;
+        const nextLink =
+          mode === "one_time"
+            ? anchor.dataset.linkOneTime
+            : anchor.dataset.linkSubscription;
+        anchor.href = nextLink || "#";
+      });
+    }
+  })();
+</script>

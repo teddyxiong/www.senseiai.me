@@ -1,0 +1,266 @@
+---
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+import Notice from "@/layouts/shortcodes/Notice";
+
+const downloadsIndex = await getEntry("downloads", "-index");
+if (!downloadsIndex) {
+  throw new Error("Downloads data not found");
+}
+const { 
+  meta_title, 
+  meta_description, 
+  title, 
+  description, 
+  last_updated, 
+  current_version, 
+  items,
+} = downloadsIndex.data;
+---
+
+<Base title={meta_title} description={meta_description}>
+  <PageHeader title={title} />
+  
+
+
+  
+  <!-- Downloads Section -->
+  <section class="section py-0 mt-10 mb-10">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="mx-auto text-center lg:col-12">
+          <!-- <div
+            class="section-heading-shape"
+            aria-label="shape"
+            data-aos="fade-up-sm"
+          >
+          </div> -->
+          <!-- <h2
+            class="mb-6"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(title)}
+          /> -->
+          
+          
+          <!-- Version Info -->
+          <!-- <div class="mb-12 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+            {current_version && (
+              <div class="flex items-center gap-2">
+                <span class="font-semibold">Current Version:</span>
+                <span class="rounded-full bg-primary/10 px-3 py-1 text-primary">{current_version}</span>
+              </div>
+            )}
+            {last_updated && (
+              <div class="flex items-center gap-2">
+                <span class="font-semibold">Last Updated:</span>
+                <span>{last_updated}</span>
+              </div>
+            )}
+          </div> -->
+        </div>
+
+        <!-- Download Tabs -->
+        <div id="downloadsTabs" class="col-12">
+          <!-- Tab Headers: show image and name -->
+          <div class="flex flex-wrap justify-center gap-3 mb" role="tablist" aria-label="Download platforms">
+            {items.map((item: any, idx: number) => (
+              <button
+                class={`relative inline-flex items-center gap-2 rounded-t-[12px] border-2 px-6 py-3 text-base font-medium transition-shadow duration-300 ease-in-out ${idx === 0 ? 'border-primary bg-primary/10 text-primary shadow-md hover:shadow-lg after:content-[""] after:absolute after:left-0 after:-bottom-0 after:h-[2px] after:w-full after:bg-primary' : 'border-purple-200 bg-white text-dark hover:shadow-md'} tab-btn`}
+                data-index={idx}
+                aria-selected={idx === 0 ? 'true' : 'false'}
+                role="tab"
+              >
+                <img src={item.image} alt={item.name} class="h-6 w-6 object-contain" />
+                <span>{item.name}</span>
+              </button>
+            ))}
+          </div>
+          <div class="border-b-4 border-primary mb-6"></div>
+
+          <!-- Tab Panels: left/right layout -->
+          <div class="space-y-8">
+            {items.map((item: any, idx: number) => (
+              <div class={`tab-panel ${idx === 0 ? '' : 'hidden'}`} data-panel-index={idx} role="tabpanel">
+                <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                  <!-- Left column: download button, tips and teminal code -->
+                  <div>
+                    <div class="mb-8">
+                      <div class="flex items-center gap-3">
+                        <img src={item.image} alt={item.name} class="h-8 w-8 object-contain" />
+                        <div>
+                          <h3 class="text-2xl font-semibold text-dark">For {item.name} </h3>
+                          <p class="text-sm text-gray-600">{item.description}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* <div class="mb-4 text-xs text-gray-500">
+                      <span class="font-medium">Size:</span> {item.file_size}
+                    </div> */}
+
+                    <div class="mb-6">
+                      <a
+                        href={item.url}
+                        class="btn btn-primary block mx-auto w-60 sm:w-66 transition-all duration-300 bg-primary text-white hover:bg-primary hover:text-white download-btn text-center"
+                        download
+                      >
+                        Download({item.file_size})
+                      </a>
+                    </div>
+
+                   <div class="mb-6 rounded-md bg-gray-50 p-4 text-sm text-gray-700 leading-relaxed">
+                       <Notice type="note" className="mt-2"><span class="leading-relaxed" set:html={item.tips}></span>
+                      
+                        
+                      </Notice>
+                      <Notice type="note">{item.tips2 && item.tips2.trim() !== '' ? (
+                          <div class="text-sm text-gray-700 leading-relaxed" set:html={item.tips2}></div>
+                        ) : null}</Notice>
+                    </div>
+
+                    {item.teminal && item.teminal.trim() !== '' ? (
+                      <div>
+                        <h4 class="mb-1 text-sm font-semibold text-dark">Terminal # Run this command in the terminal to fix the issue.
+                        </h4>
+                        <pre class="rounded-md bg-gray-800 px-3 py-2 my-2 text-sm text-gray-50 overflow-auto whitespace-normal">
+                          <code class="block leading-tight m-0">
+                            {item.teminal?.trim().split('\n').filter((l: string) => l.trim().length > 0).map((line: string) => (
+                              <div class="flex items-center whitespace-nowrap leading-tight my-0 py-0">
+                                <span class="flex-1">{line}</span>
+                                <button class="copy-btn shrink-0 text-xs bg-gray-700 hover:bg-gray-600 text-gray-100 rounded px-2 py-0 h-4" data-copy={line} aria-label="Copy this command" title="Copy">Copy</button>
+                              </div>
+                            ))}
+                          </code>
+                        </pre>
+                        <script is:inline>
+                          document.addEventListener('click', (e) => {
+                            const btn = e.target.closest('button.copy-btn');
+                            if (!btn) return;
+                            const text = btn.getAttribute('data-copy') || '';
+                            if (!text) return;
+                            const updateBtn = (label) => { try { btn.textContent = label; } catch {} };
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                              navigator.clipboard.writeText(text).then(() => {
+                                updateBtn('Copyed!');
+                                setTimeout(() => updateBtn('Copy'), 1500);
+                              }).catch(() => {
+                                updateBtn('Copy failed');
+                                setTimeout(() => updateBtn('Copy'), 1500);
+                              });
+                            } else {
+                              const textarea = document.createElement('textarea');
+                              textarea.value = text;
+                              textarea.style.position = 'fixed';
+                              textarea.style.opacity = '0';
+                              document.body.appendChild(textarea);
+                              textarea.focus();
+                              textarea.select();
+                              try {
+                                document.execCommand('copy');
+                                updateBtn('Copied');
+                              } catch {
+                                updateBtn('Copy failed');
+                              } finally {
+                                document.body.removeChild(textarea);
+                                setTimeout(() => updateBtn('Copy'), 1500);
+                              }
+                            }
+                          });
+                        </script>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <!-- Right column: embedded video -->
+                  <div>
+                    <div class="relative w-full overflow-hidden rounded-lg h-[315px] md:h-[360px] border border-gray-200">
+                      <iframe
+                        src={item.video_url}
+                        title={`${item.name} Installation Video`}
+                        class="absolute inset-0 h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Tabs interaction script -->
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const root = document.getElementById('downloadsTabs');
+              if (!root) return;
+              const tabs = root.querySelectorAll('.tab-btn');
+              const panels = root.querySelectorAll('.tab-panel');
+              tabs.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                  const idx = btn.getAttribute('data-index');
+                  tabs.forEach((b) => {
+                    b.classList.remove('border-primary', 'bg-primary/10', 'text-primary', 'shadow-md', 'after:content-[""]', 'after:absolute', 'after:left-0', 'after:-bottom-2', 'after:h-[2px]', 'after:w-full', 'after:bg-primary');
+                    b.classList.add('border-purple-200', 'bg-white', 'text-dark', 'hover:shadow-sm');
+                    b.setAttribute('aria-selected', 'false');
+                  });
+                  btn.classList.add('border-primary', 'bg-primary/10', 'text-primary', 'shadow-md', 'after:content-[""]', 'after:absolute', 'after:left-0', 'after:-bottom-2', 'after:h-[2px]', 'after:w-full', 'after:bg-primary');
+                  btn.classList.remove('border-purple-200', 'bg-white', 'text-dark', 'hover:shadow-sm');
+                  btn.setAttribute('aria-selected', 'true');
+                  panels.forEach((p) => {
+                    if (p.getAttribute('data-panel-index') === idx) {
+                      p.classList.remove('hidden');
+                    } else {
+                      p.classList.add('hidden');
+                    }
+                  });
+                });
+              });
+            });
+          </script>
+        </div>
+        
+        <!-- {description && (
+            <p
+              class="mb-8 text-lg text-dark"
+              // data-aos="fade-up-sm"
+              // data-aos-delay="100"
+              set:html={markdownify(description)}
+            />
+          )} -->
+          
+        <!-- Additional Info -->
+        <!-- <div class="col-12">
+          <div class="mx-auto mt-12 max-w-4xl text-center">
+            <div class="rounded-lg bg-gray-50 p-6">
+              <h3 class="mb-4 text-lg font-semibold">System Requirements</h3>
+              <div class="grid grid-cols-1 gap-4 text-sm text-gray-600 md:grid-cols-2 lg:grid-cols-3">
+                <div>
+                  <strong>Mac Intel:</strong><br>
+                  macOS 10.14 or later
+                </div>
+                <div>
+                  <strong>Mac Apple Silicon:</strong><br>
+                  macOS 11.0 or later
+                </div>
+                <div>
+                  <strong>Windows:</strong><br>
+                  Windows 10/11 (64-bit)
+                </div>
+                <div>
+                  <strong>Linux:</strong><br>
+                  Ubuntu 18.04+ or equivalent
+                </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+  <!-- /.Downloads Section -->
+
+</Base>
+            

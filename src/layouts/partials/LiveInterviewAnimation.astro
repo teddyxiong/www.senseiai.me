@@ -1,0 +1,361 @@
+<div
+  class="live-interview-animation"
+  data-live-interview-animation
+  data-capability-animation
+  aria-hidden="true"
+>
+  <img
+    class="live-interview-layer live-interview-background"
+    src="/images/liveinterview/background.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    loading="eager"
+    fetchpriority="high"
+    decoding="sync"
+  />
+
+  <video
+    class="live-interview-media live-interview-people"
+    data-src="/images/liveinterview/people.webm"
+    width="1290"
+    height="500"
+    muted
+    loop
+    playsinline
+    preload="none"
+    data-people-video></video>
+
+  <img
+    class="live-interview-layer live-interview-overlay"
+    data-src="/images/liveinterview/overlay.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    decoding="async"
+  />
+
+  <img
+    class="live-interview-layer live-interview-bubble live-interview-listening"
+    data-src="/images/liveinterview/listening.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    decoding="async"
+    data-listening
+  />
+
+  <img
+    class="live-interview-layer live-interview-bubble live-interview-question"
+    data-src="/images/liveinterview/questionbubble.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    decoding="async"
+    data-question
+  />
+
+  <img
+    class="live-interview-layer live-interview-bubble live-interview-answer"
+    data-src="/images/liveinterview/answerbubble.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    decoding="async"
+    data-answer
+  />
+</div>
+
+<script>
+  function startLiveInterviewAnimation(root: HTMLElement) {
+    if (root.dataset.liveInterviewAnimationReady === "true") return;
+    root.dataset.liveInterviewAnimationReady = "true";
+
+    const video = root.querySelector<HTMLVideoElement>("[data-people-video]");
+
+    const listening = root.querySelector<HTMLElement>("[data-listening]");
+
+    const question = root.querySelector<HTMLElement>("[data-question]");
+
+    const answer = root.querySelector<HTMLElement>("[data-answer]");
+
+    if (!video || !listening || !question || !answer) {
+      return;
+    }
+
+    const LISTENING_IN = 0.5;
+    const LISTENING_OUT = 2.0;
+    const QUESTION_IN = 2.5;
+    const ANSWER_IN = 4.3;
+
+    const setVisible = (element: HTMLElement, visible: boolean) => {
+      element.classList.toggle("is-visible", visible);
+    };
+
+    const clearBubbles = () => {
+      setVisible(listening, false);
+      setVisible(question, false);
+      setVisible(answer, false);
+    };
+
+    const syncBubbles = () => {
+      if (!isSelected) {
+        clearBubbles();
+        return;
+      }
+      const time = video.currentTime;
+
+      setVisible(listening, time >= LISTENING_IN && time < LISTENING_OUT);
+
+      setVisible(question, time >= QUESTION_IN);
+
+      setVisible(answer, time >= ANSWER_IN);
+    };
+
+    let isVisible = false;
+    let isSelected = root.classList.contains("is-active");
+    let loadScheduled = false;
+    let animationAssetsReady = false;
+    let activationVersion = 0;
+    const saveData = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean };
+      }
+    ).connection?.saveData;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const playVideo = () => {
+      if (!video.currentSrc || !isVisible || !isSelected || document.hidden)
+        return;
+      video.play().catch((err: Error) => {
+        console.warn("[liveinterview] play() failed:", err.name, err.message);
+      });
+    };
+
+    const loadVideo = () => {
+      if (!video.currentSrc && !video.src) {
+        const source = video.dataset.src;
+        if (!source) return;
+        video.src = source;
+        video.load();
+      }
+      playVideo();
+    };
+
+    const loadDynamicImages = async () => {
+      if (animationAssetsReady) return;
+      const images = Array.from(
+        root.querySelectorAll<HTMLImageElement>("img[data-src]"),
+      );
+      await Promise.all(
+        images.map(async (image) => {
+          if (!image.getAttribute("src")) image.src = image.dataset.src || "";
+          if (image.decode) await image.decode().catch(() => undefined);
+        }),
+      );
+      animationAssetsReady = true;
+      root.classList.add("is-assets-ready");
+    };
+
+    const prepareAnimation = async () => {
+      if (!isVisible || !isSelected || document.hidden) return;
+      const version = activationVersion;
+      await loadDynamicImages();
+      if (
+        version === activationVersion &&
+        isVisible &&
+        isSelected &&
+        !document.hidden
+      )
+        loadVideo();
+    };
+
+    const scheduleVideoLoad = () => {
+      if (
+        loadScheduled ||
+        video.currentSrc ||
+        !isVisible ||
+        !isSelected ||
+        saveData ||
+        reduceMotion
+      )
+        return;
+      loadScheduled = true;
+      const run = () => {
+        loadScheduled = false;
+        if (isVisible && isSelected && !document.hidden)
+          void prepareAnimation();
+      };
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(run, { timeout: 2000 });
+      } else {
+        globalThis.setTimeout(run, 250);
+      }
+    };
+
+    video.onloadeddata = () => {
+      root.classList.add("is-video-ready");
+      playVideo();
+    };
+
+    video.ontimeupdate = syncBubbles;
+    video.onseeked = syncBubbles;
+
+    video.onerror = () => {
+      console.warn("[liveinterview] people.webm failed to load");
+    };
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    root.classList.remove("is-video-ready");
+    clearBubbles();
+    video.pause();
+
+    const observer =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isVisible = entry.isIntersecting;
+              if (isVisible && isSelected) {
+                scheduleVideoLoad();
+                playVideo();
+              } else video.pause();
+            },
+            { rootMargin: "200px" },
+          )
+        : null;
+
+    if (observer) observer.observe(root);
+    else {
+      isVisible = true;
+      scheduleVideoLoad();
+    }
+
+    const onVisibilityChange = () => {
+      if (document.hidden) video.pause();
+      else if (isVisible && isSelected) {
+        scheduleVideoLoad();
+        playVideo();
+      }
+    };
+    const onActivate = () => {
+      activationVersion += 1;
+      isSelected = true;
+      clearBubbles();
+      if (video.currentSrc) video.currentTime = 0;
+      scheduleVideoLoad();
+      playVideo();
+    };
+    const onDeactivate = () => {
+      activationVersion += 1;
+      isSelected = false;
+      video.pause();
+      clearBubbles();
+    };
+
+    root.addEventListener("capability:activate", onActivate);
+    root.addEventListener("capability:deactivate", onDeactivate);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        observer?.disconnect();
+        root.removeEventListener("capability:activate", onActivate);
+        root.removeEventListener("capability:deactivate", onDeactivate);
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+        video.pause();
+      },
+      { once: true },
+    );
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-live-interview-animation]")
+      .forEach(startLiveInterviewAnimation);
+  });
+</script>
+
+<style>
+  .live-interview-animation {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .live-interview-layer {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  .live-interview-background {
+    z-index: 1;
+  }
+
+  .live-interview-media {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    width: 72.15%;
+    height: 48.5185%;
+    object-fit: fill;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .live-interview-people {
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  .live-interview-animation.is-assets-ready.is-video-ready
+    .live-interview-people {
+    opacity: 1;
+  }
+
+  .live-interview-overlay {
+    z-index: 5;
+    visibility: hidden;
+  }
+
+  .live-interview-animation.is-assets-ready .live-interview-overlay {
+    visibility: visible;
+  }
+
+  .live-interview-listening {
+    z-index: 6;
+  }
+
+  .live-interview-question {
+    z-index: 7;
+  }
+
+  .live-interview-answer {
+    z-index: 8;
+  }
+
+  .live-interview-bubble {
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+
+  .live-interview-animation.is-assets-ready .live-interview-bubble.is-visible {
+    opacity: 1;
+  }
+
+  .live-interview-animation.is-resetting .live-interview-bubble {
+    transition: none;
+  }
+</style>

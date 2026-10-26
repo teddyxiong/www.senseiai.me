@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Blog</title>
+    <!-- Meta refresh  -->
+    <meta http-equiv="refresh" content="0;url=/blog/">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f8f9fa;
+        }
+        .redirect-message {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-message">
+        <div id="en-content" class="lang-content active">
+            <h1>Redirecting...</h1>
+            <p>If you are not automatically redirected, <a href="/blog/">click here</a> to continue.</p>
+        </div>
+        <div id="zh-content" class="lang-content">
+            <h1>重定向中...</h1>
+            <p>如果您没有被自动重定向，请<a href="/blog/">点击这里</a>继续。</p>
+        </div>
+    </div>
+
+    <!-- Language detection and redirection -->
+    <script>
+        // Detect browser language
+        function detectLanguage() {
+            const userLang = navigator.language || navigator.userLanguage;
+            return userLang.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        }
+
+        // Show content based on language
+        function showLanguageContent() {
+            const lang = detectLanguage();
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(lang + '-content').classList.add('active');
+        }
+
+        // Run language detection
+        showLanguageContent();
+
+        // Redirect after a short delay to allow language content to be seen
+        setTimeout(function() {
+            window.location.href = "/blog/";
+        }, 100);
+    </script>
+</body>
+</html>

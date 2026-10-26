@@ -1,0 +1,177 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+const { testimonial } = Astro.props;
+const { enable, title, description, testimonials } = testimonial.data;
+const { titleHtml, descriptionHtml, className } = Astro.props as {
+  titleHtml?: string;
+  descriptionHtml?: string;
+  className?: string;
+};
+
+const figmaTitle =
+  "<span style=\"color:#58ACF2;\">Proven Results with</span> <br />Linkjob AI Interview Assistant";
+const figmaDescription =
+  "Every testimonial below comes from a real user of Linkjob AI. Read their firsthand experiences with our AI interview assistant, shared in their own words.";
+
+const testimonialLogos = [
+  "/images/companylogo/google.png",
+  "/images/companylogo/amazon.png",
+  "/images/companylogo/databricks.png",
+  "/images/companylogo/netflix.png",
+  "/images/companylogo/paypal.png",
+  "/images/companylogo/coinbase.png",
+  "/images/companylogo/microsoft.png",
+  "/images/companylogo/citi.png",
+  "/images/companylogo/ibm.png",
+  "/images/companylogo/goldmansachs.png",
+  "/images/companylogo/intel.png",
+  "/images/companylogo/nvidia.png",
+  "/images/companylogo/mckinsey.png",
+  "/images/companylogo/jpmorgan.png",
+];
+
+const testimonialStats = [
+  { value: "36,000+", label: "Offers Received" },
+  { value: "172,800+", label: "Interviews Aced" },
+  { value: "29+", label: "Languages Supported" },
+  { value: "1700+", label: "Companies Landed" },
+];
+---
+
+{
+  enable && (
+    <section class="section pt-16 md:pt-24 pb-12 md:pb-20">
+      <div class="container">
+        <div class="row">
+          <div class="mx-auto text-center lg:col-12" data-aos="fade-up-sm">
+            {/* <div class="section-heading-shape" aria-label="shape" /> */}
+            <h2
+              class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+              style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+              data-aos="fade-up-sm"
+              data-aos-delay="100"
+              set:html={markdownify(figmaTitle)}
+            />
+            <p
+              class="mb-8 mx-auto text-[15px] md:text-[20px] lg:text-[20px] w-full max-w-[70ch]"
+              style="max-width: 750px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+              set:html={markdownify(figmaDescription)}
+            />
+          </div>
+
+          <div class="col-12" data-aos="fade-up-sm" data-aos-delay="50">
+            <div class="logo-marquee overflow-hidden">
+              <div class="logo-marquee-track flex items-center gap-8 md:gap-12 lg:gap-16" style="width: max-content;">
+                {[...testimonialLogos, ...testimonialLogos].map((logo: string) => (
+                  <div class="flex items-center justify-center shrink-0" style="width: clamp(100px, 12vw, 140px);">
+                    <img
+                      src={logo}
+                      alt="company logo"
+                      class="h-[40px] w-auto object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-8" data-aos="fade-up-sm" data-aos-delay="150">
+            <div class="rounded-[22px] border p-3 md:p-5 lg:p-6 bg-white">
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <img
+                  src="/images/testimonial/testimonial4.webp"
+                  alt="testimonial column 1"
+                  class="w-full rounded-[15px]"
+                  loading="lazy"
+                />
+                <img
+                  src="/images/testimonial/testimonial5.webp"
+                  alt="testimonial column 2"
+                  class="w-full rounded-[15px]"
+                  loading="lazy"
+                />
+                <img
+                  src="/images/testimonial/testimonial6.webp"
+                  alt="testimonial column 3"
+                  class="w-full rounded-[15px]"
+                  loading="lazy"
+                />
+              </div>
+
+              <div
+                class="my-5 h-px w-full"
+                style="background: linear-gradient(90deg, rgba(164, 166, 176, 0) 0%, rgba(103, 105, 115, 1) 50%, rgba(164, 166, 176, 0) 100%);"
+              />
+
+              <div
+                class="rounded-[15px] border px-[20px] py-[16px] md:px-[33px] md:py-[20px]"
+                style="background: rgba(124, 206, 249, 0.5); border-color: rgba(121, 116, 126, 0.5);"
+              >
+                <!-- Small/medium screen: 2×2 grid -->
+                <div class="grid grid-cols-2 lg:hidden">
+                  {testimonialStats.map((item, index) => (
+                    <div
+                      class={`text-center px-3 py-3 ${
+                        index < 2 ? "border-b" : ""
+                      } ${index % 2 === 0 ? "border-r" : ""}`}
+                      style="border-color: rgba(121, 116, 126, 0.5);"
+                    >
+                      <p class="text-xl font-medium md:text-3xl leading-tight text-black">{item.value}</p>
+                      <p class="text-base leading-tight text-black mt-1">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <!-- Large screen: horizontal flex -->
+                <div class="hidden lg:flex items-center justify-between">
+                  {testimonialStats.map((item, index) => (
+                    <>
+                      <div class="flex-1 text-center">
+                        <p class="h2 leading-tight text-black">{item.value}</p>
+                        <p class="text-lg leading-tight text-black">{item.label}</p>
+                      </div>
+                      {index < testimonialStats.length - 1 && (
+                        <div
+                          class="mx-3 h-[68px] w-px md:mx-[20px]"
+                          style="background: rgba(121, 116, 126, 0.5);"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const tracks = document.querySelectorAll(".logo-marquee-track");
+    tracks.forEach((track) => {
+      const el = track as HTMLElement;
+      const halfWidth = el.scrollWidth / 2;
+      if (halfWidth <= 0) return;
+      const duration = Math.max(halfWidth / 50, 8);
+      el.style.setProperty("--marquee-duration", `${duration}s`);
+    });
+  });
+</script>
+
+<style>
+  @keyframes logoMarquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .logo-marquee-track {
+    animation: logoMarquee var(--marquee-duration, 25s) linear infinite;
+  }
+  .logo-marquee:hover .logo-marquee-track {
+    animation-play-state: paused;
+  }
+</style>

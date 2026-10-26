@@ -1,0 +1,124 @@
+---
+import BlogCard from "@/components/BlogCard.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import taxonomyFilter from "@/lib/utils/taxonomyFilter";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getCollection } from "astro:content";
+import { slugify, markdownify, humanize } from "@/lib/utils/textConverter";
+
+// get static paths for all categories
+// Add debug output in getStaticPaths function
+export async function getStaticPaths() {
+  const BLOG_FOLDER = "blog";
+  const categories = await getTaxonomy(BLOG_FOLDER, "categories");
+  
+  //console.log("Available categories:", categories);
+  
+  return categories.map((category) => {
+    return {
+      params: { category },
+    };
+  });
+}
+
+const { category } = Astro.params;
+
+// get posts by category
+const BLOG_FOLDER = "blog";
+const posts = await getSinglePage(BLOG_FOLDER);
+const filterByCategories = taxonomyFilter(posts, "categories", category!);
+const sortedPosts = sortByDate(filterByCategories);
+
+// Get category content if available
+let categoryContent = null;
+let Content;
+let categoryData = {
+  title: category,
+  description: "",
+  meta_title: category,
+  featured_image: null
+};
+
+// Add debug output when reading category content
+try {
+  // Try to find a matching category content file
+  const categoryCollection = await getCollection("category", (entry) => {
+    // Auto-handle date format: convert string dates to Date objects
+    if (entry.data.date && typeof entry.data.date === 'string') {
+      // Remove any surrounding quotes
+      const dateStr = entry.data.date.replace(/^"|"$/g, '');
+      entry.data.date = new Date(dateStr);
+    }
+    return true; // Return all entries
+  });
+  //console.log("Category collection entries:", categoryCollection.map(entry => entry.id));
+  
+  const matchingCategory = categoryCollection.find(entry => {
+    // Remove file extension before comparing
+    const fileNameWithoutExt = entry.id.replace(/\.md$/, "");
+    
+    // Match by file name (without extension) instead of title
+    return slugify(fileNameWithoutExt) === category || 
+           // Keep the category array check as fallback
+           (entry.data.category && entry.data.category.some((cat: string) => slugify(cat) === category));
+  });
+  
+  //console.log("Found matching category:", matchingCategory ? matchingCategory.id : "None");
+  
+  if (matchingCategory) {
+    categoryContent = matchingCategory;
+    const rendered = await matchingCategory.render();
+    Content = rendered.Content;
+    categoryData = {
+      title: matchingCategory.data.title,
+      description: matchingCategory.data.description || "",
+      meta_title: matchingCategory.data.title,
+      featured_image: matchingCategory.data.featured_image || null
+    };
+  }
+} catch (error) {
+  console.error("Error loading category content:", error);
+}
+
+---
+
+<Base 
+  title={categoryData.meta_title || categoryData.title}
+  description={categoryData.description}
+>
+ 
+
+  {/* Check if categoryContent has body content */}
+  {(!categoryContent || !categoryContent.body || categoryContent.body.length === 0) && (
+    <PageHeader title={categoryData.title} />
+  )}
+  
+  {categoryContent && categoryContent.body && categoryContent.body.length > 0 && (
+    <div class="section-sm">
+      <div class="container">
+        <div class="row justify-center">
+          <div class="lg:col-10">
+            <div class="content mb-10">
+              
+              <div class="content">
+                <Content />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+  
+  <div class="section-sm">
+    <div class="container">
+      <h2 class="h3 mb-8 text-center">Articles  related to  {humanize(category!)}</h2>
+      <div class="row">
+        {sortedPosts.map((post) => <BlogCard data={post} />)}
+      </div>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,27 @@
+{
+  "home": {
+    "src": "https://www.youtube.com/embed/GRlpVJAoPuc?si=eUeBL8pngJ0b_GVl&rel=0&modestbranding=1&playsinline=1",
+    "title": "Linkjob AI Introduction Video",
+    "overlayText": ""
+  },
+  "interviewCopilot": {
+    "src": "https://www.youtube.com/embed/tEF3DXagKgQ?si=3k5-nqQKZjHc7ZZV&rel=0&modestbranding=1&playsinline=1",
+    "title": "Real-time AI Interview Copilot Demo Video",
+    "overlayText": ""
+  },
+  "aiMockInterview": {
+    "src": "https://www.youtube.com/embed/KX75MMEwQ7A?si=2BS4pSMaY7tL2HMF&rel=0&modestbranding=1&playsinline=1",
+    "title": "AI Mock Interview Demo Video",
+    "overlayText": ""
+  },
+  "codingInterviewCopilot": {
+    "src": "https://www.youtube.com/embed/KX75MMEwQ7A?si=4oTkf2VAYTR9Ja8V&rel=0&modestbranding=1&playsinline=1",
+    "title": "AI Coding Interview Assistant Demo Video",
+    "overlayText": ""
+  },
+  "zoomDemo": {
+    "src": "https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1",
+    "title": "Zoom Demo Video",
+    "overlayText": ""
+  }
+}

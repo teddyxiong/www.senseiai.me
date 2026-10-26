@@ -1,0 +1,288 @@
+---
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+interface PaymentMethod {
+  payment_company: string;
+  payment_name: string;
+  payment_logo: string;
+  payment_description: string;
+  payment_link: string;
+  is_active: boolean;
+  is_visible: boolean;
+  display_order: number;
+}
+
+interface PaymentType {
+  label: string;
+  description: string;
+}
+
+const paymentsIndex = await getEntry("payments", "-index");
+if (!paymentsIndex) {
+  throw new Error("Payments data not found");
+}
+
+console.log("Debug: paymentsIndex data:", paymentsIndex.data);
+
+const {
+  meta_title,
+  meta_description,
+  title,
+  description,
+  payment_methods,
+  payment_types,
+} = paymentsIndex.data as {
+  meta_title: string;
+  meta_description: string;
+  title: string;
+  description: string;
+  payment_methods: Record<string, PaymentMethod[]>;
+  payment_types: Record<string, PaymentType>;
+};
+
+// In static generation mode, we cannot get URL parameters on the server side
+// We need to use client-side JavaScript to handle URL parameters
+---
+
+<Base title={meta_title} description={meta_description}>
+  <PageHeader title={title} />
+  
+  <section class="section">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="lg:col-8">
+          <div class="text-center mb-12">
+            <h1 class="mb-4" set:html={markdownify(title)} />
+            <p class="text-lg text-gray-600" set:html={markdownify(description)} />
+          </div>
+
+          <!-- Payment Type Selection (default view) -->
+          <div id="payment-type-selection" class="payment-type-selection">
+            <h2 class="text-2xl font-bold text-center mb-8">Select Subscription Type</h2>
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+              {Object.entries(payment_types).map(([type, typeData]: [string, PaymentType]) => (
+                <div class="payment-type-card bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200 hover:border-primary transition-colors cursor-pointer"
+                     data-type={type}>
+                  <h3 class="text-xl font-semibold mb-3 text-center" style="color: #393294;">
+                    {typeData.label}
+                  </h3>
+                  <p class="text-gray-600 text-center mb-4">
+                    {typeData.description}
+                  </p>
+                  <div class="text-center">
+                    <button class="btn btn-primary w-full">
+                      Choose {typeData.label}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Payment Methods (shown when type is selected) -->
+          <div id="payment-methods" class="payment-methods" style="display: none;">
+            <div class="flex items-center justify-between mb-8">
+              <h2 id="payment-methods-title" class="text-2xl font-bold">
+                Payment Methods
+              </h2>
+              <!-- <button id="back-button" class="btn btn-outline-primary">
+                ← Back to Plans
+              </button> -->
+            </div>
+
+            <!-- Payment methods will be populated by JavaScript -->
+            <div id="payment-methods-grid" class="space-y-4">
+              <!-- Payment methods cards will be inserted here -->
+            </div>
+
+            <!-- No payment methods message -->
+            <div id="no-payment-methods" class="text-center py-12" style="display: none;">
+              <div class="bg-gray-50 rounded-lg p-8">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">
+                  No Payment Methods Available
+                </h3>
+                <p class="text-gray-600 mb-6">
+                  There are currently no active payment methods for this subscription type.
+                </p>
+                <!-- <button id="back-button-2" class="btn btn-primary">
+                  ← Back to Plans
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pass data to JavaScript -->
+  <script define:vars={{ payment_methods, payment_types }}>
+    // Store data globally for JavaScript access
+    window.paymentData = {
+      payment_methods,
+      payment_types
+    };
+
+    function initPaymentPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paymentType = urlParams.get('type');
+      
+      console.log('Client-side paymentType:', paymentType);
+      console.log('Available payment methods:', payment_methods);
+      
+      if (paymentType && payment_methods[paymentType]) {
+        showPaymentMethods(paymentType);
+      } else {
+        showPaymentTypeSelection();
+      }
+    }
+
+    function showPaymentTypeSelection() {
+      document.getElementById('payment-type-selection').style.display = 'block';
+      document.getElementById('payment-methods').style.display = 'none';
+    }
+
+    function showPaymentMethods(type) {
+      const typeData = payment_types[type];
+      const methods = payment_methods[type] || [];
+      
+      // Filter active and visible methods
+      const activePayments = methods
+        .filter(method => method.is_active && method.is_visible)
+        .sort((a, b) => a.display_order - b.display_order);
+
+      console.log('Active payments for', type, ':', activePayments);
+
+      // If only one payment method is available, redirect directly
+      if (activePayments.length === 1) {
+        console.log('Only one payment method available, redirecting to:', activePayments[0].payment_link);
+        window.location.href = activePayments[0].payment_link;
+        return;
+      }
+
+      // Update title
+      document.getElementById('payment-methods-title').textContent = 
+        `${typeData?.label || type} - Payment Methods`;
+
+      // Hide type selection, show payment methods
+      document.getElementById('payment-type-selection').style.display = 'none';
+      document.getElementById('payment-methods').style.display = 'block';
+
+      const grid = document.getElementById('payment-methods-grid');
+      const noMethodsDiv = document.getElementById('no-payment-methods');
+
+      if (activePayments.length === 0) {
+        grid.style.display = 'none';
+        noMethodsDiv.style.display = 'block';
+      } else {
+        grid.style.display = 'block';
+        noMethodsDiv.style.display = 'none';
+        
+        // Generate payment method cards
+         grid.innerHTML = activePayments.map(method => `
+           <div class="payment-method-card bg-white rounded-lg shadow-lg p-4 border-2 border-gray-200 hover:border-primary transition-colors flex items-center">
+             <div class="flex-shrink-0 mr-4">
+               <img src="${method.payment_logo}" alt="${method.payment_company}" class="w-20 h-auto" />
+             </div>
+             <div class="flex-grow">
+               <h3 class="text-lg font-semibold text-gray-800 mb-1">${method.payment_company}</h3>
+               <p class="text-sm text-gray-600 mb-2">${method.payment_name}</p>
+               <p class="text-gray-600 text-sm">${method.payment_description}</p>
+             </div>
+             <div class="flex-shrink-0 ml-4">
+               <a href="${method.payment_link}" target="_blank" class="btn btn-primary">
+                 Continue
+              
+               </a>
+             </div>
+           </div>
+         `).join('');
+      }
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize page based on URL
+      initPaymentPage();
+
+      // Handle payment type selection
+      document.querySelectorAll('.payment-type-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const type = this.getAttribute('data-type');
+          // Update URL without page reload
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.set('type', type);
+          window.history.pushState({}, '', newUrl);
+          
+          showPaymentMethods(type);
+        });
+      });
+
+      // Handle back buttons
+      /* document.getElementById('back-button').addEventListener('click', function() {
+        // Remove type parameter from URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('type');
+        window.history.pushState({}, '', newUrl);
+        
+        showPaymentTypeSelection();
+      });
+
+      document.getElementById('back-button-2').addEventListener('click', function() {
+        // Remove type parameter from URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('type');
+        window.history.pushState({}, '', newUrl);
+        
+        showPaymentTypeSelection();
+      }); */
+
+      // Handle browser back/forward buttons
+      window.addEventListener('popstate', function() {
+        initPaymentPage();
+      });
+    });
+  </script>
+</Base>
+
+
+
+<style>
+  .payment-type-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .payment-method-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+  }
+
+  .btn-primary {
+    background: linear-gradient(188deg, #393294 0%, #6A65C2 100%);
+    @apply text-white hover:opacity-90;
+  }
+
+  .btn-outline-primary {
+    @apply border-2 text-primary hover:bg-primary hover:text-white;
+    border-color: #393294;
+    color: #393294;
+  }
+
+  .btn-outline-primary:hover {
+    background: #393294;
+  }
+</style>

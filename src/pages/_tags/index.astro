@@ -1,0 +1,44 @@
+---
+export const prerender = true; // Generate tag index page
+
+import Base from "@/layouts/Base.astro";
+import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { humanize } from "@/lib/utils/textConverter";
+import PageHeader from "@/partials/PageHeader.astro";
+
+const BLOG_FOLDER = "blog";
+
+const tags = await getTaxonomy(BLOG_FOLDER, "tags");
+const allTags = await getAllTaxonomy(BLOG_FOLDER, "tags");
+// oder by tag-sums
+const sortedTags = tags
+  .map((tag) => ({
+    name: tag,
+    count: allTags.filter((t) => t === tag).length,
+  }))
+  .sort((a, b) => b.count - a.count);
+---
+
+<Base title={"Tags"}>
+  <PageHeader title={"All Tags"} />
+  <section class="section">
+    <section class="section">
+      <div class="container text-center">
+        <ul>
+          {
+            sortedTags.map((tag) => (
+              <li class="m-3 inline-block">
+                <a
+                  href={`/tags/${tag.name}`}
+                  class="block rounded bg-theme-light px-4 py-2 text-xl text-dark"
+                >
+                  {humanize(tag.name)}{" "}
+                  <span class="ml-2 rounded bg-body px-2">{tag.count}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+</Base>

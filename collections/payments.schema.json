@@ -1,0 +1,237 @@
+{
+  "$ref": "#/definitions/payments",
+  "definitions": {
+    "payments": {
+      "type": "object",
+      "properties": {
+        "canonical": {
+          "type": "string"
+        },
+        "meta_title": {
+          "type": "string"
+        },
+        "meta_description": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "payment_methods": {
+          "type": "object",
+          "properties": {
+            "monthly": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "payment_company": {
+                    "type": "string"
+                  },
+                  "payment_name": {
+                    "type": "string"
+                  },
+                  "payment_logo": {
+                    "type": "string"
+                  },
+                  "payment_description": {
+                    "type": "string"
+                  },
+                  "payment_link": {
+                    "type": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  },
+                  "is_visible": {
+                    "type": "boolean"
+                  },
+                  "display_order": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "payment_company",
+                  "payment_name",
+                  "payment_logo",
+                  "payment_description",
+                  "payment_link",
+                  "is_active",
+                  "is_visible",
+                  "display_order"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "quarterly": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "payment_company": {
+                    "type": "string"
+                  },
+                  "payment_name": {
+                    "type": "string"
+                  },
+                  "payment_logo": {
+                    "type": "string"
+                  },
+                  "payment_description": {
+                    "type": "string"
+                  },
+                  "payment_link": {
+                    "type": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  },
+                  "is_visible": {
+                    "type": "boolean"
+                  },
+                  "display_order": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "payment_company",
+                  "payment_name",
+                  "payment_logo",
+                  "payment_description",
+                  "payment_link",
+                  "is_active",
+                  "is_visible",
+                  "display_order"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "annually": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "payment_company": {
+                    "type": "string"
+                  },
+                  "payment_name": {
+                    "type": "string"
+                  },
+                  "payment_logo": {
+                    "type": "string"
+                  },
+                  "payment_description": {
+                    "type": "string"
+                  },
+                  "payment_link": {
+                    "type": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  },
+                  "is_visible": {
+                    "type": "boolean"
+                  },
+                  "display_order": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "payment_company",
+                  "payment_name",
+                  "payment_logo",
+                  "payment_description",
+                  "payment_link",
+                  "is_active",
+                  "is_visible",
+                  "display_order"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "monthly",
+            "quarterly",
+            "annually"
+          ],
+          "additionalProperties": false
+        },
+        "payment_types": {
+          "type": "object",
+          "properties": {
+            "monthly": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "description"
+              ],
+              "additionalProperties": false
+            },
+            "quarterly": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "description"
+              ],
+              "additionalProperties": false
+            },
+            "annually": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "monthly",
+            "quarterly",
+            "annually"
+          ],
+          "additionalProperties": false
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "meta_title",
+        "meta_description",
+        "title",
+        "description",
+        "payment_methods",
+        "payment_types"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

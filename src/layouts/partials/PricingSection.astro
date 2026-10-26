@@ -1,0 +1,717 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { pricing } = Astro.props;
+const { header, plans } = pricing ?? {};
+
+const checkoutProducts: Record<string, { subscription: number; one_time: number }> = {
+  monthly: { subscription: 1, one_time: 4 },
+  quarterly: { subscription: 2, one_time: 5 },
+  yearly: { subscription: 3, one_time: 6 },
+  lifetime: { subscription: 7, one_time: 7 },
+};
+
+const resolvedPlans = (plans ?? []).map((plan: any) => {
+  const isLifetime = Boolean(plan?.is_lifetime);
+  const isFree = Boolean(plan?.is_free);
+  const switchable = Boolean(plan?.switchable);
+
+  const prefix = plan?.price?.prefix ?? "$";
+
+  const subscription = plan?.price?.subscription ?? {};
+  const oneTime = plan?.price?.one_time ?? {};
+
+  const subscriptionValue = subscription?.value ?? "";
+  const oneTimeValue = oneTime?.value ?? "";
+
+  const subscriptionSuffix = subscription?.suffix ?? "";
+  const oneTimeSuffix = oneTime?.suffix ?? "";
+
+  const subscriptionNote = subscription?.note ?? "";
+  const oneTimeNote = oneTime?.note ?? "";
+
+  const payments = Array.isArray(plan?.payments) ? plan.payments : [];
+
+  return {
+    ...plan,
+    isLifetime,
+    isFree,
+    switchable,
+    prefix,
+    subscriptionValue,
+    oneTimeValue,
+    subscriptionSuffix,
+    oneTimeSuffix,
+    subscriptionNote,
+    oneTimeNote,
+    payments,
+    checkoutProducts: checkoutProducts[String(plan?.plan_key ?? "").toLowerCase()],
+  };
+});
+
+const oneTimeTabLabel = header?.tabs?.one_time_label ?? "One-time payment";
+const subscriptionTabLabel = header?.tabs?.subscription_label ?? "Subscription";
+const subscriptionExtraText = header?.tabs?.subscription_extra_text ?? "";
+const badges = Array.isArray(header?.badges) ? header.badges : [];
+---
+
+<div class="price-section" data-price-ready="false">
+      <style is:inline>
+        html[data-price-mode] .price-section[data-price-ready="false"] {
+          visibility: hidden;
+        }
+      </style>
+      <script is:inline>
+        (() => {
+          try {
+            const mode = sessionStorage.getItem("pricing_mode");
+            if (mode === "one_time" || mode === "subscription") {
+              document.documentElement.dataset.priceMode = mode;
+            }
+          } catch {}
+        })();
+      </script>
+      <div class="container px-2">
+{/* pricing switcher */}
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-2 md:mt-8 xl:mt-10">
+          <div class="inline-flex w-full flex-wrap items-center justify-center gap-3 sm:w-auto">
+            <div class="relative inline-flex w-full items-center gap-2 rounded-full bg-[#f5f3f2] p-1 sm:w-auto sm:p-1.5">
+              <input
+                type="radio"
+                name="price-mode"
+                value="one_time"
+                id="price-one-time"
+                class="price-mode-input absolute h-px w-px opacity-0"
+              />
+              <label
+                for="price-one-time"
+                class="price-mode-label inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-transparent px-2.5 py-1.5 text-[14px] font-bold leading-none text-black/50 transition-colors sm:flex-none sm:gap-2.5 sm:px-3.5 sm:py-2.5 sm:text-[18px]"
+              >
+                <span
+                  class="price-mode-icon relative inline-flex h-4 w-4 flex-none items-center justify-center rounded-full border-2 border-black/40 bg-transparent transition-colors sm:h-[22px] sm:w-[22px]"
+                  aria-hidden="true"
+                />
+                <span class="whitespace-nowrap" set:html={markdownify(oneTimeTabLabel)} />
+              </label>
+
+              <input
+                type="radio"
+                name="price-mode"
+                value="subscription"
+                id="price-subscription"
+                class="price-mode-input absolute h-px w-px opacity-0"
+                checked
+              />
+              <label
+                for="price-subscription"
+                class="price-mode-label inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-transparent px-2.5 py-1.5 text-[14px] font-bold leading-none text-black/50 transition-colors sm:flex-none sm:gap-2.5 sm:px-3.5 sm:py-2.5 sm:text-[18px]"
+              >
+                <span
+                  class="price-mode-icon relative inline-flex h-4 w-4 flex-none items-center justify-center rounded-full border-2 border-black/40 bg-transparent transition-colors sm:h-[22px] sm:w-[22px]"
+                  aria-hidden="true"
+                />
+                <span class="whitespace-nowrap" set:html={markdownify(subscriptionTabLabel)} />
+                {subscriptionExtraText && (
+                  <span class="block text-center text-[12px] font-bold leading-none text-[#0175de] sm:ml-2 sm:inline sm:text-[18px]">
+                    {subscriptionExtraText}
+                  </span>
+                )}
+              </label>
+            </div>
+          </div>
+        </div>
+{/* badges */}
+        {badges?.length ? (
+          <div class="mt-3 mb-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[14px] text-dark/70 sm:mt-4 sm:mb-12 sm:gap-x-0 sm:text-[18px]">
+            {badges.map((badge: any, idx: number) => (
+              <span
+                class={`inline-flex items-center ${idx > 0 ? "sm:ml-4 sm:border-l sm:border-slate-900/20 sm:pl-4" : ""}`}
+                data-badge-index={idx}
+              >
+                <span class="inline-flex items-center gap-1.5 whitespace-normal sm:whitespace-nowrap">
+                  {!!badge?.icon && (
+                    <img
+                      src={badge.icon}
+                      alt={badge.text ?? ""}
+                      class="block h-[14px] w-[14px] object-contain sm:h-[18px] sm:w-[18px]"
+                      loading="lazy"
+                    />
+                  )}
+                  {badge?.link ? (
+                    <a href={badge.link} class="font-bold text-[#0175de] underline">
+                      {badge.text}
+                    </a>
+                  ) : (
+                    <span class="font-medium">{badge.text}</span>
+                  )}
+                </span>
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <p class="js-checkout-message text-center text-sm text-red-700" aria-live="polite" hidden />
+{/* plan name */}
+        <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {resolvedPlans.map((plan: any) => {
+            const hasSaveBadge = !!(plan?.badge?.save_label && plan?.badge?.save_value);
+            return (
+              <div
+                class={`relative rounded-2xl border shadow-sm flex h-full flex-col ${
+                  String(plan?.plan_key || "").toLowerCase() === "yearly" || String(plan?.plan_key || "").toLowerCase() === "quarterly"
+                    ? "bg-[#F2F8FE] border-[#7cb3ef]"
+                    : "bg-white border-border"
+                }`}
+              >
+                {!!plan?.top_badge && (
+                  <div class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#006bdf] px-3.5 py-1.5 text-[13px] font-extrabold leading-none tracking-[0.6px] text-white">
+                    {plan.top_badge}
+                  </div>
+                )}
+                <div class="px-3 pt-5 flex flex-1 flex-col">
+                  <h3 class="mt-4 font-['DM Sans',sans-serif] text-[25px] font-normal text-dark">{plan.title}</h3>
+{/* pricing */}
+                  <div class="mt-3 mb-5">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="text-dark flex items-baseline">
+                        <span class="text-[35px] font-bold leading-none">{plan.prefix}</span>
+                        <span
+                          class="js-price-value text-[35px] font-bold leading-none"
+                          data-fixed={plan.switchable ? "false" : "true"}
+                          data-price-one-time={plan.switchable ? plan.oneTimeValue : undefined}
+                          data-price-subscription={plan.switchable ? plan.subscriptionValue : undefined}
+                        >
+                          {plan.switchable ? plan.subscriptionValue : plan.subscriptionValue}
+                        </span>
+                        <span
+                          class="js-price-suffix ml-1 text-[15px] font-semibold leading-none text-dark"
+                          data-fixed={plan.switchable ? "false" : "true"}
+                          data-suffix-one-time={plan.switchable ? plan.oneTimeSuffix : undefined}
+                          data-suffix-subscription={plan.switchable ? plan.subscriptionSuffix : undefined}
+                        >
+                          {plan.switchable ? plan.subscriptionSuffix : plan.subscriptionSuffix}
+                        </span>
+                      </div>
+                      {hasSaveBadge && (
+                        <span class="inline-flex items-center gap-1 whitespace-nowrap rounded-[5px] border border-[#7AF1A7] bg-[#DCFCE7] px-2.5 py-1.5 leading-none text-[#046730]">
+                          <span class="text-[12px] font-bold">{plan.badge.save_label}</span>
+                          <span class="text-[15px] font-extrabold">{plan.badge.save_value}</span>
+                        </span>
+                      )}
+                    </div>
+{/* total price */}
+                    <div class="mt-1 text-[15px] text-dark/70">
+                      <span
+                        class="js-price-note"
+                        data-fixed={plan.switchable ? "false" : "true"}
+                        data-note-one-time={plan.switchable ? plan.oneTimeNote : undefined}
+                        data-note-subscription={plan.switchable ? plan.subscriptionNote : undefined}
+                      >
+                        {plan.switchable ? plan.subscriptionNote : plan.subscriptionNote}
+                      </span>
+                    </div>
+                  </div>
+{/* payment */}
+                <div class="mb-4 flex flex-col gap-2">
+                  {plan.payments.map((payment: any) => {
+                    const provider = String(payment?.provider ?? "");
+                    if (!["stripe", "paypal", "creem"].includes(provider)) return null;
+                    const oneTimeProductId = payment?.modes?.one_time
+                      ? plan.checkoutProducts?.one_time
+                      : undefined;
+                    const subscriptionProductId = payment?.modes?.subscription
+                      ? plan.checkoutProducts?.subscription
+                      : undefined;
+                    const defaultProductId = subscriptionProductId ?? oneTimeProductId;
+                    if (!defaultProductId) return null;
+                    return (
+                      <button
+                        type="button"
+                        class="flex h-9 items-center justify-start gap-8 rounded-md border border-[#005BAC] bg-white px-5 text-[15px] font-semibold text-[#005BAC] transition-colors hover:bg-[#58ACF2]/10 disabled:cursor-wait disabled:opacity-60"
+                        data-payment-button={plan.switchable ? "true" : "false"}
+                        data-fixed={plan.switchable ? "false" : "true"}
+                        data-product-one-time={oneTimeProductId}
+                        data-product-subscription={subscriptionProductId}
+                        data-product-id={defaultProductId}
+                        data-payment-provider={provider}
+                      >
+                        {payment?.logo && (
+                          <span class="flex w-12 shrink-0 items-center justify-center">
+                            <img
+                              src={payment.logo}
+                              alt={payment.label}
+                              class="block h-6 w-auto object-contain"
+                              loading="lazy"
+                            />
+                          </span>
+                        )}
+                        <span class="text-left">{payment.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+{/* ai models */}
+                {plan?.ai_models?.title && plan?.ai_models?.items?.length ? (
+                  <div class="mt-5 mb-5">
+                    <div class="text-[15px] font-bold text-dark">
+                      {plan.ai_models.title}
+                    </div>
+                    <ul class="mt-3 flex flex-col gap-2">
+                      {[...plan.ai_models.items]
+                        .sort((a: any, b: any) => {
+                          const aIsLatest = a.tag === "Latest";
+                          const bIsLatest = b.tag === "Latest";
+                          if (aIsLatest === bIsLatest) return 0;
+                          return aIsLatest ? -1 : 1;
+                        })
+                        .map((model: any) => (
+                        <li
+                          class={`flex items-center justify-between gap-2 text-[13px] ${
+                            model.tag === "Latest" ? "text-[#F67564] font-bold" : "text-dark"
+                          }`}
+                        >
+                          <span class="flex min-w-0 items-center gap-1">
+                            <img
+                              src={model.logo}
+                              alt={model.name}
+                              class={`h-4 w-4 shrink-0 object-contain block ${
+                                model.tag === "Latest" ? "-mt-[1px]" : ""
+                              }`}
+                              loading="lazy"
+                            />
+                            <span>{model.name}</span>
+                          </span>
+                          {!!model.tag && (
+                            <span
+                              class={`flex-shrink-0 whitespace-nowrap rounded-full px-1.5 py-0 text-[10px] font-bold ${
+                                model.tag === "Latest"
+                                  ? "bg-[#F67564] text-white"
+                                  : "bg-[#087FE7] text-white"
+                              }`}
+                            >
+                              {model.tag}
+                            </span>
+                          )}
+                        </li>
+                        ))}
+                    </ul>
+                  </div>
+                ) : null}
+                <div class="flex-1" />
+              </div>
+{/* features */}
+              {plan?.features?.title && plan?.features?.list?.length ? (
+                <>
+                  <div class="mx-auto w-[90%] border-t border-border" />
+                  <div class="px-3 pb-5 pt-4">
+                    <div class="text-[15px] font-bold text-dark">
+                      {plan.features.title}
+                    </div>
+                    <ul class="price-features-list list list-check mt-3 text-[15px] leading-5 text-dark">
+                      {plan.features.list.map((l: string) => (
+                        <li set:html={markdownify(l)} />
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <div class="pb-5" />
+              )}
+            </div>
+            );
+          })}
+        </div>
+      </div>
+</div>
+
+<style>
+  .price-mode-icon::after {
+    content: "";
+    width: 55%;
+    height: 35%;
+    border-left: 3px solid #0175de;
+    border-bottom: 3px solid #0175de;
+    transform: translateY(-1px) rotate(-45deg);
+    opacity: 0;
+    transition: opacity 120ms ease;
+  }
+
+  .price-mode-input:focus-visible + .price-mode-label {
+    outline: 2px solid rgba(88, 172, 242, 0.85);
+    outline-offset: 2px;
+  }
+
+  .price-mode-input:checked + .price-mode-label {
+    background: #fff;
+    color: #0f172a;
+    box-shadow: none;
+  }
+
+  .price-mode-input:checked + .price-mode-label .price-mode-icon {
+    background: #0175de;
+    border-color: #0175de;
+  }
+
+  .price-mode-input:checked + .price-mode-label .price-mode-icon::after {
+    border-left-color: #fff;
+    border-bottom-color: #fff;
+    opacity: 1;
+  }
+
+  :global(.price-features-list li) {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  :global(.price-features-list li > p) {
+    margin: 0;
+    display: inline;
+  }
+</style>
+
+<script>
+  import {
+    cancelPricingCheckout,
+    preloadPricingSession,
+    startPricingCheckout,
+    type PricingCheckoutResult,
+  } from "@/lib/account/pricingCheckout";
+
+  (function () {
+    syncPricingDebugFlag();
+    preloadPricingSession();
+    setupPriceSwitcher({ reason: "initial" });
+
+    window.addEventListener("pageshow", function (event) {
+      const pageShowEvent = event as PageTransitionEvent;
+      if (pageShowEvent.persisted) {
+        const section = document.querySelector(".price-section") as HTMLElement | null;
+        section?.querySelectorAll<HTMLButtonElement>("[data-payment-provider]")
+          .forEach((button) => { button.disabled = false; });
+        if (section) section.dataset.checkoutState = "idle";
+        if (section) setCheckoutMessage(section, "");
+        cancelPricingCheckout();
+      }
+      setupPriceSwitcher({
+        reason: "pageshow",
+        forceModeRefresh: Boolean(pageShowEvent.persisted),
+      });
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) {
+        setupPriceSwitcher({ reason: "visibilitychange" });
+      }
+    });
+
+    document.addEventListener("astro:page-load", function () {
+      syncPricingDebugFlag();
+      setupPriceSwitcher({ reason: "astro:page-load", forceModeRefresh: true });
+    });
+
+    type SetupOptions = {
+      reason: string;
+      forceModeRefresh?: boolean;
+    };
+
+    function setupPriceSwitcher(options: SetupOptions) {
+      const section = document.querySelector(".price-section") as HTMLElement | null;
+      const oneTimeInput = section?.querySelector(
+        'input[name="price-mode"][value="one_time"]'
+      ) as HTMLInputElement | null;
+      const subscriptionInput = section?.querySelector(
+        'input[name="price-mode"][value="subscription"]'
+      ) as HTMLInputElement | null;
+
+      if (!oneTimeInput || !subscriptionInput || !section) {
+        debugLog("setup skipped: missing required elements", options);
+        return;
+      }
+
+      if (options.forceModeRefresh) {
+        section.dataset.currentMode = "";
+        debugLog("force mode refresh", options);
+      }
+
+      const initialMode = syncInitialMode(oneTimeInput, subscriptionInput);
+      debugLog("setup start", {
+        ...options,
+        initialMode,
+        switcherBound: section.dataset.switcherBound ?? "",
+        currentMode: section.dataset.currentMode ?? "",
+      });
+      // Intentionally restore DOM state before the switcherBound guard so
+      // pageshow/visibilitychange can resync the UI without rebinding events.
+      applyMode(initialMode, section, options.reason);
+      writeStoredMode(initialMode);
+      markReady(section);
+      setupCheckoutButtons(section);
+
+      if (section.dataset.switcherBound === "true") {
+        debugLog("skip event binding: already bound", options);
+        return;
+      }
+      section.dataset.switcherBound = "true";
+
+      const onModeChange = (event: Event) => {
+        const mode = getCurrentMode(oneTimeInput, subscriptionInput);
+        debugLog("mode event", {
+          reason: event.type,
+          nextMode: mode,
+          oneTimeChecked: oneTimeInput.checked,
+          subscriptionChecked: subscriptionInput.checked,
+          currentMode: section.dataset.currentMode ?? "",
+        });
+        applyMode(mode, section, event.type);
+        writeStoredMode(mode);
+      };
+
+      oneTimeInput.addEventListener("change", onModeChange);
+      subscriptionInput.addEventListener("change", onModeChange);
+      // iOS Safari occasionally misses radio change events on custom controls.
+      oneTimeInput.addEventListener("click", onModeChange);
+      subscriptionInput.addEventListener("click", onModeChange);
+      debugLog("bind events", {
+        reason: options.reason,
+        listeners: ["change", "click"],
+      });
+    }
+
+    function getCurrentMode(
+      oneTimeInput: HTMLInputElement,
+      subscriptionInput: HTMLInputElement
+    ): "one_time" | "subscription" {
+      if (oneTimeInput.checked) return "one_time";
+      if (subscriptionInput.checked) return "subscription";
+      return "subscription";
+    }
+
+    function syncInitialMode(
+      oneTimeInput: HTMLInputElement,
+      subscriptionInput: HTMLInputElement
+    ): "one_time" | "subscription" {
+      const storedMode = readStoredMode();
+
+      if (storedMode === "one_time") {
+        oneTimeInput.checked = true;
+        subscriptionInput.checked = false;
+        return "one_time";
+      }
+
+      oneTimeInput.checked = false;
+      subscriptionInput.checked = true;
+      return "subscription";
+    }
+
+    function markReady(section: HTMLElement) {
+      section.dataset.priceReady = "true";
+      delete document.documentElement.dataset.priceMode;
+      debugLog("mark ready", {
+        currentMode: section.dataset.currentMode ?? "",
+      });
+    }
+
+    function readStoredMode(): "one_time" | "subscription" | null {
+      try {
+        const value = sessionStorage.getItem("pricing_mode");
+        if (value === "one_time" || value === "subscription") return value;
+      } catch {}
+      return null;
+    }
+
+    function writeStoredMode(mode: "one_time" | "subscription") {
+      try {
+        sessionStorage.setItem("pricing_mode", mode);
+        debugLog("store mode", { mode });
+      } catch {}
+    }
+
+    function setupCheckoutButtons(section: HTMLElement) {
+      if (section.dataset.checkoutBound === "true") return;
+      section.dataset.checkoutBound = "true";
+      section.dataset.checkoutState = "idle";
+
+      section.querySelectorAll<HTMLButtonElement>("[data-payment-provider]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const provider = button.dataset.paymentProvider;
+          const productId = Number(button.dataset.productId);
+          if (
+            provider !== "stripe" &&
+            provider !== "paypal" &&
+            provider !== "creem"
+          ) return;
+          if (!Number.isInteger(productId) || productId < 1 || productId > 7) return;
+          void handleCheckout(
+            section,
+            startPricingCheckout({ provider, productId }),
+          );
+        });
+      });
+    }
+
+    async function handleCheckout(
+      section: HTMLElement,
+      checkout: Promise<PricingCheckoutResult>,
+    ) {
+      const buttons = section.querySelectorAll<HTMLButtonElement>("[data-payment-provider]");
+      buttons.forEach((button) => { button.disabled = true; });
+      section.dataset.checkoutState = "checkingAuth";
+      setCheckoutMessage(section, "");
+
+      const result = await checkout;
+      if (result.kind === "success") {
+        section.dataset.checkoutState = "redirecting";
+        return;
+      }
+      if (result.kind === "redirecting") {
+        section.dataset.checkoutState = "awaitingAuth";
+        return;
+      }
+
+      buttons.forEach((button) => { button.disabled = false; });
+      section.dataset.checkoutState = "failed";
+      if (result.kind === "verificationRequired") {
+        setCheckoutMessage(section, "Verify your email before purchasing.");
+      } else if (result.kind === "unavailable") {
+        setCheckoutMessage(section, "Payment is temporarily unavailable. Please try again.");
+      } else {
+        setCheckoutMessage(section, "We couldn't start payment. Please try again.");
+      }
+    }
+
+    function setCheckoutMessage(section: HTMLElement, message: string) {
+      section.querySelectorAll<HTMLElement>(".js-checkout-message").forEach((element) => {
+        element.textContent = message;
+        element.hidden = !message;
+      });
+    }
+
+    function syncPricingDebugFlag() {
+      try {
+        const url = new URL(window.location.href);
+        const debugParam = url.searchParams.get("pricingDebug");
+        if (debugParam === "1") {
+          sessionStorage.setItem("pricing_debug", "1");
+        } else if (debugParam === "0") {
+          sessionStorage.removeItem("pricing_debug");
+        }
+      } catch {}
+    }
+
+    function isPricingDebugEnabled(): boolean {
+      try {
+        return sessionStorage.getItem("pricing_debug") === "1";
+      } catch {
+        return false;
+      }
+    }
+
+    function debugLog(message: string, payload?: unknown) {
+      if (!isPricingDebugEnabled()) return;
+      if (payload === undefined) {
+        console.info("[PricingSwitcher]", message);
+        return;
+      }
+      console.info("[PricingSwitcher]", message, payload);
+    }
+
+    function debugWarn(message: string, payload?: unknown) {
+      if (!isPricingDebugEnabled()) return;
+      if (payload === undefined) {
+        console.warn("[PricingSwitcher]", message);
+        return;
+      }
+      console.warn("[PricingSwitcher]", message, payload);
+    }
+
+    function applyMode(
+      mode: "one_time" | "subscription",
+      section: HTMLElement,
+      reason: string
+    ) {
+      if (section.dataset.currentMode === mode) {
+        debugLog("skip apply: same mode", { mode, reason });
+        return;
+      }
+
+      debugLog("apply mode", {
+        mode,
+        reason,
+        previousMode: section.dataset.currentMode ?? "",
+      });
+
+      const values = section.querySelectorAll(".js-price-value");
+      values.forEach((element, index) => {
+        const htmlElement = element as HTMLElement;
+        if (htmlElement.dataset.fixed === "true") return;
+        const finalValue =
+          mode === "one_time"
+            ? htmlElement.dataset.priceOneTime
+            : htmlElement.dataset.priceSubscription;
+        if (finalValue === undefined) {
+          debugWarn("missing price data attribute", { mode, index });
+          return;
+        }
+        if (finalValue !== undefined && htmlElement.textContent !== finalValue) {
+          htmlElement.textContent = finalValue;
+        }
+      });
+
+      const suffixes = section.querySelectorAll(".js-price-suffix");
+      suffixes.forEach((element, index) => {
+        const htmlElement = element as HTMLElement;
+        if (htmlElement.dataset.fixed === "true") return;
+        const nextSuffix =
+          mode === "one_time"
+            ? htmlElement.dataset.suffixOneTime
+            : htmlElement.dataset.suffixSubscription;
+        if (nextSuffix === undefined) {
+          debugWarn("missing suffix data attribute", { mode, index });
+          return;
+        }
+        if (nextSuffix !== undefined && htmlElement.textContent !== nextSuffix) {
+          htmlElement.textContent = nextSuffix;
+        }
+      });
+
+      const notes = section.querySelectorAll(".js-price-note");
+      notes.forEach((element, index) => {
+        const htmlElement = element as HTMLElement;
+        if (htmlElement.dataset.fixed === "true") return;
+        const nextNote =
+          mode === "one_time"
+            ? htmlElement.dataset.noteOneTime
+            : htmlElement.dataset.noteSubscription;
+        if (nextNote === undefined) {
+          debugWarn("missing note data attribute", { mode, index });
+          return;
+        }
+        if (nextNote !== undefined && htmlElement.textContent !== nextNote) {
+          htmlElement.textContent = nextNote;
+        }
+      });
+
+      const paymentButtons = section.querySelectorAll('[data-payment-button="true"]');
+      paymentButtons.forEach((button, index) => {
+        const checkoutButton = button as HTMLButtonElement;
+        if (checkoutButton.dataset.fixed === "true") return;
+        const nextProductId =
+          mode === "one_time"
+            ? checkoutButton.dataset.productOneTime
+            : checkoutButton.dataset.productSubscription;
+        const shouldShow = typeof nextProductId === "string" && nextProductId !== "";
+        if (!shouldShow) {
+          debugWarn("missing checkout product for mode", {
+            mode,
+            index,
+            provider: checkoutButton.dataset.paymentProvider ?? "",
+          });
+        }
+        checkoutButton.hidden = !shouldShow;
+        if (shouldShow) checkoutButton.dataset.productId = nextProductId;
+      });
+
+      section.dataset.currentMode = mode;
+      debugLog("apply complete", { mode });
+    }
+  })();
+</script>

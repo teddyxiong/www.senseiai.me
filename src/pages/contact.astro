@@ -1,0 +1,244 @@
+---
+import config from "@/config/config.json";
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+import { markdownify } from "@/lib/utils/textConverter";
+import { FaLocationArrow } from "react-icons/fa";
+import {
+  FaCartShopping,
+  FaEnvelope,
+  FaHeadset,
+  FaLaptop,
+  FaPhone,
+} from "react-icons/fa6";
+
+const contact = await getEntry("contact", "-index");
+const { phone, email, address } = config.params as { phone: string; email: string; address: string };
+const { title, description, meta_title, image, form, info, cards } = (contact?.data ?? {}) as any;
+---
+
+<Base title={title} meta_title={meta_title} description={description} image={image}>
+  <PageHeader title={title} />
+
+  <section class="section section-gradient rounded-none">
+    <div class="container">
+      <div class="mb-10 rounded-md bg-white p-6 lg:mb-20 lg:px-10 lg:py-10">
+        <div class="row">
+          <div class="order-2 lg:col-7 lg:order-1">
+            <div
+              class="gradient gradient-sky max-lg:gradient-to-center lg:gradient-to-bottom max-lg:gradient-horizontal lg:gradient-vertical after:right-0 max-lg:mt-10 max-lg:pt-10 max-lg:after:top-0 lg:pe-10"
+            >
+              <form method="post" class="row gy-4" id="contactForm" data-form-messages={JSON.stringify({
+                sendingText: form.sending_text,
+                submitLabel: form.submit_label,
+                errorRequired: form.error_required,
+                errorEmail: form.error_email,
+                errorSubmission: form.error_submission,
+                errorSystem: form.error_system,
+                successMessage: form.success_message,
+              })}>
+                <div class="sm:col-12">
+                  <label class="form-label" for="name">{form.name_label}</label>
+                  <input
+                    type="text"
+                    placeholder={form.name_placeholder}
+                    name="name"
+                    id="name"
+                    class="form-input w-1/2"
+                    required
+                  />
+                </div>
+                <div class="sm:col-12">
+                  <label class="form-label" for="email">{form.email_label}</label>
+                  <input
+                    type="email"
+                    placeholder={form.email_placeholder}
+                    name="email"
+                    id="email"
+                    class="form-input w-1/2"
+                    required
+                  />
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="message">{form.message_label}</label>
+                  <textarea
+                    rows="6"
+                    name="message"
+                    id="message"
+                    placeholder={form.message_placeholder}
+                    class="form-input"
+                    required></textarea>
+                </div>
+                <div class="col-12">
+                  <button class="btn btn-md btn-primary w-full" type="submit" id="sendMessageButton">
+                    {form.submit_label}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <script type="module" data-astro-rerun>
+            function initContactForm() {
+              const formEl = document.getElementById("contactForm");
+              if (!(formEl instanceof HTMLFormElement)) return;
+              if (formEl.dataset.bound === "1") return;
+              formEl.dataset.bound = "1";
+
+              const submitButtonEl = document.getElementById("sendMessageButton");
+              const nameInputEl = document.getElementById("name");
+              const emailInputEl = document.getElementById("email");
+              const messageInputEl = document.getElementById("message");
+
+              if (!(submitButtonEl instanceof HTMLButtonElement)) return;
+              if (!(nameInputEl instanceof HTMLInputElement)) return;
+              if (!(emailInputEl instanceof HTMLInputElement)) return;
+              if (!(messageInputEl instanceof HTMLTextAreaElement)) return;
+
+              const messages = JSON.parse(formEl.getAttribute("data-form-messages") || "{}");
+              const defaultSubmitLabel = submitButtonEl.textContent || "";
+
+              formEl.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                submitButtonEl.disabled = true;
+                submitButtonEl.textContent = messages.sendingText || defaultSubmitLabel;
+
+                try {
+                  const name = nameInputEl.value.trim();
+                  const email = emailInputEl.value.trim();
+                  const message = messageInputEl.value.trim();
+
+                  if (!name || !email || !message) {
+                    throw new Error(messages.errorRequired || "Missing required fields");
+                  }
+
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (!emailRegex.test(email)) {
+                    throw new Error(messages.emailError || "Invalid email");
+                  }
+
+                  // Send through both paths completely independently and in parallel, with no dependency
+                  const results = await Promise.allSettled([
+                    // 3a: Send to Cloudflare Worker
+                    fetch("https://contact.fkg90932.workers.dev/", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ name, email, message }),
+                    }),
+                    // 3b: Send notification email to linkjobai@gmail.com via the EmailJS REST API
+                    fetch("https://api.emailjs.com/api/v1.0/email/send", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        service_id: "service_f9rncis",
+                        template_id: "template_4ybig3l",
+                        user_id: "PwlY8aSgzyIRIY-VA",
+                        template_params: {
+                          from_name: name,
+                          from_email: email,
+                          message: message,
+                        },
+                      }),
+                    }),
+                  ]);
+
+                  const [workerResult, emailResult] = results;
+
+                  // Check Worker submission result
+                  if (workerResult.status === "rejected" || !workerResult.value.ok) {
+                    let errorMsg = messages.errorSubmission || "Submit failed";
+                    if (workerResult.status === "fulfilled") {
+                      try {
+                        const data = await workerResult.value.json();
+                        errorMsg = data?.error || errorMsg;
+                      } catch (_) {}
+                    }
+                    throw new Error(errorMsg);
+                  }
+
+                  // Check email sending result (failure only logs the error and does not block the process)
+                  if (emailResult.status === "rejected") {
+                    console.error("Email notification to support@senseiai.me failed:", emailResult.reason);
+                  }
+
+                  alert(messages.successMessage || "Submitted");
+                  formEl.reset();
+                } catch (err) {
+                  alert(err instanceof Error ? err.message : (messages.errorSystem || "System error"));
+                } finally {
+                  submitButtonEl.disabled = false;
+                  submitButtonEl.textContent = messages.submitLabel || defaultSubmitLabel;
+                }
+              });
+            }
+
+            document.addEventListener("astro:page-load", initContactForm);
+            initContactForm();
+          </script>
+
+          <div class="order-1 lg:col-5 lg:order-2">
+            <div>
+              <h2 class="mb-6">{info.title}</h2>
+              <p class="mb-4 lg:mb-8" set:html={markdownify(info.description)} />
+              <ul class="mt-12 flex flex-wrap gap-y-6 gap-x-6 justify-between">
+                <li class="flex items-start gap-x-4 w-full lg:w-auto">
+                  <div class="mt-1"><FaPhone /></div>
+                  <div>
+                    <h3 class="h5 mb-1.5">{info.phone_label}</h3>
+                    <a class="text-sm underline" href={`tel:${phone}`}>{phone}</a>
+                  </div>
+                </li>
+                <li class="flex items-start gap-x-4 w-full lg:w-auto">
+                  <div class="mt-1"><FaEnvelope /></div>
+                  <div>
+                    <h3 class="h5 mb-1.5">{info.email_label}</h3>
+                    <a class="text-sm underline" href={`mailto:${email}`}>{email}</a>
+                  </div>
+                </li>
+                <li class="flex items-start gap-x-4 w-full">
+                  <div class="mt-1"><FaLocationArrow /></div>
+                  <div>
+                    <h3 class="h5 mb-1.5">{info.address_label}</h3>
+                    <span class="text-sm">{address}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row gy-4">
+        <div class="md:col-6 lg:col-4">
+          <div class="bg-gradient-primary flex min-h-full flex-col items-center gap-y-4 rounded-xl px-7 py-6 text-center text-white sm:px-14 sm:py-10">
+            <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-xl">
+              <FaCartShopping />
+            </div>
+            <h3 class="h4 text-inherit">{cards.sales.title}</h3>
+            <p class="opacity-80" set:html={markdownify(cards.sales.description)} />
+          </div>
+        </div>
+        <div class="md:col-6 lg:col-4">
+          <div class="bg-gradient-primary flex min-h-full flex-col items-center gap-y-4 rounded-xl px-7 py-6 text-center text-white sm:px-14 sm:py-10">
+            <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-center text-xl">
+              <FaHeadset />
+            </div>
+            <h3 class="h4 text-inherit">{cards.support.title}</h3>
+            <p class="opacity-80" set:html={markdownify(cards.support.description)} />
+          </div>
+        </div>
+        <div class="md:col-6 lg:col-4">
+          <div class="bg-gradient-primary flex min-h-full flex-col items-center gap-y-4 rounded-xl px-7 py-6 text-center text-white sm:px-14 sm:py-10">
+            <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-center text-xl">
+              <FaLaptop />
+            </div>
+            <h3 class="h4 text-inherit">{cards.resources.title}</h3>
+            <p class="opacity-80" set:html={markdownify(cards.resources.description)} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

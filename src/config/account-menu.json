@@ -1,0 +1,17 @@
+{
+  "buttons": {
+    "signIn": "Sign in"
+  },
+  "menu": {
+    "planAndBilling": "Dashboard",
+    "signOut": "Sign out"
+  },
+  "links": {
+    "login": "https://www.senseiai.me/auth/sign-in",
+    "billing": "https://www.senseiai.me/dashboard"
+  },
+  "a11y": {
+    "accountMenu": "Account menu"
+  }
+}
+

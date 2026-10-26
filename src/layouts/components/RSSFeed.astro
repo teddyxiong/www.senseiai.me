@@ -1,0 +1,32 @@
+---
+import { fetchRSSData, type RSSItem } from "@/lib/utils/rssUtils";
+import RSSCard from "./RSSCard.astro";
+
+// 服务端预获取RSS数据（双数据源各3条）
+let rssItems: RSSItem[] = [];
+try {
+  rssItems = await fetchRSSData();
+} catch (error) {
+  console.error("Failed to fetch RSS data on server:", error);
+}
+---
+
+<div id="rss-feed-container">
+  {
+    rssItems.length > 0 ? (
+      rssItems.map((item) => <RSSCard data={item} />)
+    ) : (
+      <div class="col-12 text-center">
+        <div class="text-gray-500">
+          Latest articles are temporarily unavailable.
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  #rss-feed-container {
+    display: contents;
+  }
+</style>

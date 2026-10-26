@@ -1,0 +1,13 @@
+.header {
+  @apply bg-white py-5 duration-300 shadow;
+
+  // navbar items
+  .navbar {
+    @apply relative flex flex-wrap items-center justify-between;
+  }
+}
+
+// 添加这个样式定义
+.header-fixed-top {
+  @apply fixed top-0 left-0 w-full z-30;
+}

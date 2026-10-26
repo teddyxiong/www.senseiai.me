@@ -1,0 +1,69 @@
+{
+  "menuGroups": [
+    {
+      "groupName": "Interview Assistant",
+      "items": [
+        {
+          "name": "Try AI Mock",
+          "url": "https://app.aihirely.com/",
+          "icon": "FaRobot"
+        },
+        {
+          "name": "Live AI Copilot",
+          "url": "/features/",
+          "icon": "FaMicrophone"
+        },
+        {
+          "name": "Phone AI Reply",
+          "url": "/features/",
+          "icon": "FaPhone"
+        }
+      ]
+    },
+    {
+      "groupName": "Resources",
+      "items": [
+        {
+          "name": "Blog",
+          "url": "/blog/",
+          "icon": "FaBlogger"
+        },
+        {
+          "name": "Pricing",
+          "url": "/pricing/",
+          "icon": "FaMoneyBillWave"
+        },
+        {
+          "name": "FAANG+ Interview",
+          "url": "/case-study/",
+          "icon": "FaBriefcase"
+        }
+      ]
+    },
+    {
+      "groupName": "About Us",
+      "items": [
+        {
+          "name": "Discord",
+          "url": "https://discord.com/invite/PfrcRpt7Sv",
+          "icon": "FaDiscord"
+        },
+        {
+          "name": "Instagram",
+          "url": "https://www.instagram.com/ai.hirely/",
+          "icon": "FaInstagram"
+        },
+        {
+          "name": "TikTok",
+          "url": "https://www.tiktok.com/@Linkjob",
+          "icon": "FaTiktok"
+        },
+        {
+          "name": "Contact",
+          "url": "/contact/",
+          "icon": "FaEnvelope"
+        }
+      ]
+    }
+  ]
+}

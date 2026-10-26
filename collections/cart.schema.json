@@ -1,0 +1,125 @@
+{
+  "$ref": "#/definitions/cart",
+  "definitions": {
+    "cart": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "meta_title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "canonical": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "ui_text": {
+          "type": "object",
+          "properties": {
+            "choose_plan_title": {
+              "type": "string"
+            },
+            "choose_plan_desc": {
+              "type": "string"
+            },
+            "choose_plan_meta": {
+              "type": "string"
+            },
+            "subscription_title": {
+              "type": "string"
+            },
+            "one_time_title": {
+              "type": "string"
+            },
+            "missing_payment_message": {
+              "type": "string"
+            },
+            "contact_html": {
+              "type": "string"
+            },
+            "choose_method_title": {
+              "type": "string"
+            },
+            "choose_method_desc": {
+              "type": "string"
+            },
+            "choose_method_status": {
+              "type": "string"
+            },
+            "loading_message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "choose_plan_title",
+            "choose_plan_desc",
+            "choose_plan_meta",
+            "subscription_title",
+            "one_time_title",
+            "missing_payment_message",
+            "contact_html",
+            "choose_method_title",
+            "choose_method_desc",
+            "choose_method_status",
+            "loading_message"
+          ],
+          "additionalProperties": false
+        },
+        "plan_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "pid": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "pid",
+                    "label"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "title",
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "draft": {
+          "type": "boolean"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "ui_text",
+        "plan_groups"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,248 @@
+// Gradient Background
+.bg-gradient-primary {
+  // @apply from-[#9676DB] from-0% to-primary to-100% bg-gradient-[188deg];
+  //background-color: #393294;
+}
+
+.bg-gradient-secondary {
+  // @apply from-[#683acb26] from-0% to-[#f5f6ff00] to-100% bg-gradient-[180deg];
+  background-color: #fff;
+}
+
+// Buttons Animation
+.bg-slide {
+  @apply relative z-10 overflow-hidden;
+  &-dark {
+    @apply before:bg-dark after:bg-dark hover:text-dark focus:text-dark;
+  }
+  &-white {
+    @apply before:bg-white after:bg-white hover:text-dark focus:text-dark;
+  }
+  &-gradient-primary {
+    @apply hover:text-dark focus:text-dark;
+    &::after,
+    &::before {
+      @apply bg-gradient-primary;
+    }
+  }
+
+  &::before {
+    @apply absolute left-0 -z-10 h-[120%] w-[110%] -rotate-1 transition-none duration-300 ease-out content-[""] hover:rotate-0 focus:rotate-0;
+  }
+  @apply before:bottom-[110%] hover:before:-bottom-0 hover:before:transition-all focus:before:-bottom-0 focus:before:transition-all;
+
+  &::after {
+    @apply absolute left-0 -z-10 h-[120%] w-[110%] -rotate-1 transition-all duration-300 ease-out content-[""] hover:rotate-0 focus:rotate-0;
+  }
+  @apply after:-bottom-[130%] hover:after:bottom-0 hover:after:top-[110%] hover:after:transition-none focus:after:bottom-0 focus:after:top-[110%] focus:after:transition-none;
+}
+
+// Buttons Style
+.btn {
+  @apply relative inline-block rounded border border-transparent px-4 py-1.5 text-base font-normal transition duration-300;
+
+  &-primary {
+    // @apply border-transparent text-white hover:text-white focus:text-white;
+    color: #253b80;
+    font-weight: 900;
+    background-color: #fff;
+
+    &:hover {
+      border-color: #fff;
+      background-color: #fff;
+    }
+
+    &:focus {
+      border-color: #bf3d37;
+      background-color: #fff;
+    }
+
+    // Animation
+    @apply border outline outline-1 outline-offset-0 outline-primary/50 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] hover:border hover:border-solid hover:outline-offset-8 hover:outline-transparent focus:border-solid focus:outline-offset-8 focus:outline-transparent;
+  }
+
+  &-blog-viewall {
+    color: #253b80;
+    font-weight: 900;
+    background-color: #fff;
+
+    &:hover {
+      border-color: #253b80;
+      background-color: #fff;
+    }
+
+    &:focus {
+      border-color: #253b80;
+      background-color: #fff;
+    }
+
+    @apply border outline outline-1 outline-offset-0 outline-[#253B80];
+    @apply transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)];
+    @apply hover:border hover:border-solid hover:border-[#253B80];
+    @apply hover:outline-offset-8 hover:outline-transparent;
+    @apply focus:border-solid focus:outline-offset-8 focus:outline-transparent;
+  }
+
+  &-cta-home {
+    @apply outline-[#253B80];
+    @apply hover:border hover:border-solid hover:border-[#253B80];
+    @apply focus:border focus:border-solid focus:border-[#253B80];
+  }
+
+  // Header CTA variant: blue fill, white text, blue border; keep original animation
+  &-header-primary {
+    @apply relative inline-flex items-center justify-center overflow-visible;
+    border-radius: clamp(8px, 1vw, 11px);
+    background-color: #3272d5;
+    color: #ffffff;
+    font-weight: 900;
+    @apply border border-transparent outline outline-1 outline-offset-0 outline-[#E3E7ED];
+    @apply transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)];
+    @apply hover:border hover:border-solid hover:border-[#E3E7ED];
+    @apply hover:outline-offset-8 hover:outline-transparent;
+    @apply focus:border focus:border-solid focus:border-[#E3E7ED];
+    @apply focus:outline-offset-8 focus:outline-transparent;
+  }
+
+  &-outline {
+    @apply border-transparent bg-transparent text-dark hover:border-border focus:border-border;
+    // Animation
+    @apply border outline outline-1 outline-offset-0 outline-border transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] hover:border hover:border-solid hover:outline-offset-8 hover:outline-transparent focus:border-solid focus:outline-offset-8 focus:outline-transparent;
+  }
+  &-outline-sky {
+    @apply border-border-sky bg-transparent text-dark hover:border-primary/20 hover:text-white;
+
+    // Animation
+    @extend .bg-slide;
+    @extend .bg-slide-gradient-primary;
+  }
+  &-outline-white {
+    @apply border-white bg-transparent text-white;
+
+    // Animation
+    @extend .bg-slide;
+    @extend .bg-slide-white;
+  }
+
+  &-white {
+    @apply relative overflow-visible bg-white;
+    color: #253b80;
+    font-weight: 900;
+    font-size: large;
+
+    // Animation
+    @apply border outline outline-1 outline-offset-0 outline-[#E3E7ED] transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] hover:border hover:border-solid hover:outline-offset-8 hover:outline-transparent focus:border-solid focus:outline-offset-8 focus:outline-transparent;
+  }
+
+  &-blue {
+    @apply relative overflow-visible;
+    background-color: #ffffff;
+    color: #3272d5;
+    font-weight: 900;
+    font-size: large;
+
+    // Base: blue border, hover/focus: white border
+    @apply border-[#3272D5] hover:border-white focus:border-white;
+
+    // Animation (customized for btn-blue)
+    @apply border outline outline-1 outline-offset-0 outline-transparent transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] hover:border hover:border-solid hover:outline-offset-1 hover:outline-white focus:border-solid focus:outline-offset-1 focus:outline-white;
+  }
+
+  // Nav capsule buttons: dark blue bg, white text, used between hero & features and in blog section
+  &-nav-capsule {
+    @apply inline-flex items-center gap-2 rounded-full border border-[#253B80]/20 bg-[#253B80] px-5 py-2 text-base font-medium text-white shadow-sm md:text-xl;
+
+    // Animation: lift, darken, and add shadow on hover
+    @apply transition-all duration-300 ease-[cubic-bezier(0.19,1,0.22,1)] hover:-translate-y-0.5 hover:border-[#253B80]/40 hover:bg-[#1F336E] hover:shadow-[0_10px_24px_rgba(37,59,128,0.24)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#253B80]/40 focus-visible:ring-offset-2;
+  }
+
+  &.btn-sm {
+    @apply px-3 py-2 text-sm;
+  }
+  &.btn-md {
+    @apply px-3 py-2.5 text-base;
+  }
+
+  // Btns Reset (Prevent Icon Click Inside Buttons)
+  & > * {
+    @apply pointer-events-none;
+  }
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 50px;
+  border-radius: 12px;
+  white-space: nowrap;
+  padding: 0 24px;
+  background: #fff;
+  color: #253b80;
+  border: 1px solid #d8d8d8;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-download-primary {
+  border-color: #253b80;
+  box-shadow: 0 6px 18px rgba(37, 59, 128, 0.18);
+}
+
+.btn-download-primary:hover {
+  background: #f8faff;
+  box-shadow: 0 8px 24px rgba(37, 59, 128, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-download-secondary:hover {
+  background: #f8faff;
+  border-color: #253b80;
+  transform: translateY(-1px);
+}
+
+.home-hero {
+  .btn-download-primary,
+  .btn-download-primary:hover {
+    background: #000;
+    color: #fff;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .btn-download-secondary,
+  .btn-download-secondary:hover {
+    background: #fff;
+    color: #3157a6;
+    border: 1px solid #e3e7ed;
+  }
+}
+
+.download-buttons {
+  display: flex;
+  width: auto;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+@media (min-width: 1024px) {
+  .btn-download {
+    font-size: 18px;
+  }
+}
+
+.hero-actions {
+  margin-top: clamp(32px, 5vw, 50px);
+}
+
+.hero-webm {
+  margin-top: clamp(40px, 7vw, 75px);
+  max-width: min(1000px, 100%);
+}
+
+.hero-webm--capabilities {
+  max-width: min(1200px, 100%);
+}

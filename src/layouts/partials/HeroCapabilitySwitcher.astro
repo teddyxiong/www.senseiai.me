@@ -1,0 +1,477 @@
+---
+import DualDeviceAnimation from "@/partials/DualDeviceAnimation.astro";
+import LiveInterviewAnimation from "@/partials/LiveInterviewAnimation.astro";
+---
+
+<div class="hero-capability-runway" data-capability-runway>
+  <div class="hero-capability-sticky" data-capability-sticky>
+    <div class="hero-capability-layout">
+      <div
+        class="hero-capability-tabs"
+        role="tablist"
+        aria-label="Interview modes"
+        aria-orientation="horizontal"
+        data-capability-tabs
+      >
+        <button
+          class="hero-capability-tab is-active"
+          type="button"
+          role="tab"
+          id="hero-capability-tab-live"
+          aria-selected="true"
+          aria-controls="hero-capability-panel-live"
+          tabindex="0"
+          data-capability-tab="0"
+        >
+          <span class="hero-capability-tab-title">Live Interview</span>
+          <span class="hero-capability-tab-description">
+            Get AI answers through an invisible overlay for any meeting platform
+            or browser-based test.
+          </span>
+        </button>
+        <button
+          class="hero-capability-tab"
+          type="button"
+          role="tab"
+          id="hero-capability-tab-dual-device"
+          aria-selected="false"
+          aria-controls="hero-capability-panel-dual-device"
+          tabindex="-1"
+          data-capability-tab="1"
+        >
+          <span class="hero-capability-tab-title">Dual-device</span>
+          <span class="hero-capability-tab-description">
+            Get AI answers on your phone to avoid detection by desktop
+            monitoring software.
+          </span>
+        </button>
+      </div>
+
+      <div class="hero-capability-stage">
+        <div
+          class="hero-capability-panel is-active"
+          id="hero-capability-panel-live"
+          role="tabpanel"
+          aria-labelledby="hero-capability-tab-live"
+          data-capability-panel="0"
+        >
+          <LiveInterviewAnimation />
+        </div>
+        <div
+          class="hero-capability-panel"
+          id="hero-capability-panel-dual-device"
+          role="tabpanel"
+          aria-labelledby="hero-capability-tab-dual-device"
+          data-capability-panel="1"
+          hidden
+        >
+          <DualDeviceAnimation />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    capabilityIndexFromScroll,
+    minimumRunwayTravel,
+    runwayTravelForLogoVisibility,
+    runwayGeometryFromMeasurements,
+    scrollTopForCapability,
+    stickyTopForViewport,
+    switchMountedCapability,
+  } from "@/lib/hero/capabilitySwitcher.mjs";
+
+  function setupCapabilitySwitcher(runway: HTMLElement) {
+    if (runway.dataset.capabilityReady === "true") return;
+    runway.dataset.capabilityReady = "true";
+
+    const sticky = runway.querySelector<HTMLElement>(
+      "[data-capability-sticky]",
+    );
+    const tablist = runway.querySelector<HTMLElement>("[data-capability-tabs]");
+    const tabs = Array.from(
+      runway.querySelectorAll<HTMLButtonElement>("[data-capability-tab]"),
+    );
+    const panels = Array.from(
+      runway.querySelectorAll<HTMLElement>("[data-capability-panel]"),
+    );
+    const animations = panels.map((panel) =>
+      panel.querySelector<HTMLElement>("[data-capability-animation]"),
+    );
+    if (
+      !sticky ||
+      !tablist ||
+      tabs.length === 0 ||
+      tabs.length !== panels.length ||
+      animations.some((animation) => !animation)
+    )
+      return;
+
+    const capabilityAnimations = animations as HTMLElement[];
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    let activeIndex = -1;
+    let frame = 0;
+    let programmaticScrollFrame = 0;
+
+    const loadAnimationAssets = async (animation: HTMLElement) => {
+      if (
+        !animation.matches("[data-switcher-managed]") ||
+        animation.classList.contains("is-assets-ready")
+      )
+        return;
+
+      const images = Array.from(
+        animation.querySelectorAll<HTMLImageElement>("img[data-src]"),
+      );
+      await Promise.all(
+        images.map(async (image) => {
+          if (!image.getAttribute("src")) image.src = image.dataset.src || "";
+          if (image.decode) await image.decode().catch(() => undefined);
+        }),
+      );
+      animation.classList.add("is-assets-ready");
+    };
+
+    const setActive = (index: number, focus = false) => {
+      const nextIndex = switchMountedCapability({
+        tabs,
+        panels,
+        animations: capabilityAnimations,
+        activeIndex,
+        nextIndex: index,
+        focus,
+      });
+      if (nextIndex === activeIndex) return;
+      activeIndex = nextIndex;
+      void loadAnimationAssets(capabilityAnimations[nextIndex]);
+    };
+
+    const geometry = () => {
+      const runwayDocumentTop =
+        runway.getBoundingClientRect().top + window.scrollY;
+      const stickyTop = Number.parseFloat(getComputedStyle(sticky).top) || 0;
+      return runwayGeometryFromMeasurements({
+        runwayDocumentTop,
+        stickyTop,
+        runwayHeight: runway.offsetHeight,
+        stickyHeight: sticky.offsetHeight,
+        capabilityCount: tabs.length,
+      });
+    };
+
+    const syncFromScroll = () => {
+      frame = 0;
+      if (reduceMotion) return;
+      setActive(capabilityIndexFromScroll(window.scrollY, geometry()));
+    };
+
+    const onScroll = () => {
+      if (programmaticScrollFrame) return;
+      if (!frame) frame = window.requestAnimationFrame(syncFromScroll);
+    };
+
+    const syncLayoutMetrics = () => {
+      const headerBottom = Math.max(
+        0,
+        document.querySelector<HTMLElement>(".header")?.getBoundingClientRect()
+          .bottom || 0,
+      );
+      const stickyTop = stickyTopForViewport({
+        viewportHeight: window.innerHeight,
+        stickyHeight: sticky.offsetHeight,
+        reservedTop: headerBottom,
+        minimumTop: headerBottom,
+      });
+      const minimumTravel = minimumRunwayTravel(
+        window.innerHeight,
+        window.innerWidth,
+      );
+      sticky.style.setProperty(
+        "--hero-capability-sticky-top",
+        `${stickyTop}px`,
+      );
+      runway.style.setProperty(
+        "--hero-capability-sticky-height",
+        `${sticky.offsetHeight}px`,
+      );
+      runway.style.setProperty(
+        "--hero-capability-runway-travel",
+        `${minimumTravel}px`,
+      );
+
+      const logoMarquee = runway
+        .closest("section")
+        ?.querySelector<HTMLElement>("[data-company-logo-marquee]");
+      if (logoMarquee && window.innerWidth >= 768) {
+        const runwayDocumentTop =
+          runway.getBoundingClientRect().top + window.scrollY;
+        const logoDocumentTop =
+          logoMarquee.getBoundingClientRect().top + window.scrollY;
+        const trailingGap = Math.max(
+          0,
+          logoDocumentTop - (runwayDocumentTop + runway.offsetHeight),
+        );
+        const runwayTravel = runwayTravelForLogoVisibility({
+          viewportHeight: window.innerHeight,
+          stickyTop,
+          stickyHeight: sticky.offsetHeight,
+          trailingGap,
+          minimumTravel,
+        });
+        runway.style.setProperty(
+          "--hero-capability-runway-travel",
+          `${runwayTravel}px`,
+        );
+      }
+      onScroll();
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => {
+        setActive(index);
+        if (!reduceMotion) {
+          if (frame) window.cancelAnimationFrame(frame);
+          frame = 0;
+          if (programmaticScrollFrame)
+            window.cancelAnimationFrame(programmaticScrollFrame);
+          window.scrollTo({
+            top: scrollTopForCapability(index, geometry()),
+            behavior: "auto",
+          });
+          programmaticScrollFrame = window.requestAnimationFrame(() => {
+            programmaticScrollFrame = 0;
+            syncFromScroll();
+          });
+        }
+      });
+      tab.addEventListener("keydown", (event) => {
+        const nextKeys = ["ArrowDown", "ArrowRight"];
+        const previousKeys = ["ArrowUp", "ArrowLeft"];
+        if (!nextKeys.includes(event.key) && !previousKeys.includes(event.key))
+          return;
+        event.preventDefault();
+        const direction = nextKeys.includes(event.key) ? 1 : -1;
+        const nextIndex = (index + direction + tabs.length) % tabs.length;
+        tabs[nextIndex].click();
+        tabs[nextIndex].focus({ preventScroll: true });
+      });
+    });
+
+    const preloadObserver =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              if (!entry.isIntersecting) return;
+              capabilityAnimations.forEach(
+                (animation) => void loadAnimationAssets(animation),
+              );
+              preloadObserver.disconnect();
+            },
+            { rootMargin: "300px" },
+          )
+        : null;
+    preloadObserver?.observe(runway);
+
+    const syncOrientation = () => {
+      tablist.setAttribute(
+        "aria-orientation",
+        desktop.matches ? "vertical" : "horizontal",
+      );
+    };
+
+    syncOrientation();
+    syncLayoutMetrics();
+    queueMicrotask(() => setActive(0));
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", syncLayoutMetrics);
+    desktop.addEventListener("change", syncOrientation);
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        preloadObserver?.disconnect();
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", syncLayoutMetrics);
+        desktop.removeEventListener("change", syncOrientation);
+        if (frame) window.cancelAnimationFrame(frame);
+        if (programmaticScrollFrame)
+          window.cancelAnimationFrame(programmaticScrollFrame);
+      },
+      { once: true },
+    );
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-capability-runway]")
+      .forEach(setupCapabilitySwitcher);
+  });
+</script>
+
+<style>
+  .hero-capability-runway {
+    width: 100%;
+  }
+
+  .hero-capability-sticky {
+    width: 100%;
+  }
+
+  .hero-capability-layout {
+    display: grid;
+    grid-template-columns: clamp(260px, 22vw, 320px) minmax(0, 1fr);
+    align-items: center;
+    gap: 38px;
+    width: 100%;
+  }
+
+  .hero-capability-tabs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: start;
+    margin-block-start: clamp(40px, 4vw, 56px);
+    border-left: 2px solid #c8cdd5;
+  }
+
+  .hero-capability-tab {
+    position: relative;
+    display: flex;
+    min-height: 104px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 0 12px 20px;
+    border: 0;
+    background: transparent;
+    color: #747b86;
+    text-align: left;
+    transition: color 180ms ease;
+  }
+
+  .hero-capability-tab-title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .hero-capability-tab-description {
+    max-width: 30ch;
+    color: #7c838e;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.45;
+    transition: color 180ms ease;
+  }
+
+  .hero-capability-tab::before {
+    content: "";
+    position: absolute;
+    left: -2px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: transparent;
+  }
+
+  .hero-capability-tab.is-active {
+    color: #20242b;
+  }
+
+  .hero-capability-tab.is-active .hero-capability-tab-description {
+    color: #545b66;
+  }
+
+  .hero-capability-tab.is-active::before {
+    background: #4f91ff;
+  }
+
+  .hero-capability-tab:focus-visible {
+    outline: 2px solid #3157a6;
+    outline-offset: 4px;
+  }
+
+  .hero-capability-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1861 / 1124;
+  }
+
+  .hero-capability-panel {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .hero-capability-panel[hidden] {
+    display: none;
+  }
+
+  .hero-capability-panel:not(.is-active) :global([data-capability-animation]) {
+    visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-capability-runway {
+      height: calc(
+        var(--hero-capability-sticky-height) +
+          var(--hero-capability-runway-travel, clamp(480px, 50svh, 640px))
+      );
+    }
+
+    .hero-capability-sticky {
+      position: sticky;
+      top: var(--hero-capability-sticky-top, 72px);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .hero-capability-layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .hero-capability-tabs {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-self: auto;
+      margin-block-start: 0;
+      border-left: 0;
+      border-bottom: 2px solid #c8cdd5;
+    }
+
+    .hero-capability-tab {
+      min-width: 0;
+      min-height: 0;
+      flex: 1 1 0;
+      gap: 4px;
+      padding: 10px 12px 12px;
+    }
+
+    .hero-capability-tab-title {
+      font-size: 16px;
+    }
+
+    .hero-capability-tab-description {
+      max-width: none;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .hero-capability-tab::before {
+      left: 0;
+      top: auto;
+      bottom: -2px;
+      width: 100%;
+      height: 2px;
+    }
+  }
+</style>

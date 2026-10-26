@@ -1,0 +1,31 @@
+---
+enable: true
+center_icon:
+  src: "/images/center-icon-50dac5.png"
+  alt: "Center Icon"
+logos:
+  - name: "Google"
+    image: "/images/platforms/google.png"
+    class_name: "icon-google"
+  - name: "Coderpad"
+    image: "/images/platforms/coderpad.png"
+    class_name: "icon-coderpad"
+  - name: "Teams"
+    image: "/images/platforms/teams.png"
+    class_name: "icon-teams"
+  - name: "CodeSignal"
+    image: "/images/platforms/codesignal.png"
+    class_name: "icon-codesignal"
+  - name: "HackerRank"
+    image: "/images/platforms/hackerrank.png"
+    class_name: "icon-hackerrank"
+  - name: "Zoom"
+    image: "/images/platforms/zoom.png"
+    class_name: "icon-zoom"
+  - name: "Lark"
+    image: "/images/platforms/lark.png"
+    class_name: "icon-lark"
+  - name: "Webex"
+    image: "/images/platforms/webex.png"
+    class_name: "icon-webex"
+---

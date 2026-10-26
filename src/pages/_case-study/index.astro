@@ -1,0 +1,40 @@
+---
+import CaseStudyCard from "@/components/CaseStudyCard.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { sortByWeight } from "@/lib/utils/sortFunctions"; // Import weight sorting function
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+// Get case studies list
+const caseStudies = await getSinglePage("case-study");
+// Sort by weight
+const sortedCaseStudies = sortByWeight(caseStudies);
+
+// Get index page data with frontmatter
+const caseStudyIndex = await getEntry("case-study", "-index");
+
+---
+
+<Base 
+  title={caseStudyIndex.data.title}
+  meta_title={caseStudyIndex.data.meta_title}
+  description={caseStudyIndex.data.description}
+>
+  <PageHeader title="Ultimate FAANG+ Interview Prep Guide" />
+
+  <section class="section-sm pb-0">
+    <div class="container">
+      <div class="row g-4" data-aos="fade-up-sm" data-aos-delay="150">
+        {
+          sortedCaseStudies.map((caseStudy: any) => (
+            <CaseStudyCard data={caseStudy} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>

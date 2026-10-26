@@ -1,0 +1,78 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { brands } = Astro.props;
+---
+
+{
+  brands.enable && (
+    <section class="section pb-0">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="text-center sm:flex sm:items-center">
+              <div class="md:gradient md:gradient-to-left gradient-horizontal h-px w-full" />
+              <p
+                class="pb-4 font-bold tracking-wide sm:mx-8 sm:whitespace-nowrap sm:pb-0"
+                style="font-size: 1.5rem;"
+                data-aos="fade-up-sm"
+                set:html={markdownify(brands.title)}
+              />
+              <div class="gradient gradient-to-center md:gradient-to-right gradient-horizontal h-px w-full" />
+            </div>
+          </div>
+          <div
+            class="col-12 pt-5 md:pt-10"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+          >
+            <div class="swiper brand-logo">
+              <div class="swiper-wrapper">
+                {brands.logos.map((logo: { image: string }) => (
+                  <div class="swiper-slide">
+                    <img src={logo.image} alt="brand logo" loading="lazy" decoding="async" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  import { Swiper } from "swiper";
+  import "swiper/css";
+  import "swiper/css/navigation";
+  import "swiper/css/pagination";
+  import { Autoplay, Navigation } from "swiper/modules";
+
+  document.addEventListener("astro:page-load", () => {
+    new Swiper(".brand-logo", {
+      loop: true,
+      slidesPerView: 2,
+      modules: [Autoplay, Navigation],
+      speed: 500,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      breakpoints: {
+        1200: {
+          slidesPerView: 6,
+        },
+        991: {
+          slidesPerView: 5,
+        },
+        767: {
+          slidesPerView: 4,
+        },
+        480: {
+          slidesPerView: 3,
+        },
+      },
+    });
+  });
+</script>

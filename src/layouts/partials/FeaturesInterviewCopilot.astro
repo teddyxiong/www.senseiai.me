@@ -1,0 +1,294 @@
+---
+import { getEntry } from "astro:content";
+import type { FeaturesSectionV2Data } from "@/content/config";
+import "../../styles/features-section.css";
+const entry = await getEntry("sections", "featureinterviewcopilot");
+const data = entry?.data as FeaturesSectionV2Data | undefined;
+
+type HeroVideoWithFacadeAssets = FeaturesSectionV2Data["hero_card"]["video"] & {
+  cover_image?: string;
+  play_button_image?: string;
+};
+
+const heroVideo = data?.hero_card.video as HeroVideoWithFacadeAssets | undefined;
+
+const WAVE = { mult: 17, mod: 55 };
+const VIDEO_MIN_HEIGHT = 340;
+const waveBars = (base: number, count: number, delayStep = 0.04) =>
+  Array.from({ length: count }, (_, i) => ({
+    height: `${base + ((i * WAVE.mult) % WAVE.mod)}%`,
+    delay: `${(i * delayStep).toFixed(2)}s`,
+  }));
+---
+
+{
+  data?.enable && (
+    <section class="features-v2-section w-full bg-white pt-0 pb-8 md:pb-10">
+      <div class="container mx-auto max-w-[1440px] px-4 sm:px-6">
+        <div class="row">
+          <div class="mx-auto mb-6 text-center md:mb-8 lg:col-12">
+            <h2 class="feature-card-title text-[28px] sm:text-[35px] md:text-[40px]">
+              <span>{data.header.title_line_1}</span>
+              <br />
+              <span class="text-[#58ACF2]">{data.header.title_line_2}</span>
+            </h2>
+          </div>
+
+          <div class="col-12 flex flex-col gap-6">
+            <div class="feature-card-base flex flex-col gap-6 rounded-[20px] p-4 sm:p-6 md:min-h-[500px] md:rounded-[30px] md:p-10 xl:flex-row xl:gap-8">
+              <div class="flex flex-[2] flex-col gap-5">
+                <h3 class="feature-card-title text-[22px] sm:text-[24px] md:text-[30px]">
+                  {data.hero_card.title}
+                </h3>
+                <p class="feature-card-desc text-[15px] sm:text-[16px] md:text-[20px]">
+                  {data.hero_card.description}
+                </p>
+              </div>
+
+              <div class="flex flex-[3] items-center justify-center">
+                <div
+                  class="relative flex aspect-video h-full min-h-[140px] w-full items-center justify-center overflow-hidden rounded-[20px] bg-[#1A1A1A] sm:min-h-[180px] md:min-h-[420px]"
+                  data-youtube-container
+                >
+                  <button
+                    type="button"
+                    class="group relative h-full w-full cursor-pointer"
+                    aria-label={`Play video: ${heroVideo?.title || "Interview Copilot Demo"}`}
+                    data-video-dialog
+                    data-video-url={heroVideo?.src}
+                  >
+                    <img
+                      class="h-full w-full object-cover"
+                      src={heroVideo?.cover_image}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+
+                    <span
+                      class="pointer-events-none absolute inset-0 flex items-center justify-center"
+                      aria-hidden="true"
+                    >
+                      <img
+                        class="h-auto w-[68px] drop-shadow-lg transition-transform duration-200 group-hover:scale-105 group-focus-visible:scale-105 sm:w-[76px] md:w-20"
+                        src={heroVideo?.play_button_image}
+                        alt=""
+                        width="80"
+                        height="56"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-6 xl:flex-row">
+              <div class="feature-card-base flex flex-[3] flex-col gap-5 rounded-[20px] p-4 sm:p-5 md:min-h-[420px] md:rounded-[30px] md:p-8">
+                <h3 class="feature-card-title text-[22px] sm:text-[24px] md:text-[30px]">
+                  {data.cards.pressure.title}
+                </h3>
+                <p class="feature-card-desc shrink-0 text-[15px] sm:text-[16px] md:text-[20px]">
+                  {data.cards.pressure.description}
+                </p>
+
+                <div class="flex w-full items-end justify-center overflow-visible">
+                  <div class="relative flex h-[150px] w-full max-w-[400px] items-end justify-center overflow-visible pt-5 sm:h-[190px]">
+                    <div class="pointer-events-none absolute bottom-0 left-1/2 z-[2] h-[140px] w-40 -translate-x-1/2">
+                      {data.voice_ui.bubbles.map((bubble) => (
+                        <div class={`ai-bubble ${bubble.class_name} absolute bottom-5 left-1/2 z-[3] grid size-8 place-items-center rounded-full bg-white opacity-0 shadow-[0_4px_20px_rgba(169,212,248,0.4)] sm:bottom-[25px] sm:size-12`}>
+                          <img class="size-[22px] object-contain sm:size-[34px]" src={bubble.logo} alt={bubble.name} />
+                        </div>
+                      ))}
+                    </div>
+
+                    <div class="relative z-[3] flex w-max items-center overflow-hidden rounded-[18px] bg-white px-[14px] py-[9.5px] shadow-[0_0_40px_rgba(169,212,248,0.8)] sm:rounded-[22px] sm:px-[18px] sm:py-[11.5px]">
+                      <div class="size-9 shrink-0 overflow-hidden rounded-[7px] bg-[#d9d9d9] sm:size-[42px] sm:rounded-lg">
+                        <img class="block size-full object-cover" src={data.voice_ui.avatar} alt={data.voice_ui.avatar_alt} />
+                      </div>
+
+                      <div class="flex h-7 w-max items-center gap-0.5 pl-[18px] sm:h-8 sm:gap-[5px] sm:pl-[22px]">
+                        {waveBars(35, data.voice_ui.bar_count || 31).map((bar) => (
+                          <span
+                            class="wave-bar w-[2.5px] rounded-full sm:w-[3px]"
+                            style={`height: ${bar.height}; animation-delay: ${bar.delay}`}
+                          ></span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="feature-card-base flex flex-[2] flex-col gap-5 rounded-[20px] p-4 sm:p-5 md:min-h-[420px] md:rounded-[30px] md:p-8">
+                <h3 class="feature-card-title text-[22px] sm:text-[24px] md:text-[30px]">
+                  {data.cards.personalized.title}
+                </h3>
+                <p class="feature-card-desc shrink-0 text-[15px] sm:text-[16px] md:text-[20px]">
+                  {data.cards.personalized.description}
+                </p>
+
+                <div class="flex flex-1 items-center justify-center">
+                  <div class="mx-auto flex min-h-[220px] w-full max-w-[500px] items-center justify-center gap-5 pt-5 sm:gap-7">
+                    <div class="flex basis-[130px] items-end justify-center self-end sm:basis-[170px]">
+                      {data.cards.personalized.resume_image && (
+                        <img class="block w-[130px] max-w-full object-contain sm:w-[170px]" src={data.cards.personalized.resume_image} alt="Resume" />
+                      )}
+                    </div>
+
+                    <div class="flex flex-col items-start justify-start gap-2 self-start pb-[10px] sm:pb-[18px]">
+                      {data.cards.personalized.resume_items.map((item, index) => (
+                        <div
+                          class="personalized-pill flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 sm:px-4 sm:py-[7.5px]"
+                          style={`background-color: ${item.color}`}
+                        >
+                          <img class="size-[18px] shrink-0 object-contain sm:size-[22px]" src={item.image} alt="" />
+                          <span class="text-[14px] font-semibold leading-[1.15] text-white sm:text-[16px]">{item.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-6 xl:flex-row">
+              <div class="feature-card-base flex flex-[2] flex-col gap-5 rounded-[20px] p-4 sm:p-5 md:min-h-[420px] md:rounded-[30px] md:p-8">
+                <h3 class="feature-card-title text-[22px] sm:text-[24px] md:text-[30px]">
+                  {data.cards.platform.title}
+                </h3>
+                <p class="feature-card-desc shrink-0 text-[15px] sm:text-[16px] md:text-[20px]">
+                  {data.cards.platform.description}
+                </p>
+
+                {data.rotating_logos?.enable && (
+                  <div class="grid w-full flex-1 place-items-center">
+                    <div class="relative size-[180px] md:size-[220px]">
+                      <div class="absolute inset-5 rounded-full border border-dashed border-[#949499]"></div>
+                      <div class="absolute left-1/2 top-1/2 z-10 size-14 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[5px] md:size-[70px]">
+                        <img class="size-full object-cover" src={data.rotating_logos.center_icon.src} alt={data.rotating_logos.center_icon.alt || "Center Icon"} loading="lazy" />
+                      </div>
+
+                      <div class="rotating-container absolute inset-0">
+                        {data.rotating_logos.logos.map((logo, index) => (
+                          <div class="absolute inset-0" style={`transform: rotate(${index * 45}deg)`}>
+                            <div class="absolute left-1/2 top-5 size-[30px] -translate-x-1/2 -translate-y-1/2 md:size-9">
+                              <div class="size-full" style={`transform: rotate(${-index * 45}deg)`}>
+                                <div class="platform-icon-wrap size-full overflow-hidden rounded-full bg-white shadow-[0_5px_5px_rgba(0,0,0,0.25)]">
+                                  <img class="size-full object-contain" src={logo.image} alt={logo.name} loading="lazy" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div class="feature-card-base flex flex-[3] flex-col gap-5 rounded-[20px] p-4 sm:p-5 md:min-h-[420px] md:rounded-[30px] md:p-8">
+                <h3 class="feature-card-title text-[22px] sm:text-[24px] md:text-[30px]">
+                  {data.cards.interview_types.title}
+                </h3>
+                <p class="feature-card-desc shrink-0 text-[15px] sm:text-[16px] md:text-[20px]">
+                  {data.cards.interview_types.description}
+                </p>
+
+                <div class="grid w-full place-items-center pt-3 sm:pt-10">
+                  <div class="grid w-full max-w-[960px] grid-cols-2 gap-2 p-2 sm:gap-3 sm:p-3 lg:gap-4">
+                    {data.cards.interview_types.badges.map((badge, index) => (
+                      <div
+                        class="interview-badge grid-cols-[28px_minmax(0,1fr)_32px] gap-1.5 rounded-[22px] px-2 py-[14px] sm:grid-cols-[34px_minmax(0,1fr)_42px] sm:gap-2 sm:rounded-[26px] sm:px-3 sm:py-4 lg:grid-cols-[44px_minmax(0,1fr)_56px] lg:gap-3 lg:rounded-[32px] lg:px-4 lg:py-[19px]"
+                        style={`animation-delay: calc(var(--badge-stagger) * (${index} - 4))`}
+                      >
+                        <div class="grid size-7 place-items-center rounded-[7px] border border-[#d8dee8] bg-white p-[3px] sm:size-[34px] sm:rounded-[9px] sm:p-1 lg:size-11 lg:rounded-[11px] lg:p-1.5" aria-hidden="true">
+                          <span class="grid size-full place-items-center rounded-[5px] text-[11px] font-bold leading-none text-white sm:rounded-[6px] sm:text-[13px] lg:rounded-[8px] lg:text-[16px]" style={`background-color: ${badge.color}`}>
+                            {badge.initial}
+                          </span>
+                        </div>
+
+                        <span class="min-w-0 truncate text-[11px] font-bold leading-none text-white sm:text-[13px] lg:text-[16px]">
+                          {badge.label}
+                        </span>
+
+                        <div class="interview-badge-wave flex h-5 w-8 items-center justify-end gap-[2px] sm:h-6 sm:w-[42px] sm:gap-[3px] lg:h-[30px] lg:w-14 lg:gap-1" aria-hidden="true">
+                          {waveBars(25, 8, 0.08).map((bar) => (
+                            <span
+                              class="interview-badge-wave-bar w-[2px] shrink-0 rounded-full sm:w-[2.5px] lg:w-[3px]"
+                              style={`height: ${bar.height}; animation-delay: ${bar.delay}`}
+                            ></span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  let _youtubePreconnected = false;
+
+  function _preconnectYouTube() {
+    if (_youtubePreconnected) return;
+    _youtubePreconnected = true;
+    for (const origin of ['https://www.youtube.com', 'https://i.ytimg.com']) {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = origin;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+  }
+
+  document.addEventListener('pointerdown', (e) => {
+    const btn = (e.target as HTMLElement)?.closest?.('[data-youtube-facade]');
+    if (btn) _preconnectYouTube();
+  }, { passive: true, capture: true });
+
+  document.addEventListener('mouseenter', (e) => {
+    const btn = (e.target as HTMLElement)?.closest?.('[data-youtube-facade]');
+    if (btn) _preconnectYouTube();
+  }, { passive: true, capture: true });
+
+  document.addEventListener('focusin', (e) => {
+    const btn = (e.target as HTMLElement)?.closest?.('[data-youtube-facade]');
+    if (btn) _preconnectYouTube();
+  }, { passive: true, capture: true });
+
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement)?.closest?.('[data-youtube-facade]');
+    if (!(btn instanceof HTMLButtonElement)) return;
+
+    const container = btn.closest('[data-youtube-container]');
+    if (!container) return;
+
+    const src = btn.getAttribute('data-youtube-src');
+    const title = btn.getAttribute('data-youtube-title') || '';
+    if (!src) return;
+
+    e.preventDefault();
+
+    const url = new URL(src);
+    url.searchParams.set('autoplay', '1');
+
+    const iframe = document.createElement('iframe');
+    iframe.src = url.toString();
+    iframe.title = title;
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:20px';
+
+    container.textContent = '';
+    container.appendChild(iframe);
+  });
+</script>

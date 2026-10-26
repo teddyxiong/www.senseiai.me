@@ -1,0 +1,595 @@
+---
+import DynamicIcon from "@/helpers/DynamicIcon";
+import Base from "@/layouts/Base.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+// import PageHeader from "@/partials/PageHeader.astro";
+import FAQ from "@/partials/FAQ.astro";
+import TestimonialInterviewCopilot from "@/partials/Testimonialinterviewcopilot.astro";
+import PlatformStatusList from "@/layouts/components/PlatformStatusListinterviewcopilot.astro";
+
+import { getEntry } from "astro:content";
+import { FaCirclePlay } from "react-icons/fa6";
+import HeroCapabilitySwitcher from "@/partials/HeroCapabilitySwitcher.astro";
+import FeaturesInterviewCopilot from "@/partials/FeaturesInterviewCopilot.astro";
+import videos from "@/config/video.json";
+import "../styles/home-video-dialog.css";
+
+const interviewCopilotPageData = await getEntry("interview-copilot", "-index");
+if (!interviewCopilotPageData) {
+  throw new Error("interview-copilot page data not found");
+}
+const {
+  banner,
+  challenges_section,
+  platform,
+  explore_section,
+  inbound_solution,
+  tools_section,
+  nav_buttons: navButtons = [],
+} = interviewCopilotPageData.data;
+
+const testimonial = await getEntry("sections", "testimonial");
+if (!testimonial) {
+  throw new Error("testimonial data not found");
+}
+
+const testimonialCopy = (await getEntry(
+  "sections",
+  "testimonialinterviewcopilot",
+)) as unknown as { data: { title: string; description: string } };
+if (!testimonialCopy?.data) {
+  throw new Error("testimonialinterviewcopilot data not found");
+}
+const testimonialCopyTitle = testimonialCopy.data.title as string;
+const testimonialCopyDescription = testimonialCopy.data.description as string;
+
+const faqEntry = await getEntry("sections", "faqinterviewcopilot");
+if (!faqEntry) {
+  throw new Error("faqinterviewcopilot data not found");
+}
+
+const ctaEntry = await getEntry("sections", "call-to-action-copilot");
+if (!ctaEntry) {
+  throw new Error("call-to-action-copilot data not found");
+}
+
+const video = videos.codingInterviewCopilot;
+---
+
+<Base {...interviewCopilotPageData.data} footerVariant="interview-copilot">
+  <section
+    class="home-hero section pb-16 md:pb-32 bg-index-hero bg-index-hero--home bg-index-hero-overlay relative rounded-t-[10px] text-white md:rounded-t-[10px]"
+  >
+    <div class="container relative z-10">
+      <div class="row gy-4 items-center">
+        <div class="lg:col-12 flex flex-col items-center">
+          <div
+            class="mb-5 mx-8 flex items-center justify-center text-center sm:mx-12 lg:mx-16 rounded-[20px] border border-[#3157A6] bg-white/5 px-3 py-px text-[#3157A6] max-[400px]:text-sm sm:px-4"
+          >
+            <img
+              src="/images/thunder1.svg"
+              alt=""
+              class="me-2 h-6 w-6 shrink-0"
+              width="24"
+              height="24"
+            />
+            <span class="min-w-0" set:html={markdownify(banner?.badge)} />
+          </div>
+          <h1
+            class="home-hero-title mt-6 mb-7 w-full max-w-[1000px] text-center text-[30px] leading-[1.2] text-black md:text-[36px] lg:text-[45px]"
+            set:html={markdownify(banner.title)}
+          />
+          <p
+            class="mb-0 w-full max-w-[58ch] text-center text-base font-regular text-[#454A52] sm:max-w-[60ch] md:max-w-[64ch] md:text-lg lg:text-xl"
+            style="text-wrap: balance;"
+            set:html={markdownify(banner.content)}
+          />
+
+          <div class="hero-actions flex flex-col gap-2">
+            <div class="flex justify-center mb-2">
+              {
+                banner.video_button.enable && (
+                  <button
+                    class="btn btn-outline-white"
+                    data-src={banner.video_button.link}
+                    data-modal
+                    data-target="video-modal"
+                    aria-label="play-button"
+                    aria-labelledby="video-modal"
+                  >
+                    <FaCirclePlay className="me-1 -mt-1 inline" />
+                    {banner.video_button.label}
+                  </button>
+                )
+              }
+            </div>
+
+            <div class="download-buttons">
+              {
+                banner.button.enable && (
+                  <a
+                    href={banner.button.link}
+                    class="btn btn-download btn-download-primary"
+                  >
+                    {banner.button.label}
+                    <img
+                      src="/images/icons/download-white.png"
+                      alt=""
+                      class="inline-block h-3 w-auto scale-150"
+                      width="48"
+                      height="48"
+                    />
+                  </a>
+                )
+              }
+              {
+                banner.button2?.enable && (
+                  <a
+                    href={banner.button2.link}
+                    class="btn btn-download btn-download-secondary"
+                  >
+                    {banner.button2.label}
+                    <img
+                      src="/images/icons/arrow-right.png"
+                      alt=""
+                      class="inline-block h-3 w-auto"
+                      width="44"
+                      height="30"
+                    />
+                  </a>
+                )
+              }
+            </div>
+          </div>
+
+          <div class="hero-webm hero-webm--capabilities w-full">
+            <HeroCapabilitySwitcher />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- <PageHeader title={interviewCopilotPageData.data.title} /> -->
+
+  <FeaturesInterviewCopilot />
+
+  <!-- challenges_section -->
+  <section class="section pt-0 pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12 xl:col-12">
+          <div class="mb-2 h-10" data-aos="fade-up-sm" aria-hidden="true"></div>
+          <h2
+            class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+            style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+            set:html={markdownify(challenges_section.title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            class="mb-10 text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+            style="text-wrap: balance;"
+            set:html={markdownify(challenges_section.description)}
+          />
+
+          <!-- <div class="hero-webm mx-auto w-full mt-10" data-aos="fade-up-sm" data-aos-delay="200">
+            <div class="w-full overflow-hidden rounded-xl md:rounded-2xl border border-[#D0E7FB] bg-white/5 shadow-sm">
+              <img
+                src="/images/interviewcopilot.webp"
+                alt="Real-Time Interview Feedback & Instant Question Identification"
+                class="w-full h-auto"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div> -->
+        </div>
+
+        <!-- youtube video area  -->
+
+        <section class="section pt-0 pb-0">
+          <div class="container">
+            <div class="row justify-center">
+              <div class="w-full max-w-[960px]">
+                <div
+                  class="relative aspect-video w-full overflow-hidden rounded-xl border border-gray-200 bg-white/50 shadow-sm"
+                  data-youtube-container
+                >
+                  <button
+                    type="button"
+                    class="group absolute inset-0 h-full w-full cursor-pointer"
+                    aria-label={`Play video: ${video.title}`}
+                    data-video-dialog
+                    data-video-url={video.src}
+                  >
+                    <img
+                      class="h-full w-full object-cover"
+                      src="/images/features/coding-interview-copilot-cover2.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+
+                    <span
+                      class="pointer-events-none absolute inset-0 flex items-center justify-center"
+                      aria-hidden="true"
+                    >
+                      <img
+                        class="h-auto w-[68px] drop-shadow-lg transition-transform duration-200 group-hover:scale-105 sm:w-[76px] md:w-20"
+                        src="/images/features/youtube-button.webp"
+                        alt=""
+                        width="80"
+                        height="56"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div
+          class="col-12 pt-5 md:pt-10"
+          data-aos="fade-up-sm"
+          data-aos-delay="250"
+        >
+          <div class="row rounded-3xl">
+            {
+              challenges_section.challenges.map(
+                (challenge: {
+                  title: string;
+                  description: string;
+                  icon: string;
+                }) => (
+                  <div class="after:bg-gradient-primary relative border p-7 transition-colors duration-300 after:absolute after:left-0 after:top-0 after:-z-10 after:h-full after:w-full after:opacity-0 after:duration-300 hover:border-transparent hover:text-white hover:after:opacity-100 sm:p-10 lg:col-6">
+                    <div class="flex flex-wrap items-center">
+                      <div class="mb-6 mr-3 h-[50px] w-[50px] rounded-full border text-center text-lg leading-[50px] sm:h-[56px] sm:w-[56px] sm:text-2xl sm:leading-[56px] flex items-center justify-center">
+                        <DynamicIcon icon={challenge.icon} />
+                      </div>
+                      <h3
+                        class="h4 mb-4 inline-block text-inherit"
+                        set:html={markdownify(challenge.title)}
+                      />
+                    </div>
+                    <p set:html={markdownify(challenge.description)} />
+                  </div>
+                ),
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore AI coding interview copilot -->
+  {
+    navButtons[1] && (
+      <div class="flex justify-center pt-8 pb-8 md:pb-12">
+        <a href={navButtons[1].link} class="btn btn-nav-capsule">
+          {navButtons[1].label}
+          <img
+            src="/images/icons/arrow-white.png"
+            alt=""
+            class="inline-block h-3 w-auto"
+          />
+        </a>
+      </div>
+    )
+  }
+
+  <TestimonialInterviewCopilot
+    testimonial={testimonial}
+    titleHtml={testimonialCopyTitle}
+    descriptionHtml={testimonialCopyDescription}
+    className="mt-10 mb-12"
+  />
+
+  <!-- explore_section  -->
+  <!-- <section class="section-sm mb-1 pb-1">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12">
+          <div class="mb-2 h-10" data-aos="fade-up-sm" aria-hidden="true"></div>
+          <h2
+            class="mb-6 mx-auto text-center"
+            style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(explore_section.title)}
+          />
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            class="mb-10 text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+            set:html={markdownify(explore_section.description)}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    explore_section.features.map(
+      (
+        feature: {
+          title: string;
+          description: string;
+          image: string;
+          lists: string[];
+        },
+        i: number
+      ) => (
+        <section
+          class={`section pt-10 pb-10 ${
+            i === explore_section.features.length - 1 || i % 2 !== 0
+              ? ""
+              : "section-gradient pt-0"
+          }`}
+        >
+          <div class="container">
+            <div
+              class={`row items-center ${i % 2 === 0 ? "max-lg:gy-5 max-lg:flex-col-reverse" : "max-lg:gy-5"}`}
+            >
+              <div
+                class={`lg:col-6 ${i % 2 === 0 ? "" : "order-last"}`}
+                data-aos="fade-left-sm"
+                data-aos-delay="100"
+              >
+                {/* <div class="section-heading-shape" aria-label="shape" /> */}
+                <h3 class="mb-6" set:html={markdownify(feature.title)} />
+                <p class="mb-6" set:html={markdownify(feature.description)} />
+                <div
+                  class="gradient gradient-horizontal gradient-to-right w-full"
+                  aria-label="horizontal line"
+                />
+                <ul class="list list-check pt-6">
+                  {feature.lists.map((list: string) => (
+                    <li>{list}</li>
+                  ))}
+                </ul>
+              </div>
+              <div
+                class={`lg:col-6 ${i % 2 === 0 ? "order-last" : ""}`}
+                data-aos="fade-left-sm"
+                data-aos-delay="150"
+              >
+                <img
+                  width="576"
+                  class="mx-auto lg:mx-0 lg:pl-6 xl:pl-12"
+                  src={feature.image}
+                  alt={feature.title}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    )
+  } -->
+
+  <!-- platform -->
+  <!-- <section class="section pt-0 pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12 xl:col-12">
+          <div class="mb-2 h-10" data-aos="fade-up-sm" aria-hidden="true"></div>
+          <h2
+            class="mb-6 mx-auto text-center"
+            style="max-width: 700px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            data-aos="fade-up-sm"
+            data-aos-delay="50"
+            set:html={markdownify(platform.title)}
+          />
+          <p
+            class="mb-10 text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            set:html={markdownify(platform.description)}
+          />
+          <PlatformStatusList />
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Inbound Solution -->
+  <section class="section section-gradient pt-0">
+    <div class="container">
+      <!-- features-->
+      <div class="row">
+        <div class="mx-auto text-center lg:col-12">
+          <div class="mb-2 h-10" data-aos="fade-up-sm" aria-hidden="true"></div>
+          <h2
+            class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+            style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+            set:html={markdownify(inbound_solution.title)}
+          />
+          <p
+            class="mb-10 text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+            set:html={markdownify(inbound_solution.description)}
+          />
+          <!-- {
+            inbound_solution.button.enable && (
+              <div data-aos="fade-up-sm" data-aos-delay="200">
+                <a href={inbound_solution.button.link} class="btn btn-primary mt-10">
+                  {inbound_solution.button.label}
+                </a>
+              </div>
+            )
+          } -->
+        </div>
+      </div>
+
+      <!-- solutions part 4 cards -->
+      <div class="row pt-0">
+        <div class="col-12">
+          <div class="mx-auto">
+            <div
+              class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
+            >
+              {
+                inbound_solution.solutions.map((solution: any, i: number) => (
+                  <div class="h-full">
+                    <div
+                      class="rounded-[20px] p-6 text-center sm:p-8 md:rounded-[30px] h-full flex flex-col"
+                      style="background: rgba(236, 245, 253, 0.3); border: 1px solid rgba(150, 200, 255, 0.3);"
+                      data-aos="fade-up-sm"
+                      data-aos-delay={100 + i * 50}
+                    >
+                      <div class="mx-auto mb-5 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-primary/10 text-center text-lg leading-[50px] text-primary sm:h-[64px] sm:w-[64px] sm:text-2xl sm:leading-[64px]">
+                        <DynamicIcon icon={solution.icon} />
+                      </div>
+                      <h3
+                        class="h4 mb-5 text-dark"
+                        set:html={markdownify(solution.title)}
+                      />
+                      <p
+                        class="text-[#4A4A4A] text-left flex-1"
+                        set:html={markdownify(solution.description)}
+                      />
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tools  -->
+  {
+    tools_section.enable && (
+      <section>
+        <div class="container pb-16 md:pb-32">
+          <div class="row">
+            <div class="mx-auto text-center lg:col-12 xl:col-12">
+              {/* <div
+                class="section-heading-shape"
+                aria-label="shape"
+                data-aos="fade-up-sm"
+              /> */}
+              <h2
+                class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+                style="max-width: 800px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+                data-aos="fade-up-sm"
+                data-aos-delay="100"
+                set:html={markdownify(tools_section.title)}
+              />
+            </div>
+            <div class="col-12" data-aos="fade-up-sm" data-aos-delay="150">
+              <div class="flex flex-wrap justify-center gap-5 pt-10 lg:gap-y-10">
+                {tools_section.tools.map(
+                  (tool: { name: string; logo: string }) => (
+                    <div class="group relative basis-[70px] rounded-xl py-4 shadow transition-all duration-300 hover:-translate-y-4 md:basis-[100px] md:py-5 lg:basis-[134px] lg:py-8">
+                      <img
+                        src={tool.logo}
+                        class="mx-auto block h-[36px] w-[36px] object-cover md:h-[56px] md:w-[56px]"
+                        alt="brand logo"
+                      />
+                      <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs opacity-0 transition-all duration-300 group-hover:-bottom-7 group-hover:opacity-100 sm:text-sm">
+                        {markdownify(tool.name)}
+                      </span>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <FAQ variant="home" data={faqEntry.data} />
+  <CallToAction variant="home" data={ctaEntry.data} />
+</Base>
+
+<script>
+  // YouTube facade: lazy-load iframe on click
+  let _youtubePreconnected = false;
+
+  function _preconnectYouTube() {
+    if (_youtubePreconnected) return;
+    _youtubePreconnected = true;
+    for (const origin of ["https://www.youtube.com", "https://i.ytimg.com"]) {
+      const link = document.createElement("link");
+      link.rel = "preconnect";
+      link.href = origin;
+      link.crossOrigin = "anonymous";
+      document.head.appendChild(link);
+    }
+  }
+
+  document.addEventListener(
+    "pointerdown",
+    (e) => {
+      const btn = (e.target as HTMLElement)?.closest?.("[data-youtube-facade]");
+      if (btn) _preconnectYouTube();
+    },
+    { passive: true, capture: true },
+  );
+
+  document.addEventListener(
+    "mouseenter",
+    (e) => {
+      const btn = (e.target as HTMLElement)?.closest?.("[data-youtube-facade]");
+      if (btn) _preconnectYouTube();
+    },
+    { passive: true, capture: true },
+  );
+
+  document.addEventListener(
+    "focusin",
+    (e) => {
+      const btn = (e.target as HTMLElement)?.closest?.("[data-youtube-facade]");
+      if (btn) _preconnectYouTube();
+    },
+    { passive: true, capture: true },
+  );
+
+  document.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement)?.closest?.("[data-youtube-facade]");
+    if (!(btn instanceof HTMLButtonElement)) return;
+
+    const container = btn.closest("[data-youtube-container]");
+    if (!container) return;
+
+    const src = btn.getAttribute("data-youtube-src");
+    const title = btn.getAttribute("data-youtube-title") || "";
+    if (!src) return;
+
+    e.preventDefault();
+
+    const url = new URL(src);
+    url.searchParams.set("autoplay", "1");
+
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.title = title;
+    iframe.setAttribute(
+      "allow",
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+    );
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    iframe.style.cssText =
+      "position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:20px";
+
+    container.textContent = "";
+    container.appendChild(iframe);
+  });
+</script>
+
+<script is:inline type="module" src="/js/home-video-dialog.js"></script>

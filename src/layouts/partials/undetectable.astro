@@ -1,0 +1,1455 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+type UndetectableItem = {
+  title?: string;
+  description?: string;
+  image?: string;
+  compact_image?: string;
+  expanded_description?: string;
+  video?: string;
+};
+
+type VideoButton = {
+  label?: string;
+  link?: string;
+};
+
+const { undetectable, videoButton } = Astro.props as {
+  undetectable?: {
+    enable?: boolean;
+    title?: string;
+    description?: string;
+    image?: string;
+    base_image?: string;
+    overlay_image?: string;
+    highlights?: UndetectableItem[];
+    items?: Record<string, UndetectableItem>;
+    background?: Array<{ image?: string }>;
+  };
+  videoButton?: VideoButton;
+};
+
+const highlights = undetectable?.highlights || [];
+const itemEntries = Object.entries(undetectable?.items || {});
+const demoHeader = itemEntries.find(([key]) => key === "header")?.[1];
+const expandIcon = itemEntries.find(([key]) => key === "expand_icon")?.[1];
+const expandedBackground = itemEntries.find(
+  ([key]) => key === "expanded_background",
+)?.[1];
+const compactBackground = itemEntries.find(
+  ([key]) => key === "compact_background",
+)?.[1];
+const items = itemEntries
+  .filter(([key]) => /^item\d+$/.test(key))
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([key, item]) => ({ key, item }));
+
+const cardBackground = undetectable?.background?.[0]?.image;
+
+const rawTitle = undetectable?.title || "";
+const titleFirstLine = rawTitle
+  .replace(/Technical Interviews/gi, "")
+  .trim()
+  .replace(/\s+$/, "");
+const titleSecondLine = "Technical Interviews";
+const imageDimensions: Record<string, [number, number]> = {
+  "/images/undetectable/screensharingproof.webp": [952, 700],
+  "/images/undetectable/dock2.webp": [990, 427],
+  "/images/undetectable/activitymonitor2.webp": [407, 310],
+  "/images/undetectable/tab.webp": [950, 742],
+  "/images/undetectable/clickthrough.webp": [966, 638],
+};
+
+---
+
+{
+  undetectable?.enable && (
+    <section class="section pt-0 pb-8 md:pb-10 overflow-hidden">
+      <div class="container">
+        <div class="row">
+          <div
+            class="mx-auto text-center lg:col-12 xl:col-12"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+          >
+            <h2
+              class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+              style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+            >
+              <span set:html={markdownify(titleFirstLine || rawTitle)} />
+              {" "}
+              <span
+                class="text-[#58ACF2]"
+                set:html={markdownify(titleSecondLine)}
+              />
+            </h2>
+
+            <p
+              class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+              style="max-width: 600px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+              set:html={markdownify(undetectable.description || "")}
+            />
+
+            {
+              undetectable.base_image && undetectable.overlay_image && (
+                <div
+                  class="mx-auto mt-8 w-full"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="200"
+                >
+                  <div
+                    class="compare-slider relative w-full overflow-hidden rounded-[20px] select-none touch-none"
+                    style="aspect-ratio: 1216 / 675;"
+                  >
+                    <!-- lynccontainer -->
+                    <img
+                      src={undetectable.base_image}
+                      alt="Coding interview screen without Linkjob AI overlay"
+                      class="absolute inset-0 block h-full w-full object-cover pointer-events-none"
+                      loading="lazy"
+                      decoding="async"
+                      fetchpriority="low"
+                      width="2432"
+                      height="1350"
+                      draggable="false"
+                    />
+
+                    <!-- overlay -->
+                    <div
+                      class="compare-overlay absolute inset-y-0 left-0 z-10 overflow-hidden"
+                      style="width: 50%;"
+                    >
+                      <img
+                        src={undetectable.overlay_image}
+                        alt="Linkjob AI overlay visible only to you"
+                        class="absolute left-0 top-0 block h-full max-w-none object-cover pointer-events-none"
+                        style="width: var(--compare-width, 100%);"
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority="low"
+                        width="2432"
+                        height="1350"
+                        draggable="false"
+                      />
+                    </div>
+
+                    <!-- Divider -->
+                    <div
+                      class="compare-divider absolute bottom-0 top-0 z-20 w-[2px] -translate-x-1/2 bg-[#000000] pointer-events-none"
+                      style="left: 50%;"
+                    >
+                    </div>
+
+                    <!-- Drag handle -->
+                    <button
+                      type="button"
+                      class="compare-handle absolute top-1/2 z-30 flex size-[28px] md:size-[32px] cursor-ew-resize items-center justify-center rounded-full bg-[#000000] shadow-[0px_4px_10px_0px_#00000026]"
+                      style="left: 50%;"
+                      aria-label="Drag to compare visible and invisible views"
+                    >
+                      <svg
+                        width="20"
+                        height="12"
+                        viewBox="0 0 16 9"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="pointer-events-none"
+                      >
+                        <path
+                          d="M4.5 7.375L1.5 4.375L4.5 1.375"
+                          stroke="white"
+                          stroke-width="1.4"
+                          stroke-miterlimit="10"
+                          stroke-linecap="square"
+                        />
+                        <path
+                          d="M11.5 7.375L14.5 4.375L11.5 1.375"
+                          stroke="white"
+                          stroke-width="1.4"
+                          stroke-miterlimit="10"
+                          stroke-linecap="square"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )
+            }
+          </div>
+        </div>
+
+        {
+          highlights.length > 0 && (
+            <div
+              class="undetectable-highlights pt-4 pb-16 md:pt-8 md:pb-32"
+              data-aos="fade-up-sm"
+              data-aos-delay="225"
+            >
+              {highlights.map((item) => (
+                <article class="undetectable-highlight">
+                  {item.image && (
+                    <span class="undetectable-highlight-icon">
+                      <img
+                        src={item.image}
+                        alt=""
+                        width="25"
+                        height="25"
+                        loading="lazy"
+                        decoding="async"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  )}
+                  <div class="undetectable-highlight-copy">
+                    <p
+                      class="undetectable-highlight-title m-0"
+                      set:html={markdownify(item.title || "")}
+                    />
+                    <p
+                      class="undetectable-highlight-description m-0"
+                      set:html={markdownify(item.description || "")}
+                    />
+                  </div>
+                </article>
+              ))}
+            </div>
+          )
+        }
+
+        {
+          items.length > 0 && (
+            <div
+              class="undetectable-demo-section ml-[calc(50%_-_50vw)] px-8 py-[75px] max-sm:px-5 max-sm:py-10"
+              data-aos="fade-up-sm"
+              data-aos-delay="250"
+            >
+              <div class="undetectable-demo-heading mx-auto mb-[47px] max-sm:mb-9">
+                <h3
+                  class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+                  style="max-width: 1000px; font-family: Asul, serif; font-weight: 700; line-height: 1.2; color: #f5f5f5;"
+                  set:html={markdownify(demoHeader?.title || "")}
+                />
+                <p
+                  class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+                  style="max-width: 600px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35; color: #a1a1aa;"
+                  set:html={markdownify(demoHeader?.description || "")}
+                />
+              </div>
+
+              <div class="undetectable-demo-grid mx-auto">
+                {items.map(({ key, item }, idx) => (
+                  <article
+                    class="undetectable-demo-card"
+                    data-undetectable-card
+                    data-state="default"
+                    role="button"
+                    tabindex="0"
+                    aria-expanded="false"
+                    aria-label={`Expand ${item.title || ""}`}
+                  >
+                    <div class="undetectable-demo-default py-[22px]">
+                      <div class="undetectable-demo-card-header mx-auto">
+                        <span>{String(idx + 1).padStart(2, "0")}</span>
+                        {expandIcon?.image && (
+                          <img
+                            src={expandIcon.image}
+                            alt=""
+                            width="20"
+                            height="20"
+                            class="undetectable-demo-expand"
+                            loading="lazy"
+                            decoding="async"
+                            fetchpriority="low"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </div>
+
+                      <div class="undetectable-demo-media mx-auto mt-5">
+                        <img
+                          src={cardBackground}
+                          alt=""
+                          class="undetectable-demo-media-bg"
+                          loading="lazy"
+                          decoding="async"
+                          fetchpriority="low"
+                          width="1004"
+                          height="924"
+                        />
+                        {item.image && (
+                          <img
+                            src={item.image}
+                            alt=""
+                            class:list={[
+                              "undetectable-demo-art",
+                              {
+                                "undetectable-demo-art--item2": key === "item2",
+                              },
+                            ]}
+                            loading="lazy"
+                            decoding="async"
+                            fetchpriority="low"
+                            width={imageDimensions[item.image]?.[0]}
+                            height={imageDimensions[item.image]?.[1]}
+                          />
+                        )}
+                      </div>
+
+                      <div class="undetectable-demo-copy mx-auto mt-[25px]">
+                        <h3
+                          class="m-0"
+                          data-undetectable-card-title
+                          set:html={markdownify(item.title || "")}
+                        />
+                        <p
+                          class="m-0"
+                          set:html={markdownify(item.description || "")}
+                        />
+                      </div>
+                    </div>
+
+                    <div class="undetectable-demo-expanded">
+                      <div class="undetectable-demo-expanded-copy">
+                        <div class="undetectable-demo-card-header">
+                          <span>{String(idx + 1).padStart(2, "0")}</span>
+                        </div>
+                        <div class="undetectable-demo-expanded-text">
+                          <p
+                            class="m-0"
+                            set:html={markdownify(
+                              item.expanded_description ||
+                                item.description ||
+                                "",
+                            )}
+                          />
+                        </div>
+                      </div>
+                      {expandedBackground?.image && (
+                        <div class="undetectable-demo-expanded-media">
+                          <img
+                            src={expandedBackground.image}
+                            alt=""
+                            class="undetectable-demo-expanded-bg"
+                            loading="lazy"
+                            decoding="async"
+                            fetchpriority="low"
+                            width="1004"
+                            height="924"
+                          />
+                          <div class="undetectable-demo-expanded-foreground">
+                            {idx === 0 &&
+                              undetectable.base_image &&
+                              undetectable.overlay_image && (
+                                <div
+                                  class="compare-slider undetectable-demo-expanded-compare relative overflow-hidden select-none touch-none"
+                                  style="aspect-ratio: 1216 / 675;"
+                                  data-hint-cycles="3"
+                                >
+                                  <img
+                                    src={undetectable.base_image}
+                                    alt="Coding interview screen without Linkjob AI overlay"
+                                    class="absolute inset-0 block h-full w-full object-cover pointer-events-none"
+                                    loading="lazy"
+                                    decoding="async"
+                                    fetchpriority="low"
+                                    width="2432"
+                                    height="1350"
+                                    draggable="false"
+                                  />
+                                  <div
+                                    class="compare-overlay absolute inset-y-0 left-0 z-10 overflow-hidden"
+                                    style="width: 50%;"
+                                  >
+                                    <img
+                                      src={undetectable.overlay_image}
+                                      alt="Linkjob AI overlay visible only to you"
+                                      class="absolute left-0 top-0 block h-full max-w-none object-cover pointer-events-none"
+                                      style="width: var(--compare-width, 100%);"
+                                      loading="lazy"
+                                      decoding="async"
+                                      fetchpriority="low"
+                                      width="2432"
+                                      height="1350"
+                                      draggable="false"
+                                    />
+                                  </div>
+                                  <div
+                                    class="compare-divider absolute bottom-0 top-0 z-20 w-[2px] -translate-x-1/2 bg-[#000000] pointer-events-none"
+                                    style="left: 50%;"
+                                  >
+                                  </div>
+                                  <span
+                                    class="compare-handle absolute top-1/2 z-30 flex size-[28px] md:size-[32px] cursor-ew-resize items-center justify-center rounded-full bg-[#000000] shadow-[0px_4px_10px_0px_#00000026]"
+                                    style="left: 50%;"
+                                    aria-hidden="true"
+                                  >
+                                    <svg
+                                      width="20"
+                                      height="12"
+                                      viewBox="0 0 16 9"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      class="pointer-events-none"
+                                    >
+                                      <path
+                                        d="M4.5 7.375L1.5 4.375L4.5 1.375"
+                                        stroke="white"
+                                        stroke-width="1.4"
+                                        stroke-miterlimit="10"
+                                        stroke-linecap="square"
+                                      />
+                                      <path
+                                        d="M11.5 7.375L14.5 4.375L11.5 1.375"
+                                        stroke="white"
+                                        stroke-width="1.4"
+                                        stroke-miterlimit="10"
+                                        stroke-linecap="square"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              )}
+                            {item.video && (
+                              <video
+                                class="undetectable-demo-expanded-video"
+                                muted
+                                loop
+                                playsinline
+                                preload="none"
+                                data-undetectable-demo-video
+                              >
+                                <source data-src={item.video} type="video/webm" />
+                              </video>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div class="undetectable-demo-compact">
+                      <span class="undetectable-demo-compact-number">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      {compactBackground?.image && (
+                        <div class="undetectable-demo-compact-media">
+                          <img
+                            src={compactBackground.image}
+                            alt=""
+                            class="undetectable-demo-compact-bg"
+                            loading="lazy"
+                            decoding="async"
+                            fetchpriority="low"
+                            width="1004"
+                            height="924"
+                          />
+                          {item.compact_image && (
+                            <img
+                              src={item.compact_image}
+                              alt=""
+                              class="undetectable-demo-compact-icon"
+                              width="50"
+                              height="50"
+                              loading="lazy"
+                              decoding="async"
+                              aria-hidden="true"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {videoButton?.label && videoButton?.link && (
+                <div
+                  class="undetectable-demo-video-action"
+                  data-undetectable-video-cta
+                >
+                  <a
+                    href={videoButton.link}
+                    class="btn-download btn-download-primary undetectable-demo-video-cta"
+                    data-home-video-dialog
+                  >
+                    <img
+                      src="/images/icons/video.svg"
+                      alt=""
+                      width="24"
+                      height="24"
+                      aria-hidden="true"
+                    />
+                    <span>{videoButton.label}</span>
+                  </a>
+                </div>
+              )}
+            </div>
+          )
+        }
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .undetectable-highlights {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(12px, 2vw, 24px);
+    width: 100%;
+  }
+
+  .undetectable-highlight {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: flex-start;
+    gap: clamp(10px, 1.56vw, 20px);
+  }
+
+  .undetectable-highlight-icon {
+    display: flex;
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eef2fa;
+  }
+
+  .undetectable-highlight-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .undetectable-highlight-copy p {
+    font-family: "DM Sans", sans-serif;
+    line-height: 1.2;
+    text-transform: none;
+    white-space: normal;
+  }
+
+  .undetectable-highlight-title {
+    color: #000;
+    font-size: clamp(16px, 1.65vw, 20px);
+    font-weight: 600;
+  }
+
+  .undetectable-highlight-description {
+    color: #000;
+    font-size: clamp(14px, 1.48vw, 18px);
+    font-weight: 400;
+  }
+
+  .undetectable-demo-section {
+    width: 100vw;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 52% 58% at 50% 0%, #142c57 0%, #13284e 18%, rgba(18, 28, 47, 0.72) 58%, transparent 100%),
+      linear-gradient(180deg, #121212 0%, #101010 25%, #0e0e0e 52%, #0c0c0c 75%, #050505 100%);
+  }
+
+  .undetectable-demo-heading {
+    width: min(987px, 100%);
+    text-align: center;
+  }
+
+  .undetectable-demo-heading :global(.demo-title-accent) {
+    color: #4f8eef;
+  }
+
+  .undetectable-demo-grid {
+    --undetectable-demo-gap: 15px;
+
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: var(--undetectable-demo-gap);
+    width: 90vw;
+  }
+
+  .undetectable-demo-video-action {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 36px;
+  }
+
+  .undetectable-demo-video-cta {
+    width: max-content;
+    max-width: 100%;
+    min-height: 54px;
+    height: auto;
+    gap: 10px;
+    padding: 15px;
+    border: 0;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: none;
+    color: #3157A6;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .undetectable-demo-video-cta img {
+    flex: 0 0 auto;
+  }
+
+  .undetectable-demo-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 7%);
+    border-radius: 20px;
+    background: #141414;
+    color: #f5f5f5;
+    font-family: "DM Sans", sans-serif;
+  }
+
+  .undetectable-demo-default {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+  }
+
+  .undetectable-demo-expanded,
+  .undetectable-demo-compact {
+    display: none;
+  }
+
+  .undetectable-demo-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 90%;
+  }
+
+  .undetectable-demo-card-header span {
+    color: #52525b;
+    font-family: Asul, serif;
+    font-size: 45px;
+    font-weight: 700;
+    line-height: 54px;
+    transition: color 180ms ease;
+  }
+
+  .undetectable-demo-media {
+    position: relative;
+    flex: 0 0 auto;
+    width: 90%;
+    aspect-ratio: 225 / 200;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+
+  .undetectable-demo-media-bg,
+  .undetectable-demo-expanded-bg,
+  .undetectable-demo-compact-bg {
+    box-sizing: border-box;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 15px;
+  }
+
+  .undetectable-demo-expand {
+    box-sizing: content-box;
+    align-self: center;
+    padding: 3px;
+    border: 1px solid rgb(255 255 255 / 7%);
+    border-radius: 8px;
+    background: transparent;
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .undetectable-demo-expand:hover {
+    border-color: rgb(255 255 255 / 20%);
+    background: #252626;
+  }
+
+  .undetectable-demo-media-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .undetectable-demo-art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 89%;
+    transform: translate(-50%, -50%);
+  }
+
+  .undetectable-demo-art--item2 {
+    left: 1px;
+    transform: translateY(-50%);
+  }
+
+  .undetectable-demo-copy {
+    display: grid;
+    flex: 1 0 auto;
+    grid-template-rows: 3fr 5fr;
+    width: var(--undetectable-copy-width, 90%);
+  }
+
+  .undetectable-demo-copy [data-undetectable-card-title] {
+    padding-bottom: 10px;
+    font-family: "DM Sans", sans-serif;
+    color: #f5f5f5;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21.6px;
+    text-transform: none;
+  }
+
+  .undetectable-demo-copy p {
+    color: #a1a1aa;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 18px;
+  }
+
+  .undetectable-demo-video {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 10px;
+    width: 119px;
+    height: 32px;
+    border: 1px solid rgb(255 255 255 / 15%);
+    border-radius: 10px;
+    background: #1a1a1a;
+    color: #f5f5f5;
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 18px;
+    opacity: 1;
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .undetectable-demo-video:hover {
+    border-color: rgb(255 255 255 / 20%);
+    background: #252626;
+  }
+
+  .undetectable-demo-expanded-text [data-undetectable-card-title] {
+    padding-bottom: 10px;
+    color: #f5f5f5;
+    font-family: "DM Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21.6px;
+    text-transform: none;
+  }
+
+  .undetectable-demo-expanded-text p {
+    color: #a1a1aa;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 18px;
+  }
+
+  .undetectable-demo-grid.has-active-card,
+  .undetectable-demo-grid.is-closing {
+    display: flex;
+    align-items: stretch;
+    height: var(--undetectable-demo-card-height);
+  }
+
+  .undetectable-demo-grid.has-active-card {
+    gap: clamp(15px, 1.65vw, 25px);
+  }
+
+  .undetectable-demo-card[data-state="active"] {
+    height: 100%;
+    flex-basis: 0;
+    flex-grow: 9;
+    cursor: pointer;
+  }
+
+  .undetectable-demo-card[data-state="compact"] {
+    height: 100%;
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+
+  .undetectable-demo-card[data-state="active"] .undetectable-demo-default,
+  .undetectable-demo-card[data-state="compact"] .undetectable-demo-default {
+    display: none;
+  }
+
+  .undetectable-demo-card[data-state="active"] .undetectable-demo-expanded {
+    display: grid;
+  }
+
+  .undetectable-demo-card[data-state="compact"] .undetectable-demo-compact {
+    display: flex;
+  }
+
+  .undetectable-demo-grid.is-closing .undetectable-demo-card {
+    height: 100%;
+    flex-basis: 0;
+    flex-grow: 1;
+    transition:
+      flex-grow 720ms cubic-bezier(0.16, 1.14, 0.28, 1),
+      flex-basis 720ms cubic-bezier(0.16, 1.14, 0.28, 1),
+      border-color 180ms ease;
+  }
+
+  .undetectable-demo-expanded {
+    height: 100%;
+    grid-template-columns: 281px minmax(0, 500px);
+    justify-content: space-between;
+    gap: clamp(20px, 2.45vw, 37px);
+    padding: clamp(16px, 1.32vw, 20px);
+  }
+
+  .undetectable-demo-expanded-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  .undetectable-demo-expanded-copy .undetectable-demo-card-header {
+    width: 100%;
+  }
+
+  .undetectable-demo-expanded-text {
+    margin-top: 26px;
+  }
+
+  .undetectable-demo-expanded-copy .undetectable-demo-video {
+    margin-top: auto;
+  }
+
+  .undetectable-demo-expanded-media {
+    min-width: 0;
+    width: 100%;
+    max-height: 100%;
+    aspect-ratio: 25 / 23;
+    align-self: center;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+
+  .undetectable-demo-expanded-bg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .undetectable-demo-expanded-foreground {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 1004 / 924;
+  }
+
+  .undetectable-demo-expanded-compare {
+    z-index: 1;
+    width: 90%;
+    border-radius: 10px;
+  }
+
+  .undetectable-demo-expanded-video {
+    z-index: 1;
+    display: block;
+    width: 90%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: contain;
+  }
+
+  .undetectable-demo-compact {
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    padding: 22px 12px;
+  }
+
+  .undetectable-demo-compact-number {
+    width: 100%;
+    align-self: center;
+    color: #52525b;
+    font-family: Asul, serif;
+    font-size: 45px;
+    font-weight: 700;
+    line-height: 54px;
+    text-align: center;
+    transition: color 180ms ease;
+  }
+
+  .undetectable-demo-compact [data-undetectable-card-title] {
+    align-self: center;
+    margin-top: 24px;
+    padding-bottom: 0;
+    color: #f5f5f5;
+    font-family: "DM Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21.6px;
+    text-transform: none;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .undetectable-demo-compact-media {
+    position: relative;
+    width: 100%;
+    max-width: 75px;
+    aspect-ratio: 1;
+    flex: 0 0 auto;
+    margin-top: auto;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+
+  .undetectable-demo-compact-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .undetectable-demo-compact-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 66.67%;
+    height: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  @media (min-width: 1024px) {
+    .undetectable-demo-expanded-media {
+      position: relative;
+    }
+
+    .undetectable-demo-expanded-foreground {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .undetectable-demo-expanded-compare,
+    .undetectable-demo-expanded-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .undetectable-demo-grid {
+      display: flex;
+      align-items: stretch;
+      transition: gap 720ms cubic-bezier(0.16, 1.36, 0.28, 1);
+    }
+
+    .undetectable-demo-card {
+      flex: 1 1 0;
+      cursor: pointer;
+      outline: none;
+      transition:
+        flex-grow 720ms cubic-bezier(0.16, 1.36, 0.28, 1),
+        flex-basis 720ms cubic-bezier(0.16, 1.36, 0.28, 1),
+        border-color 180ms ease;
+    }
+
+    .undetectable-demo-card:hover,
+    .undetectable-demo-card:focus-visible {
+      border-color: rgb(255 255 255 / 20%);
+    }
+
+    .undetectable-demo-card:hover .undetectable-demo-card-header span,
+    .undetectable-demo-card:focus-visible .undetectable-demo-card-header span {
+      color: #71717a;
+    }
+
+    .undetectable-demo-card:hover .undetectable-demo-compact-number,
+    .undetectable-demo-card:focus-visible .undetectable-demo-compact-number {
+      color: #71717a;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .undetectable-demo-grid,
+    .undetectable-demo-card {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .undetectable-demo-expand {
+      display: none;
+    }
+
+    .undetectable-demo-grid {
+      grid-template-columns: repeat(2, minmax(0, 260px));
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .undetectable-highlights {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .undetectable-highlight {
+      flex: 0 1 auto;
+      width: 100%;
+    }
+
+    .undetectable-demo-grid {
+      grid-template-columns: minmax(0, 260px);
+    }
+
+    .undetectable-demo-video-cta {
+      font-size: 16px;
+    }
+  }
+
+  .compare-handle {
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 180ms ease;
+  }
+
+  .compare-handle:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .compare-handle:active {
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+
+  .compare-slider.is-hinting .compare-overlay {
+    transition: width 220ms ease-in-out;
+  }
+
+  .compare-slider.is-hinting .compare-divider {
+    transition: left 220ms ease-in-out;
+  }
+
+  .compare-slider.is-hinting .compare-handle {
+    transition:
+      left 220ms ease-in-out,
+      transform 180ms ease;
+  }
+</style>
+
+<script>
+  const compareSliderControllers = new WeakMap<
+    HTMLElement,
+    {
+      resetHint: () => void;
+      restartHint: () => void;
+    }
+  >();
+
+  const initCompareSliders = () => {
+    document
+      .querySelectorAll<HTMLElement>(".compare-slider")
+      .forEach((slider) => {
+        if (slider.dataset.initialized === "true") return;
+        slider.dataset.initialized = "true";
+        const overlay =
+          slider.querySelector<HTMLElement>(".compare-overlay");
+        const divider =
+          slider.querySelector<HTMLElement>(".compare-divider");
+        const handle =
+          slider.querySelector<HTMLElement>(".compare-handle");
+        if (!overlay || !divider || !handle) return;
+        let dragging = false;
+        let hintTimers: number[] = [];
+        let observer: IntersectionObserver | null = null;
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        const syncWidth = () => {
+          const width = slider.getBoundingClientRect().width;
+          if (width <= 0) return;
+          slider.style.setProperty(
+            "--compare-width",
+            `${width}px`,
+          );
+        };
+
+        const setPercentage = (percentage: number) => {
+          const clamped = Math.max(
+            0,
+            Math.min(100, percentage),
+          );
+          overlay.style.width = `${clamped}%`;
+          divider.style.left = `${clamped}%`;
+          handle.style.left = `${clamped}%`;
+        };
+
+        const setPosition = (clientX: number) => {
+          const rect = slider.getBoundingClientRect();
+          const raw =
+            ((clientX - rect.left) / rect.width) * 100;
+
+          setPercentage(raw);
+        };
+
+        const clearHint = () => {
+          hintTimers.forEach((timer) =>
+            window.clearTimeout(timer),
+          );
+          hintTimers = [];
+          slider.classList.remove("is-hinting");
+        };
+
+        const runHint = () => {
+          if (slider.dataset.hintPlayed === "true") return;
+          slider.dataset.hintPlayed = "true";
+          slider.classList.add("is-hinting");
+          setPercentage(50);
+          const cycles = Number.parseInt(slider.dataset.hintCycles || "1", 10);
+          const positions = Array.from(
+            { length: Math.max(1, cycles) * 2 },
+            (_, index) => (index % 2 === 0 ? 52.5 : 47.5),
+          );
+          hintTimers = positions.map((position, index) =>
+            window.setTimeout(
+              () => setPercentage(position),
+              150 + index * 260,
+            ),
+          );
+          const centerDelay = 150 + positions.length * 260;
+          hintTimers.push(
+            window.setTimeout(() => setPercentage(50), centerDelay),
+            window.setTimeout(() => {
+              slider.classList.remove("is-hinting");
+              hintTimers = [];
+            }, centerDelay + 280),
+          );
+        };
+
+        const resetHint = () => {
+          clearHint();
+          slider.removeAttribute("data-hint-played");
+          setPercentage(50);
+        };
+
+        const restartHint = () => {
+          resetHint();
+          window.requestAnimationFrame(() => {
+            syncWidth();
+            if (!prefersReducedMotion) runHint();
+          });
+        };
+
+        const startDrag = (event: PointerEvent) => {
+          clearHint();
+          slider.dataset.hintPlayed = "true";
+          if (observer) {
+            observer.unobserve(slider);
+          }
+          dragging = true;
+          slider.setPointerCapture(event.pointerId);
+          setPosition(event.clientX);
+        };
+
+        const moveDrag = (event: PointerEvent) => {
+          if (!dragging) return;
+          setPosition(event.clientX);
+        };
+
+        const stopDrag = (event: PointerEvent) => {
+          dragging = false;
+          if (
+            slider.hasPointerCapture(event.pointerId)
+          ) {
+            slider.releasePointerCapture(
+              event.pointerId,
+            );
+          }
+        };
+
+        syncWidth();
+
+        compareSliderControllers.set(slider, {
+          resetHint,
+          restartHint,
+        });
+
+        const ResizeObserverConstructor = window.ResizeObserver;
+        if (typeof ResizeObserverConstructor === "function") {
+          const resizeObserver = new ResizeObserverConstructor(syncWidth);
+          resizeObserver.observe(slider);
+        } else {
+          window.addEventListener("resize", syncWidth);
+        }
+
+        slider.addEventListener(
+          "pointerdown",
+          startDrag,
+        );
+
+        slider.addEventListener(
+          "pointermove",
+          moveDrag,
+        );
+
+        slider.addEventListener(
+          "pointerup",
+          stopDrag,
+        );
+
+        slider.addEventListener(
+          "pointercancel",
+          stopDrag,
+        );
+
+        if (
+          !prefersReducedMotion &&
+          "IntersectionObserver" in window
+        ) {
+          observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (
+                  entry.isIntersecting &&
+                  entry.intersectionRatio >= 0.5 &&
+                  slider.dataset.hintPlayed !== "true"
+                ) {
+                  runHint();
+
+                  observer?.unobserve(slider);
+                }
+              });
+            },
+            {
+              threshold: [0.5],
+            },
+          );
+
+          observer.observe(slider);
+        }
+      });
+  };
+
+  const initUndetectableDemoCards = () => {
+    document
+      .querySelectorAll<HTMLElement>(".undetectable-demo-grid")
+      .forEach((grid) => {
+        if (grid.dataset.cardsInitialized === "true") return;
+
+        const cards = Array.from(
+          grid.querySelectorAll<HTMLElement>("[data-undetectable-card]"),
+        );
+        if (cards.length === 0) return;
+
+        grid.dataset.cardsInitialized = "true";
+        const expandableLayout = window.matchMedia("(min-width: 1024px)");
+        let closeTimer: number | undefined;
+
+        const placeTitle = (
+          card: HTMLElement,
+          state: "default" | "active" | "compact",
+        ) => {
+          const title = card.querySelector<HTMLElement>(
+            "[data-undetectable-card-title]",
+          );
+          if (!title) return;
+
+          if (state === "active") {
+            card
+              .querySelector(".undetectable-demo-expanded-text")
+              ?.prepend(title);
+            return;
+          }
+
+          if (state === "compact") {
+            card
+              .querySelector(".undetectable-demo-compact-number")
+              ?.after(title);
+            return;
+          }
+
+          card.querySelector(".undetectable-demo-copy")?.prepend(title);
+        };
+
+        const syncVideos = () => {
+          cards.forEach((card) => {
+            const video = card.querySelector<HTMLVideoElement>(
+              "[data-undetectable-demo-video]",
+            );
+            if (!video) return;
+
+            if (card.dataset.state === "active") {
+              const source = video.querySelector<HTMLSourceElement>("source[data-src]");
+              if (source && !source.getAttribute("src")) {
+                source.src = source.dataset.src || "";
+                video.load();
+              }
+              void video.play().catch(() => {});
+              return;
+            }
+
+            video.pause();
+            video.currentTime = 0;
+          });
+        };
+
+        const finishClosing = () => {
+          cards.forEach((card) => {
+            placeTitle(card, "default");
+            card.dataset.state = "default";
+            card.setAttribute("aria-expanded", "false");
+            card.style.removeProperty("--undetectable-copy-width");
+          });
+          grid.classList.remove("is-closing");
+          grid.style.removeProperty("--undetectable-demo-card-height");
+          syncVideos();
+        };
+
+        const resetCards = () => {
+          grid
+            .querySelectorAll<HTMLElement>(
+              ".undetectable-demo-expanded-compare",
+            )
+            .forEach((slider) =>
+              compareSliderControllers.get(slider)?.resetHint(),
+            );
+
+          if (expandableLayout.matches) {
+            const gridStyles = getComputedStyle(grid);
+            const gap =
+              Number.parseFloat(
+                gridStyles.getPropertyValue("--undetectable-demo-gap"),
+              ) || 0;
+            const cardWidth =
+              (grid.getBoundingClientRect().width - gap * (cards.length - 1)) /
+              cards.length;
+            const cardStyles = getComputedStyle(cards[0]);
+            const cardBorders =
+              Number.parseFloat(cardStyles.borderLeftWidth) +
+              Number.parseFloat(cardStyles.borderRightWidth);
+            const copyWidth = (cardWidth - cardBorders) * 0.9;
+
+            cards.forEach((card) => {
+              card.style.setProperty(
+                "--undetectable-copy-width",
+                `${copyWidth}px`,
+              );
+              placeTitle(card, "default");
+              card.dataset.state = "default";
+              card.setAttribute("aria-expanded", "false");
+            });
+            grid.classList.add("is-closing");
+            grid.classList.remove("has-active-card");
+            syncVideos();
+            window.clearTimeout(closeTimer);
+            closeTimer = window.setTimeout(finishClosing, 750);
+          } else {
+            grid.classList.remove("has-active-card");
+            finishClosing();
+          }
+        };
+
+        const syncMode = () => {
+          cards.forEach((card) => {
+            const isActive =
+              card.dataset.state === "active" &&
+              !grid.classList.contains("is-closing");
+            if (expandableLayout.matches || isActive) {
+              card.setAttribute("role", "button");
+              card.setAttribute("aria-expanded", String(isActive));
+              card.tabIndex = 0;
+              return;
+            }
+
+            card.removeAttribute("role");
+            card.removeAttribute("aria-expanded");
+            card.tabIndex = -1;
+          });
+        };
+
+        const handleLayoutChange = () => {
+          if (!expandableLayout.matches) resetCards();
+          syncMode();
+        };
+
+        const toggleCard = (selectedCard: HTMLElement) => {
+          if (selectedCard.dataset.state === "active") {
+            resetCards();
+            return;
+          }
+
+          if (!expandableLayout.matches) {
+            return;
+          }
+
+          window.clearTimeout(closeTimer);
+          grid.classList.remove("is-closing");
+          grid.style.setProperty(
+            "--undetectable-demo-card-height",
+            `${grid.getBoundingClientRect().height}px`,
+          );
+          grid.classList.add("has-active-card");
+          cards.forEach((card) => {
+            card.style.removeProperty("--undetectable-copy-width");
+            const isActive = card === selectedCard;
+            const state = isActive ? "active" : "compact";
+            placeTitle(card, state);
+            card.dataset.state = state;
+            card.setAttribute("aria-expanded", String(isActive));
+          });
+          const compareSlider = selectedCard.querySelector<HTMLElement>(
+            ".compare-slider",
+          );
+          if (compareSlider)
+            compareSliderControllers.get(compareSlider)?.restartHint();
+          syncVideos();
+        };
+
+        cards.forEach((card) => {
+          card.addEventListener("click", (event) => {
+            if (
+              event.target instanceof Element &&
+              event.target.closest(".compare-slider")
+            ) {
+              return;
+            }
+            toggleCard(card);
+          });
+          card.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            toggleCard(card);
+          });
+        });
+
+        expandableLayout.addEventListener("change", handleLayoutChange);
+        syncMode();
+      });
+  };
+
+  initCompareSliders();
+  initUndetectableDemoCards();
+
+  document.addEventListener("astro:page-load", () => {
+    initCompareSliders();
+    initUndetectableDemoCards();
+  });
+</script>

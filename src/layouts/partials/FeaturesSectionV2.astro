@@ -1,0 +1,435 @@
+---
+import { getEntry } from "astro:content";
+import type { FeaturesSectionV2Data } from "@/content/config";
+import { markdownify } from "@/lib/utils/textConverter";
+import "../../styles/features-section.css";
+
+const entry = await getEntry("sections", "featuresectionv2");
+const data = entry?.data as FeaturesSectionV2Data | undefined;
+const heroVideo = data?.hero_card.video;
+const languages = data?.cards.multilingual.languages ?? [];
+const languageRows = [
+  languages.slice(0, 7),
+  languages.slice(7, 13),
+  languages.slice(13),
+];
+
+const WAVE = { mult: 17, mod: 55 };
+const waveBars = (base: number, count: number, delayStep = 0.04) =>
+  Array.from({ length: count }, (_, index) => ({
+    height: `${base + ((index * WAVE.mult) % WAVE.mod)}%`,
+    delay: `${(index * delayStep).toFixed(2)}s`,
+  }));
+---
+
+{
+  data?.enable && (
+    <section class="features-v2-section w-full bg-white pb-8 pt-0 md:pb-10">
+      <div class="mx-auto w-full max-w-[1350px] px-4 sm:px-5">
+        <h2
+          class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+          style="max-width: 800px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+        >
+          <span>{data.header.title_line_1}</span>{" "}
+          <span class="text-[#5b9cf2]">{data.header.title_line_2}</span>
+        </h2>
+
+        <div class="features-v2-layout">
+          <article class="feature-hero-card" data-feature-card="hero">
+            <div class="feature-hero-copy">
+              <h3>{data.hero_card.title}</h3>
+              <p>{data.hero_card.description}</p>
+            </div>
+
+            <div class="feature-video" data-youtube-container>
+              <button
+                type="button"
+                aria-label={`Play video: ${heroVideo?.title || "Interview Copilot Demo"}`}
+                data-youtube-facade
+                data-youtube-src={heroVideo?.src}
+                data-youtube-title={heroVideo?.title}
+              >
+                <img
+                  class="feature-video-cover"
+                  src={heroVideo?.cover_image}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width="1600"
+                  height="900"
+                />
+                <img
+                  class="feature-video-play"
+                  src={heroVideo?.play_button_image}
+                  alt=""
+                  width="96"
+                  height="68"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            </div>
+          </article>
+
+          <div class="features-three-up" data-feature-row="three-up">
+            <article class="feature-card" data-feature-card="platform">
+              <h3>{data.cards.platform.title}</h3>
+              <p
+                data-video-dialog-scope
+                set:html={markdownify(data.cards.platform.description)}
+              />
+
+              {data.rotating_logos.enable && (
+                <div class="platform-orbit" aria-label="Supported platforms">
+                  <div class="platform-orbit-ring" />
+                  <img
+                    class="platform-center-icon"
+                    src={data.rotating_logos.center_icon.src}
+                    alt={data.rotating_logos.center_icon.alt || "Linkjob AI"}
+                    width="70"
+                    height="70"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="rotating-container">
+                    {data.rotating_logos.logos.map((logo, index) => (
+                      <div
+                        class="platform-logo-position"
+                        style={`transform: rotate(${index * 45}deg)`}
+                      >
+                        <div
+                          class="platform-logo-angle"
+                          style={`transform: rotate(${-index * 45}deg)`}
+                        >
+                          <span class="platform-icon-wrap">
+                            <img
+                              src={logo.image}
+                              alt={logo.name}
+                              width="44"
+                              height="44"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </article>
+
+            <article class="feature-card" data-feature-card="personalized">
+              <h3>{data.cards.personalized.title}</h3>
+              <p>{data.cards.personalized.description}</p>
+
+              <div class="personalized-visual">
+                <div class="personalized-inputs">
+                  {data.cards.personalized.input_cards.map((card, index) => (
+                    <div class="personalized-input-card">
+                      <div class="personalized-input-title">
+                        <img src={card.icon} alt="" width="20" height="20" />
+                        <span>{card.label}</span>
+                      </div>
+                      <img
+                        class="personalized-lines"
+                        src="/images/features/placeholder1.svg"
+                        alt=""
+                        width="100"
+                        height="40"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div class="personalized-pills">
+                  {data.cards.personalized.resume_items.map((item) => (
+                    <div
+                      class="personalized-pill"
+                      style={`background-color: ${item.color}`}
+                    >
+                      <img src={item.image} alt="" width="22" height="22" />
+                      <span>{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card" data-feature-card="multilingual">
+              <h3>{data.cards.multilingual.title}</h3>
+              <p>{data.cards.multilingual.description}</p>
+
+              <div class="language-visual">
+                <div class="language-cloud" aria-label="Supported languages">
+                  {languageRows.map((row) => (
+                    <div class="language-marquee-row">
+                      <div class="language-marquee-track">
+                        {[false, true].map((duplicate) => (
+                          <div
+                            class="language-marquee-group"
+                            aria-hidden={duplicate ? "true" : undefined}
+                          >
+                            {row.map((language) => (
+                              <span>{language}</span>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <img
+                  class="language-audio"
+                  src="/images/features/waveform.svg"
+                  alt=""
+                  width="213"
+                  height="45"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </article>
+          </div>
+
+          <div class="features-two-up" data-feature-row="two-up">
+            <article
+              class="feature-card feature-card-wide"
+              data-feature-card="realtime"
+            >
+              <h3>{data.cards.pressure.title}</h3>
+              <p>{data.cards.pressure.description}</p>
+
+              <div class="realtime-flow">
+                <div class="interviewer-audio" data-realtime-interviewer-audio>
+                  <img
+                    class="interviewer-avatar"
+                    src={data.voice_ui.avatar}
+                    alt={data.voice_ui.avatar_alt}
+                    width="42"
+                    height="42"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="audio-wave" aria-hidden="true">
+                    {waveBars(35, data.voice_ui.bar_count || 31).map((bar) => (
+                      <span
+                        class="wave-bar"
+                        style={`height: ${bar.height}; animation-delay: ${bar.delay}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <svg
+                  class="realtime-arrow"
+                  viewBox="0 0 75 8"
+                  aria-hidden="true"
+                >
+                  <path class="flow-line-base" d="M1 4H70" />
+                  <path
+                    class="flow-line-progress flow-line-progress-source"
+                    pathLength="1"
+                    d="M1 4H70"
+                  />
+                  <path class="flow-arrow-base" d="m69 1 4 3-4 3" />
+                  <path
+                    class="flow-arrow-progress flow-arrow-progress-source"
+                    d="m69 1 4 3-4 3"
+                  />
+                </svg>
+                <img
+                  class="realtime-bot"
+                  src="/images/features/bot.svg"
+                  alt="Linkjob AI"
+                  width="46"
+                  height="46"
+                />
+                <div class="model-branches" aria-label="Supported AI models">
+                  <svg
+                    class="branch branch-top"
+                    viewBox="0 0 201 80"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      class="flow-line-base"
+                      d="M1 78H50C86 78 88 4 126 4H196"
+                    />
+                    <path
+                      class="flow-line-progress flow-line-progress-top"
+                      pathLength="1"
+                      d="M1 78H50C86 78 88 4 126 4H196"
+                    />
+                    <path class="flow-arrow-base" d="m195 1 4 3-4 3" />
+                    <path
+                      class="flow-arrow-progress flow-arrow-progress-top"
+                      d="m195 1 4 3-4 3"
+                    />
+                  </svg>
+                  <svg
+                    class="branch branch-middle"
+                    viewBox="0 0 201 8"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path class="flow-line-base" d="M1 4H196" />
+                    <path
+                      class="flow-line-progress flow-line-progress-middle"
+                      pathLength="1"
+                      d="M1 4H196"
+                    />
+                    <path class="flow-arrow-base" d="m195 1 4 3-4 3" />
+                    <path
+                      class="flow-arrow-progress flow-arrow-progress-middle"
+                      d="m195 1 4 3-4 3"
+                    />
+                  </svg>
+                  <svg
+                    class="branch branch-bottom"
+                    viewBox="0 0 201 80"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      class="flow-line-base"
+                      d="M1 2H50C86 2 88 76 126 76H196"
+                    />
+                    <path
+                      class="flow-line-progress flow-line-progress-bottom"
+                      pathLength="1"
+                      d="M1 2H50C86 2 88 76 126 76H196"
+                    />
+                    <path class="flow-arrow-base" d="m195 73 4 3-4 3" />
+                    <path
+                      class="flow-arrow-progress flow-arrow-progress-bottom"
+                      d="m195 73 4 3-4 3"
+                    />
+                  </svg>
+                  <img
+                    class="model-logo model-gpt"
+                    src="/images/features/model-gpt.svg"
+                    alt="GPT"
+                  />
+                  <img
+                    class="model-logo model-claude"
+                    src="/images/features/model-claude.svg"
+                    alt="Claude"
+                  />
+                  <img
+                    class="model-logo model-gemini"
+                    src="/images/features/model-gemini.svg"
+                    alt="Gemini"
+                  />
+                </div>
+              </div>
+            </article>
+
+            <article
+              class="feature-card feature-card-wide"
+              data-feature-card="interview-types"
+            >
+              <h3>{data.cards.interview_types.title}</h3>
+              <p>{data.cards.interview_types.description}</p>
+
+              <div class="interview-types-visual">
+                <div class="candidate-card" aria-hidden="true">
+                  <img
+                    class="candidate-logo"
+                    src="/images/features/linkjob-mark.png"
+                    alt=""
+                    width="46"
+                    height="46"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <img
+                    class="candidate-lines"
+                    src="/images/features/placeholder2.svg"
+                    alt=""
+                    width="100"
+                    height="130"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <img
+                  class="interview-types-arrow"
+                  src="/images/features/line.svg"
+                  alt=""
+                  width="101"
+                  height="8"
+                />
+                <div class="interview-type-list">
+                  {data.cards.interview_types.items.map((item, index) => (
+                    <div style={`--interview-index: ${index}`}>
+                      <span
+                        class="interview-type-icon"
+                        style={`--interview-icon: url("${item.icon}")`}
+                        aria-hidden="true"
+                      />
+                      <span>{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  let youtubePreconnected = false;
+
+  function preconnectYouTube() {
+    if (youtubePreconnected) return;
+    youtubePreconnected = true;
+    for (const origin of ["https://www.youtube.com", "https://i.ytimg.com"]) {
+      const link = document.createElement("link");
+      link.rel = "preconnect";
+      link.href = origin;
+      link.crossOrigin = "anonymous";
+      document.head.appendChild(link);
+    }
+  }
+
+  for (const eventName of ["pointerdown", "mouseenter", "focusin"]) {
+    document.addEventListener(
+      eventName,
+      (event) => {
+        const target = event.target as HTMLElement | null;
+        if (target?.closest?.("[data-youtube-facade]")) preconnectYouTube();
+      },
+      { passive: true, capture: true },
+    );
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement | null;
+    const button = target?.closest?.("[data-youtube-facade]");
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    const container = button.closest("[data-youtube-container]");
+    const src = button.dataset.youtubeSrc;
+    if (!container || !src) return;
+
+    event.preventDefault();
+    const url = new URL(src);
+    url.searchParams.set("autoplay", "1");
+
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.title = button.dataset.youtubeTitle || "Interview Copilot Demo";
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    iframe.style.cssText =
+      "position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:20px";
+
+    container.replaceChildren(iframe);
+  });
+</script>

@@ -1,0 +1,154 @@
+<div
+  class="dual-device-animation"
+  data-capability-animation
+  data-dual-device-animation
+  data-switcher-managed
+  aria-hidden="true"
+>
+  <img
+    class="dual-device-layer dual-device-background"
+    src="/images/dual-device/background.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    loading="lazy"
+    decoding="async"
+  />
+  <img
+    class="dual-device-layer dual-device-highlight-one"
+    data-src="/images/dual-device/highlight.webp"
+    alt=""
+    width="1861"
+    height="1124"
+    decoding="async"
+  />
+  <span class="dual-device-pop-layer dual-device-answer">
+    <img
+      class="dual-device-layer dual-device-answer-image"
+      data-src="/images/dual-device/answer.webp"
+      alt=""
+      width="420"
+      height="815"
+      decoding="async"
+    />
+  </span>
+</div>
+
+<style>
+  .dual-device-animation {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .dual-device-layer {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  .dual-device-background {
+    z-index: 1;
+  }
+
+  .dual-device-highlight-one,
+  .dual-device-answer {
+    opacity: 0;
+  }
+
+  .dual-device-highlight-one {
+    top: -0.36%;
+    bottom: auto;
+    z-index: 2;
+  }
+
+  .dual-device-pop-layer {
+    position: absolute;
+    display: block;
+    transform-origin: center;
+    pointer-events: none;
+  }
+
+  .dual-device-pop-layer .dual-device-layer {
+    max-width: none;
+  }
+
+  .dual-device-answer {
+    left: 74.59%;
+    top: 11.74%;
+    z-index: 3;
+    width: 22.57%;
+    height: 72.51%;
+  }
+
+  .dual-device-animation.is-active.is-assets-ready .dual-device-highlight-one {
+    animation: dual-highlight-one 5.44s linear infinite;
+  }
+
+  .dual-device-animation.is-active.is-assets-ready .dual-device-answer {
+    animation: dual-answer 5.44s ease infinite;
+  }
+
+  @keyframes dual-highlight-one {
+    0%,
+    8.81% {
+      opacity: 0;
+    }
+    8.82%,
+    14.71% {
+      opacity: 1;
+    }
+    14.72%,
+    20.59% {
+      opacity: 0;
+    }
+    20.61%,
+    26.47% {
+      opacity: 1;
+    }
+    26.49%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes dual-answer {
+    0%,
+    44.85% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    55.15% {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+    59.56%,
+    96.32% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dual-device-animation.is-active.is-assets-ready
+      .dual-device-highlight-one {
+      animation: none;
+      opacity: 0;
+    }
+
+    .dual-device-animation.is-active.is-assets-ready .dual-device-answer {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,162 @@
+---
+type Pagination = {
+  section?: string;
+  currentPage?: number;
+  totalPages?: number;
+};
+const { section, currentPage = 1, totalPages = 1 }: Pagination = Astro.props;
+
+const indexPageLink = currentPage === 2;
+const hasPrevPage = currentPage > 1;
+const hasNextPage = totalPages > currentPage!;
+
+// Generate pagination range, showing 5 pages before and after current page
+const range = 5;
+let startPage = Math.max(1, currentPage - range);
+let endPage = Math.min(totalPages, currentPage + range);
+
+// Ensure enough page numbers are displayed
+if (endPage - startPage < range * 2) {
+  if (startPage === 1) {
+    endPage = Math.min(totalPages, startPage + range * 2);
+  } else if (endPage === totalPages) {
+    startPage = Math.max(1, endPage - range * 2);
+  }
+}
+
+let pageList: (number | string)[] = [];
+
+// Add first page
+if (startPage > 1) {
+  pageList.push(1);
+  if (startPage > 2) {
+    pageList.push('...');
+  }
+}
+
+// Add current range of pages
+for (let i = startPage; i <= endPage; i++) {
+  pageList.push(i);
+}
+
+// Add last page
+if (endPage < totalPages) {
+  if (endPage < totalPages - 1) {
+    pageList.push('...');
+  }
+  pageList.push(totalPages);
+}
+---
+
+{
+  totalPages > 1 && (
+    <nav
+      class="flex items-center justify-center space-x-3 pt-8"
+      aria-label="Pagination"
+    >
+      {/* previous */}
+      {hasPrevPage ? (
+        <a
+          href={
+            indexPageLink
+              ? `${section ? "/" + section : "/"}`
+              : `${section ? "/" + section : ""}/page/${currentPage - 1}/`
+          }
+          class="btn btn-primary-light shadow flex items-center rounded-full"
+        >
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 1024 1024"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" />
+          </svg>
+          <span class="hidden md:block ml-1">Previous</span>
+        </a>
+      ) : (
+        <span class="btn btn-primary-light shadow flex items-center rounded-full">
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 1024 1024"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" />
+          </svg>
+          <span class="hidden md:block ml-1">Previous</span>
+        </span>
+      )}
+
+      {/* page index */}
+      {pageList.map((pagination, i) =>
+        pagination === '...' ? (
+          <span class="rounded-full px-4 py-2 text-dark">
+            {pagination}
+          </span>
+        ) : pagination === currentPage ? (
+          <span
+            aria-current="page"
+            class="rounded-full bg-primary px-4 py-2 text-white  "
+          >
+            {pagination}
+          </span>
+        ) : (
+          <a
+            href={
+              pagination === 1
+                ? `${section ? "/" + section : "/"}`
+                : `${section ? "/" + section : ""}/page/${pagination}/`
+            }
+            aria-current="page"
+            class="rounded-full px-4 py-2 text-dark hover:bg-theme-light  "
+          >
+            {pagination}
+          </a>
+        )
+      )}
+
+      {/* next page */}
+      {hasNextPage ? (
+        <a
+          href={`${section ? "/" + section : ""}/page/${currentPage + 1}/`}
+          class="btn btn-primary-light shadow flex items-center rounded-full"
+        >
+          <span class="hidden md:block mr-1">Next</span>
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 1024 1024"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" />
+          </svg>
+        </a>
+      ) : (
+        <span class="btn btn-primary-light shadow flex items-center rounded-full">
+          <span class="hidden md:block mr-1">Next</span>
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 1024 1024"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" />
+          </svg>
+        </span>
+      )}
+    </nav>
+  )
+}

@@ -1,0 +1,171 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+type CallToActionSectionData = {
+  enable: boolean;
+  title: string;
+  description?: string;
+  button?: ActionButton;
+  button2?: ActionButton;
+};
+
+type ActionButton = {
+  enable: boolean;
+  label: string;
+  link: string;
+};
+
+const { data, entryId } = Astro.props as {
+  data?: CallToActionSectionData;
+  entryId?: string;
+};
+
+const CTA =
+  data ??
+  (
+    (await getEntry("sections", entryId ?? "call-to-action")) as unknown as {
+      data: CallToActionSectionData;
+    }
+  )?.data;
+
+if (!CTA) {
+  throw new Error("Call to action data not found");
+}
+
+const primaryButton =
+  CTA.button && CTA.button.enable
+    ? CTA.button
+    : { enable: true, label: "Download the app", link: "/downloads" };
+const secondaryButton =
+  CTA.button2 && CTA.button2.enable
+    ? CTA.button2
+    : { enable: true, label: "See plans", link: "/pricing" };
+---
+
+{
+  CTA.enable && (
+    <section class="section pt-0 pb-0 mb-12 md:mb-16 bg-[#EEF2F7] rounded-b-[20px] md:rounded-b-[40px] rounded-t-none overflow-hidden">
+      <div class="container">
+        <div class="md:px-6 pt-10 md:pt-8">
+          <div
+            class="h-px w-full my-0 md:my-10"
+            style="background: linear-gradient(90deg, rgba(37,59,128,0) 0%, rgba(37,59,128,0.22) 14%, rgba(37,59,128,0.55) 50%, rgba(37,59,128,0.22) 86%, rgba(37,59,128,0) 100%);"
+            aria-hidden="true"
+          />
+          <div class="pt-10 pb-0 md:pt-12 md:pb-20">
+            <div class="flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-between">
+              <div class="w-full md:flex-1 md:flex md:flex-col">
+                <h2
+                  class="pb-5 mb-8 text-center text-dark md:text-left"
+                  set:html={markdownify(CTA.title)}
+                />
+                <div class="flex w-full justify-start md:self-center">
+                  <div class="home-hero download-buttons">
+                    <a
+                      href={primaryButton.link}
+                      class="btn btn-download btn-download-primary"
+                    >
+                      {primaryButton.label}
+                      <img
+                        src="/images/icons/download-white.png"
+                        alt=""
+                        class="inline-block h-3 w-auto scale-150"
+                        width="48"
+                        height="48"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                    <a
+                      href={secondaryButton.link}
+                      class="btn btn-download btn-download-secondary"
+                    >
+                      {secondaryButton.label}
+                      <img
+                        src="/images/icons/arrow-right.png"
+                        alt=""
+                        class="inline-block h-3 w-auto"
+                        width="44"
+                        height="30"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="cta-download-icons-wrap relative w-full max-w-[520px] md:w-[520px] md:flex-none select-none"
+                aria-hidden="true"
+              >
+                <img
+                  src="/images/icons/command.webp"
+                  alt=""
+                  class="cta-download-icon cta-download-icon-command pointer-events-none absolute"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                  width="474"
+                  height="470"
+                />
+                <img
+                  src="/images/icons/enter.webp"
+                  alt=""
+                  class="cta-download-icon cta-download-icon-enter pointer-events-none absolute"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                  width="474"
+                  height="470"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .cta-download-icon {
+    width: clamp(190px, 24vw, 260px);
+    transform: translate(-50%, -50%);
+  }
+
+  .cta-download-icons-wrap {
+    height: clamp(180px, 22vw, 280px);
+  }
+
+  .cta-download-icon-command {
+    left: 42%;
+    top: 74%;
+  }
+
+  .cta-download-icon-enter {
+    left: 92%;
+    top: 28%;
+  }
+
+  @media (max-width: 640px) {
+    .cta-download-icon {
+      width: clamp(140px, 42vw, 170px);
+    }
+
+    .cta-download-icon-enter {
+      left: 75%;
+      top: 38%;
+    }
+
+    .cta-download-icon-command {
+      left: 38%;
+      top: 66%;
+    }
+
+    .cta-download-icons-wrap {
+      height: clamp(240px, 60vw, 320px);
+    }
+  }
+</style>

@@ -1,0 +1,484 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getEntry } from "astro:content";
+
+interface CartPageData {
+  title: string;
+  meta_title?: string;
+  description?: string;
+  ui_text: {
+    choose_plan_title: string;
+    choose_plan_desc: string;
+    choose_plan_meta: string;
+    subscription_title: string;
+    one_time_title: string;
+    missing_payment_message: string;
+    contact_html: string;
+    choose_method_title: string;
+    choose_method_desc: string;
+    choose_method_status: string;
+    loading_message: string;
+  };
+  plan_groups: Array<{
+    title: string;
+    items: Array<{ pid: string; label: string }>;
+  }>;
+}
+
+const cartIndex = (await getEntry("cart" as any, "-index")) as { data?: CartPageData } | undefined;
+if (!cartIndex?.data) {
+  throw new Error("Cart page data not found");
+}
+
+const {
+  title,
+  meta_title,
+  description,
+  ui_text,
+  plan_groups,
+} = cartIndex.data;
+
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  hideHeader={true}
+  hideFooter={true}
+>
+  <div class="cart-page">
+    <main class="wrap">
+      <section class="card">
+        <h1 id="title">{title}</h1>
+        <p id="desc">{description}</p>
+        <div class="status" id="status"><strong>{ui_text.loading_message}</strong></div>
+        <div class="meta" id="meta"></div>
+        <div class="plan-sections" id="plan-sections"></div>
+        <div class="actions" id="actions"></div>
+        <div class="contact" id="contact"></div>
+      </section>
+    </main>
+  </div>
+  <style is:global>
+    .cart-page {
+      min-height: 100vh;
+      background: #f8fafc;
+      color: #0f172a;
+      padding: 20px;
+    }
+    .cart-page .wrap {
+      min-height: calc(100vh - 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cart-page .card {
+      width: 100%;
+      max-width: 720px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      padding: 24px;
+    }
+    .cart-page h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.3;
+    }
+    .cart-page p {
+      margin: 0;
+      color: #475569;
+    }
+    .cart-page .status {
+      margin-top: 16px;
+    }
+    .cart-page .status strong {
+      color: #0f172a;
+    }
+    .cart-page .status.loading-large {
+      text-align: center;
+    }
+    .cart-page .status.loading-large strong {
+      display: inline-block;
+      font-size: 36px;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+    }
+    .cart-page .plan-sections {
+      margin-top: 18px;
+      display: grid;
+      gap: 18px;
+    }
+    .cart-page .plan-section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #0f172a;
+    }
+    .cart-page .plan-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .cart-page .actions {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .cart-page .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: #1d4ed8;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 16px;
+      text-align: center;
+      font-weight: 600;
+      min-width: 160px;
+      margin-right: 32px;
+      margin-bottom: 12px;
+    }
+    .cart-page .btn:hover {
+      opacity: 0.93;
+      color: #fff;
+    }
+    .cart-page .btn-outline-sky {
+      background: #fff;
+      color: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+    .cart-page .btn-outline-sky:hover {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+      color: #fff;
+    }
+    .cart-page .plan-row > .btn:last-child,
+    .cart-page .actions > .btn:last-child {
+      margin-right: 0;
+    }
+    .cart-page .plan-btn.disabled {
+      pointer-events: none;
+      opacity: 0.45;
+    }
+    .cart-page .contact {
+      margin-top: 12px;
+      color: #334155;
+    }
+    .cart-page .meta {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #64748b;
+    }
+  </style>
+    <script
+      is:inline
+      define:vars={{
+        choose_plan_title: ui_text.choose_plan_title,
+        choose_plan_desc: ui_text.choose_plan_desc,
+        choose_plan_meta: ui_text.choose_plan_meta,
+        missing_payment_message: ui_text.missing_payment_message,
+        contact_html: ui_text.contact_html,
+        choose_method_title: ui_text.choose_method_title,
+        choose_method_desc: ui_text.choose_method_desc,
+        choose_method_status: ui_text.choose_method_status,
+        loading_message: ui_text.loading_message,
+        plan_groups: plan_groups,
+      }}
+    >
+      (function () {
+        var API_URL = "https://www.senseiai.me/pricingswitcher/api/cache.json";
+        var PROVIDER_LABELS = {
+          stripe: "Stripe",
+          paypal: "PayPal",
+          paddle: "Paddle",
+          airwallex: "Airwallex",
+          creem: "Creem",
+          lemonsqueezy: "LemonSqueezy",
+          lianlian: "LianLian Pay",
+          linkjob: "Linkjob",
+          wise: "Wise",
+        };
+
+        var statusEl = document.getElementById("status");
+        var actionsEl = document.getElementById("actions");
+        var contactEl = document.getElementById("contact");
+        var metaEl = document.getElementById("meta");
+        var planSectionsEl = document.getElementById("plan-sections");
+        var titleEl = document.getElementById("title");
+        var descEl = document.getElementById("desc");
+        var currentChoices = [];
+        var PLAN_GROUPS = Array.isArray(plan_groups) ? plan_groups : [];
+
+        function setStatus(message, isError, isLoadingLarge) {
+          if (!statusEl) return;
+          statusEl.innerHTML = "<strong>" + String(message || "") + "</strong>";
+          statusEl.style.color = isError ? "#b91c1c" : "#0f172a";
+          if (isLoadingLarge) {
+            statusEl.classList.add("loading-large");
+          } else {
+            statusEl.classList.remove("loading-large");
+          }
+        }
+
+        function setContact(html) {
+          if (!contactEl) return;
+          contactEl.innerHTML = html || "";
+        }
+
+        function getPid() {
+          var params = new URLSearchParams(window.location.search);
+          var raw = String(params.get("pid") || "").trim();
+          if (!raw) return "";
+          try {
+            return decodeURIComponent(raw);
+          } catch {
+            return raw;
+          }
+        }
+
+        function getLinkProvider() {
+          var params = new URLSearchParams(window.location.search);
+          return String(params.get("links") || "").trim().toLowerCase();
+        }
+
+        function isHttpUrl(value) {
+          try {
+            var u = new URL(value);
+            return u.protocol === "http:" || u.protocol === "https:";
+          } catch {
+            return false;
+          }
+        }
+
+        function splitMultiUrls(raw) {
+          if (typeof raw !== "string") return [];
+          return raw
+            .split(";")
+            .map(function (item) {
+              return item.trim();
+            })
+            .filter(function (item) {
+              return !!item && isHttpUrl(item);
+            });
+        }
+
+        function pickRandom(items) {
+          if (!Array.isArray(items) || items.length === 0) return "";
+          var index = Math.floor(Math.random() * items.length);
+          return items[index] || "";
+        }
+
+        function hasAnyValidLinks(product) {
+          if (!product || !product.links || typeof product.links !== "object") return false;
+          return Object.keys(product.links).some(function (provider) {
+            var urls = splitMultiUrls(product.links[provider]);
+            return urls.length > 0;
+          });
+        }
+
+        function findProduct(payload, pid) {
+          if (payload && payload.by_product_id && payload.by_product_id[pid]) {
+            return payload.by_product_id[pid];
+          }
+          var products = Array.isArray(payload && payload.products) ? payload.products : [];
+          for (var i = 0; i < products.length; i++) {
+            var item = products[i];
+            if (item && item.product_id === pid) {
+              return {
+                product_name: item.product_name || "",
+                links: item.links || {},
+              };
+            }
+          }
+          return null;
+        }
+
+        function getValidLinks(links) {
+          var out = [];
+          var obj = links && typeof links === "object" ? links : {};
+          Object.keys(obj).forEach(function (provider) {
+            var url = obj[provider];
+            var urls = splitMultiUrls(url);
+            if (urls.length > 0) {
+              out.push({
+                provider: provider,
+                label: PROVIDER_LABELS[provider] || provider,
+                urls: urls,
+              });
+            }
+          });
+          return out;
+        }
+
+        function renderPlanGroups(payload) {
+          if (!planSectionsEl) return;
+          var html = PLAN_GROUPS.map(function (group) {
+            var row = group.items
+              .map(function (plan) {
+                var product = findProduct(payload, plan.pid);
+                var available = hasAnyValidLinks(product);
+                var href = "/cart/?pid=" + encodeURIComponent(plan.pid);
+                var klass = available ? "btn btn-outline-sky plan-btn" : "btn btn-outline-sky plan-btn disabled";
+                var ariaDisabled = available ? "false" : "true";
+                return (
+                  '<a class="' +
+                  klass +
+                  '" href="' +
+                  href +
+                  '" aria-disabled="' +
+                  ariaDisabled +
+                  '">' +
+                  plan.label +
+                  "</a>"
+                );
+              })
+              .join("");
+            return '<div class="plan-section"><h2>' + group.title + '</h2><div class="plan-row">' + row + "</div></div>";
+          }).join("");
+          planSectionsEl.innerHTML = html;
+        }
+
+        function redirectToProvider(provider) {
+          var target = currentChoices.find(function (item) {
+            return item.provider === provider;
+          });
+          if (!target) return;
+          var url = pickRandom(target.urls);
+          if (!url) return;
+          window.location.replace(url);
+        }
+
+        function renderButtons(items) {
+          if (!actionsEl) return;
+          currentChoices = Array.isArray(items) ? items : [];
+          actionsEl.innerHTML = items
+            .map(function (item) {
+              return (
+                '<button type="button" class="btn" data-action="choose-provider" data-provider="' +
+                item.provider.replace(/"/g, "&quot;") +
+                '">' +
+                item.label +
+                "</button>"
+              );
+            })
+            .join("");
+        }
+
+        async function init() {
+          setStatus(loading_message, false);
+          setContact("");
+          if (planSectionsEl) planSectionsEl.innerHTML = "";
+          if (actionsEl) actionsEl.innerHTML = "";
+
+          var pid = getPid();
+
+          try {
+            var cached = sessionStorage.getItem("pricingCache");
+            var payload;
+            if (cached) {
+              payload = JSON.parse(cached);
+              sessionStorage.removeItem("pricingCache");
+            } else {
+              var res = await fetch(API_URL, { credentials: "omit" });
+              payload = await res.json();
+              if (!res.ok || !payload || payload.ok === false) {
+                throw new Error((payload && payload.error) || "Failed to load pricing cache");
+              }
+            }
+
+            if (!pid) {
+              if (titleEl) titleEl.textContent = choose_plan_title;
+              if (descEl) descEl.textContent = choose_plan_desc;
+              if (metaEl) metaEl.textContent = choose_plan_meta;
+              setStatus("", false);
+              renderPlanGroups(payload);
+              return;
+            }
+
+            if (metaEl) metaEl.textContent = "";
+            var product = findProduct(payload, pid);
+            var validLinks = getValidLinks(product && product.links ? product.links : {});
+
+            if (!product || validLinks.length === 0) {
+              setStatus(missing_payment_message, true);
+              setContact(contact_html);
+              return;
+            }
+
+            // links=stripe → Skip the UI and go directly to the specified provider
+            var linkProvider = getLinkProvider();
+            if (linkProvider) {
+              var target = validLinks.find(function (item) {
+                return item.provider === linkProvider;
+              });
+              if (target) {
+                var url = pickRandom(target.urls);
+                if (url) {
+                  window.location.replace(url);
+                  return;
+                }
+              }
+            }
+
+            // exclude=paypal → Skip the UI and go directly to a non-specified provider
+            var params = new URLSearchParams(window.location.search);
+            var excludeProvider = String(params.get("exclude") || "").trim().toLowerCase();
+            if (excludeProvider && validLinks.length > 1) {
+              var filtered = validLinks.filter(function (item) {
+                return item.provider !== excludeProvider;
+              });
+              if (filtered.length === 1) {
+                var url = pickRandom(filtered[0].urls);
+                if (url) {
+                  window.location.replace(url);
+                  return;
+                }
+              }
+            }
+
+            if (validLinks.length === 1) {
+              // if (titleEl) titleEl.textContent = "";
+              // if (descEl) descEl.textContent = "";
+              // if (metaEl) metaEl.textContent = "";
+              // setStatus(loading_message, false, true);
+              var onlyUrl = pickRandom(validLinks[0].urls);
+              if (!onlyUrl) {
+                setStatus(missing_payment_message, true);
+                setContact(contact_html);
+                return;
+              }
+              window.location.replace(onlyUrl);
+              return;
+            }
+
+            if (titleEl) titleEl.textContent = choose_method_title;
+            if (descEl) descEl.textContent = choose_method_desc;
+            setStatus(choose_method_status, false);
+            renderButtons(validLinks);
+          } catch (err) {
+            setStatus(err && err.message ? err.message : String(err), true);
+            setContact(contact_html);
+          }
+        }
+
+        if (actionsEl) {
+          actionsEl.addEventListener("click", function (event) {
+            var target = event.target;
+            if (!target || !target.closest) return;
+            var btn = target.closest('[data-action="choose-provider"]');
+            if (!btn) return;
+            var provider = btn.getAttribute("data-provider") || "";
+            redirectToProvider(provider);
+          });
+        }
+
+        init();
+      })();
+    </script>
+</Base>

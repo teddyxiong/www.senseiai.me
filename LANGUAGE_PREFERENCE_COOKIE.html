@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Linkjob Language Preference Cookie</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: #172033;
+        background: #f4f7fb;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        line-height: 1.65;
+      }
+
+      main {
+        width: min(1040px, calc(100% - 32px));
+        margin: 40px auto 72px;
+      }
+
+      header,
+      section {
+        border: 1px solid #dce3ee;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 8px 28px rgba(31, 52, 82, 0.06);
+      }
+
+      header {
+        padding: 36px;
+        border-top: 6px solid #2563eb;
+      }
+
+      section {
+        margin-top: 24px;
+        padding: 28px 32px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        color: #102047;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 5vw, 3rem);
+      }
+
+      h2 {
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e6ebf2;
+      }
+
+      h3 {
+        margin-top: 28px;
+      }
+
+      p:last-child,
+      ul:last-child,
+      ol:last-child {
+        margin-bottom: 0;
+      }
+
+      code {
+        border-radius: 5px;
+        padding: 0.12em 0.35em;
+        color: #9f1239;
+        background: #fff1f2;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      pre {
+        overflow-x: auto;
+        border-radius: 12px;
+        padding: 20px;
+        color: #e5edf9;
+        background: #111827;
+        line-height: 1.55;
+      }
+
+      pre code {
+        padding: 0;
+        color: inherit;
+        background: transparent;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #e6ebf2;
+        padding: 12px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        width: 24%;
+        color: #193a77;
+        background: #f7f9fc;
+      }
+
+      .callout {
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        padding: 14px 18px;
+        background: #eff6ff;
+      }
+
+      .warning {
+        border-left-color: #d97706;
+        background: #fffbeb;
+      }
+
+      .unresolved {
+        display: inline-block;
+        margin-left: 8px;
+        border-radius: 999px;
+        padding: 3px 9px;
+        color: #92400e;
+        background: #fef3c7;
+        font-size: 0.78rem;
+        font-weight: 700;
+        vertical-align: middle;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 0;
+        list-style: none;
+        counter-reset: flow;
+      }
+
+      .flow li {
+        border: 1px solid #dce3ee;
+        border-radius: 10px;
+        padding: 16px;
+        background: #f9fbfe;
+        counter-increment: flow;
+      }
+
+      .flow li::before {
+        display: block;
+        margin-bottom: 7px;
+        color: #2563eb;
+        content: counter(flow);
+        font-weight: 800;
+      }
+
+      @media (max-width: 720px) {
+        header,
+        section {
+          padding: 22px;
+        }
+
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        table,
+        tbody,
+        tr,
+        th,
+        td {
+          display: block;
+          width: 100%;
+        }
+
+        th {
+          border-bottom: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Linkjob Language Preference Cookie</h1>
+        <p>
+          本文档说明 Linkjob 如何在同一浏览器中长期记录最后明确生效的语言，以及
+          Dashboard 和未来页面应该如何安全消费这项状态。
+        </p>
+        <p class="callout">
+          <strong>当前交付边界：</strong>Linkjob 已作为 Cookie 生产端实现该契约；
+          Dashboard、Auth 和其他消费端尚未改造，应按照本文档单独接入。
+        </p>
+      </header>
+
+      <section id="contract">
+        <h2>1. Cookie 契约</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th scope="row">名称</th>
+              <td><code>linkjob_locale</code></td>
+            </tr>
+            <tr>
+              <th scope="row">值</th>
+              <td>
+                Linkjob 已发布语言集合中的规范小写值，例如 <code>en</code>、
+                <code>fr</code>、<code>ja</code> 或 <code>zh-hant</code>。
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Path</th>
+              <td><code>/</code>，同一主机下的所有路径均可读取。</td>
+            </tr>
+            <tr>
+              <th scope="row">有效期</th>
+              <td><code>Max-Age=31536000</code>（一年），每次有效写入时刷新。</td>
+            </tr>
+            <tr>
+              <th scope="row">SameSite</th>
+              <td><code>Lax</code></td>
+            </tr>
+            <tr>
+              <th scope="row">Secure</th>
+              <td>HTTPS 环境设置；本地 HTTP 开发环境不设置。</td>
+            </tr>
+            <tr>
+              <th scope="row">Domain</th>
+              <td>
+                不设置，因此是 host-only Cookie。它不会自动共享给其他子域名；消费端必须
+                运行在能够接收该 Cookie 的同一主机上。
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">HttpOnly</th>
+              <td>不设置，因为浏览器端消费页面需要读取它。</td>
+            </tr>
+            <tr>
+              <th scope="row">安全含义</th>
+              <td>
+                仅用于显示语言偏好。它是用户可修改的输入，绝不能用于登录、授权或权限判断。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>当前 Linkjob 已发布值</h3>
+        <p>
+          <code>en</code>、<code>ja</code>、<code>es</code>、<code>it</code>、
+          <code>ar</code>、<code>pt</code>、<code>zh-hant</code>、
+          <code>pl</code>、<code>ko</code>、<code>fr</code>。
+          Linkjob 的权威来源仍然是根目录 <code>i18n.config.json</code> 中的
+          <code>publishedLocales</code>；消费端应维护并验证自己真正支持的子集。
+        </p>
+      </section>
+
+      <section id="write-rules">
+        <h2>2. Linkjob 如何记录语言</h2>
+        <ol class="flow">
+          <li>
+            用户进入带有受支持语言前缀的页面，例如 <code>/fr/</code> 或
+            <code>/zh-hant/pricing/</code>，公共布局记录该明确语言。
+          </li>
+          <li>
+            用户通过语言切换器进入真实存在的目标页面时，在导航前记录目标语言。
+          </li>
+          <li>
+            目标语言页面不存在、切换器回退到英文页面时，在回退导航前记录实际生效的
+            <code>en</code>。
+          </li>
+        </ol>
+
+        <h3>不会自动覆盖 Cookie 的情况</h3>
+        <ul>
+          <li>
+            无语言前缀的路径不会仅凭页面加载写入 <code>en</code>。这类路径可能是英文内容，
+            也可能是与语言无关的流程页面。
+          </li>
+          <li>
+            因此用户从 <code>/fr/</code> 进入 <code>/dashboard/</code> 或其他无前缀页面时，
+            原有 <code>fr</code> 偏好会被保留。
+          </li>
+          <li>Cookie 无法访问或写入时，页面和语言导航继续执行，不因偏好记录失败而中断。</li>
+        </ul>
+
+        <h3>语言解析优先级</h3>
+        <ol>
+          <li>当前 URL 中明确、受支持的语言前缀；</li>
+          <li>经过消费端白名单验证的 <code>linkjob_locale</code>；</li>
+          <li>消费端配置的默认语言，当前 Linkjob 默认值是 <code>en</code>。</li>
+        </ol>
+        <p class="callout">
+          Cookie 表示“最后明确生效的语言”，不是“最后尝试点击的语言”。非法值、大小写错误值、
+          不支持的值和无法解码的值都必须忽略。
+        </p>
+      </section>
+
+      <section id="consumer-example">
+        <h2>3. 未来消费端如何接入</h2>
+        <p>浏览器端消费页面建议遵循以下顺序：</p>
+        <ol>
+          <li>从 <code>document.cookie</code> 中只查找 <code>linkjob_locale</code>；</li>
+          <li>安全解码，并用消费端自己的受支持语言集合验证；</li>
+          <li>缺失、非法或解码失败时使用 <code>en</code>；</li>
+          <li>只有在验证完成后，才把语言值映射或编码到 URL；</li>
+          <li>若消费端未来有自己的显式语言 URL，显式 URL 的优先级高于 Cookie。</li>
+        </ol>
+
+        <h3>浏览器端参考实现</h3>
+        <pre><code>const COOKIE_NAME = "linkjob_locale";
+const SUPPORTED_LOCALES = new Set(["en", "fr", "ja", "zh-hant"]);
+
+function readPreferredLocale(cookie = document.cookie) {
+  const entry = cookie.split(";").map((part) =&gt; part.trim())
+    .find((part) =&gt; part.startsWith(`${COOKIE_NAME}=`));
+  if (!entry) return "en";
+  try {
+    const value = decodeURIComponent(entry.slice(COOKIE_NAME.length + 1));
+    return SUPPORTED_LOCALES.has(value) ? value : "en";
+  } catch {
+    return "en";
+  }
+}
+
+function buildMainSiteUrl(path, locale = readPreferredLocale()) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const prefix = locale === "en" ? "" : `/${encodeURIComponent(locale)}`;
+  return `https://www.senseiai.me${prefix}${normalizedPath}`;
+}</code></pre>
+
+        <h3>调用示例</h3>
+        <pre><code>buildMainSiteUrl("/");
+// en      -&gt; https://www.senseiai.me/
+// fr      -&gt; https://www.senseiai.me/fr/
+// zh-hant -&gt; https://www.senseiai.me/zh-hant/
+
+buildMainSiteUrl("/pricing/");
+// en      -&gt; https://www.senseiai.me/pricing/
+// fr      -&gt; https://www.senseiai.me/fr/pricing/
+// zh-hant -&gt; https://www.senseiai.me/zh-hant/pricing/</code></pre>
+
+        <h3>消费端集成注意事项</h3>
+        <ul>
+          <li>
+            不要把 Cookie 值直接拼接进 URL，也不要接受 <code>zh-Hant</code> 等非规范大小写。
+          </li>
+          <li>
+            消费端的语言集合可以小于 Linkjob 的发布集合；不支持的值必须回退到
+            <code>en</code>，不能猜测转换。
+          </li>
+          <li>
+            服务端渲染页面可从请求的 <code>Cookie</code> 请求头读取同名值，但仍要执行相同的
+            解码和白名单验证。
+          </li>
+          <li>
+            若未来 Dashboard 自己拥有多语言 URL，先解析 Dashboard 的明确 URL 语言，再读取
+            Cookie；不要反过来用 Cookie 覆盖用户正在访问的明确 URL。
+          </li>
+          <li>
+            该契约不规定未来 Dashboard 必须采用 <code>/fr/dashboard/</code>、无前缀翻译页面，
+            或其他路由形式。路由方案由消费端决定。
+          </li>
+        </ul>
+      </section>
+
+      <section id="dashboard-known-issues">
+        <h2>
+          4. Dashboard 当前已知问题
+          <span class="unresolved">尚未解决</span>
+        </h2>
+        <p>
+          以下内容是当前 Auth 仓库 Dashboard 实现的记录，不属于本次代码修改范围：
+        </p>
+        <ul>
+          <li>
+            Dashboard 由 Auth 仓库提供，公开路径是 <code>/dashboard/</code>；该 pathname
+            本身不包含主站语言前缀。
+          </li>
+          <li>
+            <code>public/dashboard/sidebar.js</code> 的
+            <code>getCurrentLocalePrefix()</code> 仍然尝试从 Dashboard pathname 推导语言，
+            在 <code>/dashboard/</code> 下会回到英文。
+          </li>
+          <li>
+            Dashboard 的硬编码语言列表使用 <code>zh-Hant</code>，而 Linkjob 的规范值是
+            <code>zh-hant</code>。Cookie 校验区分大小写，因此二者不能视为同一个合法值。
+          </li>
+          <li>
+            Home、Pricing、Downloads、Logo、套餐入口，以及没有支付平台信息时的订阅管理入口，
+            仍包含固定英文目标地址。
+          </li>
+          <li>Dashboard 目前还没有读取或验证 <code>linkjob_locale</code>。</li>
+        </ul>
+        <p class="callout warning">
+          Dashboard 后续接入时应删除“从 <code>/dashboard/</code> pathname 猜主站语言”的依赖，
+          改用本文档的优先级和白名单规则；但本次没有修改上述任何文件。
+        </p>
+      </section>
+
+      <section id="checkout-continuation">
+        <h2>
+          5. Checkout continuation 已知问题
+          <span class="unresolved">尚未解决</span>
+        </h2>
+        <p>
+          <code>/checkout/continue/</code> 是无语言前缀的流程页面，因此加载它不会覆盖已有的
+          <code>linkjob_locale</code>。但当待处理支付流程缺少可用的返回地址时，当前实现仍固定回退到
+          <code>/pricing/</code>。这个回退地址没有使用已保存的语言，可能使用户回到英文 Pricing。
+        </p>
+        <p class="callout warning">
+          本次只记录该问题，不修改 <code>/checkout/continue/</code>。未来处理时，应先验证 Cookie，
+          再用消费端支持的语言构造本地化 Pricing 回退地址。
+        </p>
+      </section>
+
+      <section id="non-goals">
+        <h2>6. 本次明确不解决的事项</h2>
+        <ul>
+          <li>不修改 Auth、Dashboard 或 Billing。</li>
+          <li>不修复 Dashboard 中固定的 Home、Pricing、Downloads、Logo 或套餐链接。</li>
+          <li>不统一 Dashboard 的语言列表，也不修复 <code>zh-Hant</code> 大小写问题。</li>
+          <li>不为 Dashboard 增加多语言页面或决定其未来路由结构。</li>
+          <li>不修改 <code>/checkout/continue/</code> 的固定 Pricing 回退。</li>
+          <li>不把语言保存进用户账户，也不跨浏览器或设备同步。</li>
+          <li>不增加边缘自动跳转、数据库状态、权限判断或部署步骤。</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

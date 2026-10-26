@@ -1,0 +1,52 @@
+---
+const { data } = Astro.props;
+const { title, link, thumbnail, source } = data;
+
+const sourceLabel =
+  source === "hub" ? "AI Interview Assistant Insights" : "Interview Questions";
+---
+
+<div class="col-12 md:col-6 xl:col-4">
+  <div class="rounded-xl border border-sky p-5 min-h-full flex flex-col">
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group flex w-full items-start gap-3 md:flex-col md:gap-0"
+    >
+      <div class="order-1 min-w-0 flex-1 md:order-2">
+        <div
+          class="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 md:mb-4 md:gap-x-4 md:gap-y-2"
+        >
+          <div
+            class="inline-block rounded bg-secondary px-2 py-0.5 text-xs font-medium md:px-3 md:py-1 md:text-sm"
+          >
+            <span>{sourceLabel}</span>
+          </div>
+        </div>
+
+        <h3
+          class="mb-1 text-[16px] font-bold leading-snug text-dark transition-colors group-hover:text-[#58ACF2] md:mb-5 md:text-[18px] md:font-medium lg:text-[20px]"
+          style="font-family: Asul, serif;"
+        >
+          {title}
+        </h3>
+      </div>
+      {
+        thumbnail && (
+          <img
+            class="order-2 aspect-square w-20 flex-shrink-0 self-start rounded-md object-cover sm:w-[84px] md:order-1 md:mb-6 md:aspect-[11/6] md:w-full md:self-auto md:rounded-xl"
+            src={thumbnail}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+            width="660"
+            height="360"
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84px"
+          />
+        )
+      }
+    </a>
+  </div>
+</div>

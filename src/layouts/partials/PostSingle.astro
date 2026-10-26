@@ -1,0 +1,524 @@
+---
+import BlogCard from "@/components/BlogCard.astro";
+import Disqus from "@/helpers/Disqus";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import dateFormat from "@/lib/utils/dateFormat";
+import similarItems from "@/lib/utils/similarItems";
+import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
+import { FaRegCalendar } from "react-icons/fa6";
+import { FaQuestionCircle, FaBookOpen, FaLightbulb, FaBuilding, FaEnvelope, FaMoneyBillWave, FaBook, FaHome, FaChevronLeft, FaChevronRight, FaRobot, FaMicrophone, FaPhone, FaBlog, FaBlogger, FaBriefcase, FaDiscord, FaInstagram, FaTiktok } from "react-icons/fa";
+// Removed OpenAI icon import, using FaRobot instead
+import ImageMod from "../components/ImageMod.astro";
+import Share from "../components/Share.astro";
+import CallToAction from "./CallToAction.astro";
+import leftMenu from "@/config/leftmenu.json";
+
+const COLLECTION_FOLDER = "blog";
+const { post } = Astro.props;
+
+const posts = await getSinglePage(COLLECTION_FOLDER);
+const similarPosts = similarItems(post, posts);
+const { Content } = await post.render();
+const {
+  title,
+  description,
+  author,
+  author_image,
+  categories,
+  image,
+  date,
+  tags,
+} = post.data;
+---
+
+<section class="section-md" data-aos="fade-in">
+  <div class="container">
+    <div class="row flex flex-wrap lg:flex-nowrap">
+      <!-- Left sidebar placeholder -->
+      <div id="leftNavPlaceholder" class="hidden lg:block" style="width: 247px; min-height: 300px; transition: width 0.3s ease;"></div>
+      
+      <!-- Left sidebar (fixed position) -->
+      <div id="leftNavbar" class="hidden lg:block" style="width: 247px; min-height: 300px; border-right: 1px solid #eaeaea; position: fixed; top: 20px; left: 0; right: auto; margin-left: max(2rem, calc((100% - 1280px) / 2)); z-index: 10; background-color: white; transition: width 0.3s ease, margin-left 0.3s ease;">
+        <div class="left-menu-container py-4 relative">
+          <!-- Collapse/Expand button -->
+          <button id="toggleNavBtn" class="absolute -right-4 top-2 bg-white border border-gray-200 rounded-full p-1 shadow-sm hover:shadow-md transition-all duration-200" style="transform: translateX(50%);">
+            <span id="collapseIcon"><FaChevronLeft className="w-4 h-4 text-gray-500" /></span>
+            <span id="expandIcon" class="hidden"><FaChevronRight className="w-4 h-4 text-gray-500" /></span>
+          </button>
+          
+          {leftMenu.menuGroups.map((group, groupIndex) => (
+            <div class="menu-group mb-4">
+              <h4 class="group-title text-lg font-semibold mb-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis">{group.groupName}</h4>
+              <ul class="menu-items">
+                {group.items.map((item) => {
+                  // Get the corresponding component based on icon name
+                  let IconComponent;
+                  switch(item.icon) {
+                    case "FaQuestionCircle":
+                      IconComponent = FaQuestionCircle;
+                      break;
+                    case "FaBookOpen":
+                      IconComponent = FaBookOpen;
+                      break;
+                    case "FaLightbulb":
+                      IconComponent = FaLightbulb;
+                      break;
+                    case "FaBuilding":
+                      IconComponent = FaBuilding;
+                      break;
+                    case "FaEnvelope":
+                      IconComponent = FaEnvelope;
+                      break;
+                    case "FaMoneyBillWave":
+                      IconComponent = FaMoneyBillWave;
+                      break;
+                    case "FaBook":
+                      IconComponent = FaBook;
+                      break;
+                    case "FaHome":
+                      IconComponent = FaHome;
+                      break;
+                    case "FaRobot":
+                      IconComponent = FaRobot;
+                      break;
+                    case "OpenAI":
+                      IconComponent = FaRobot; // Use FaRobot instead of OpenAI icon
+                      break;
+                    case "FaMicrophone":
+                      IconComponent = FaMicrophone;
+                      break;
+                    case "FaPhone":
+                      IconComponent = FaPhone;
+                      break;
+                    case "FaBlog":
+                      IconComponent = FaBlog;
+                      break;
+                    case "FaBlogger":
+                      IconComponent = FaBlogger;
+                      break;
+                    case "FaBriefcase":
+                      IconComponent = FaBriefcase;
+                      break;
+                    case "FaDiscord":
+                      IconComponent = FaDiscord;
+                      break;
+                    case "FaInstagram":
+                      IconComponent = FaInstagram;
+                      break;
+                    case "FaTiktok":
+                      IconComponent = FaTiktok;
+                      break;
+                    default:
+                      IconComponent = FaQuestionCircle; // Default icon
+                  }
+                  return (
+                    <li class="menu-item">
+                      <a href={item.url} class="menu-link flex flex-row items-center py-2 px-4 hover:bg-gray-100 transition-colors duration-200">
+                        <span class="menu-icon text-gray-700 flex-shrink-0" style="margin-right: 12px;">
+                          <IconComponent />
+                      </span>
+                        <span class="menu-text text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+              {groupIndex < leftMenu.menuGroups.length - 1 && (
+                <div class="menu-divider my-3 mx-4 border-t border-gray-200"></div>
+              )}
+            </div>
+          ))}
+          
+          <!-- Ad placement -->
+          <div class="ad-container mx-1 mt-6 mb-4 p-5 rounded-lg shadow-sm border border-gray-100" style="background-color: #f3f1fe;">
+            <div class="flex items-center mb-4">
+              <h3 class="text-2xl font-bold text-gray-800">Linkjob</h3>
+              <span class="ml-2 px-3 py-1 bg-purple-500 text-white rounded-md font-medium">Plus</span>
+            </div>
+            <h4 class="text-xl text-gray-600 mb-4">Unlimited:</h4>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center">
+                <span class="mr-2 flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white">✓</span>
+                <span class="text-gray-700">Mock interview</span>
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2 flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white">✓</span>
+                <span class="text-gray-700">Live interview</span>
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2 flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white">✓</span>
+                <span class="text-gray-700">Phone interview</span>
+              </li>
+            </ul>
+            <a href="https://www.senseiai.me/pricing/" class="block w-full py-3 px-4 bg-purple-500 hover:bg-purple-600 text-white text-center rounded-full font-medium transition-colors duration-200 flex items-center justify-center">
+              Upgrade Now
+              <span class="ml-2">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main blog content -->
+      <article class="w-full lg:flex-1 lg:pl-8 lg:pr-12">
+        <!-- Breadcrumb navigation -->
+        <div class="breadcrumb mb-2" style="font-size: 14px; color: #9ca2ac; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <a href="/" style="color: #9ca2ac;padding-right:10px;" class="hover:text-primary">Home</a> 
+          / 
+          <a href="/blog/" style="color: #9ca2ac;padding:0 10px;" class="hover:text-primary">blog</a> 
+          /  
+          {
+                categories.length > 0 ? 
+                <a href={`/categories/${slugify(categories[0])}/`} style="color: #9ca2ac;padding: 0 10px;" class="hover:text-primary">{humanize(categories[0])}</a>
+                : null
+          } 
+          / <span style="padding: 0 10px;" set:html={markdownify(title)} />
+        </div>
+        <h1 set:html={markdownify(title)} class="mb-4" />
+        <div class="mb-10 flex flex-wrap items-center gap-4">
+          <div class="mr-auto">
+            <img
+              src={author_image}
+              alt="author image"
+              class="mr-2 inline-block h-8 w-8 rounded-full"
+            />
+            <span class="font-secondary text-lg font-semibold">{author}</span>
+            <span style="text-decoration: underline;color:#61AFEF">
+              <a href="https://discord.gg/PfrcRpt7Sv" target="_blank"> Talk to me</a>
+            </span>
+            
+          </div>
+          <div class="inline-block">at 
+            <FaRegCalendar className="mr-1 -mt-1 inline-block" />
+            <span class="text-sm">{dateFormat(date)}</span>
+          </div>
+         
+            
+              {
+                categories.map((category: string, index: number) => (
+                <div
+            class="inline-block rounded bg-secondary px-3 py-1 text-sm font-medium capitalize"
+          ><li class="mr-4 inline-block">
+                  <a href={`/categories/${slugify(category)}/`}>
+                    {humanize(category)}
+                    {/* {index !== categories.length - 1 } */}
+                  </a> </li>
+          </div>
+                ))
+              }
+           
+          
+          
+          
+        </div>
+
+       
+            <div class="mb-10">
+              <!-- <a href="https://discord.gg/PfrcRpt7Sv">
+              <img
+                src="/images/blog/0.png"
+                width=1200 
+                class="w-full rounded"
+                format="png"
+              /></a> -->
+             
+              <!--<div class="notice note">
+                <div class="notice-head"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 9V14M10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 14.9706 14.9706 19 10 19ZM10.0498 6V6.1L9.9502 6.1002V6H10.0498Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p class="my-0 ml-1.5">Enjoy 35% off for first-time user！<span style="text-decoration: underline;color:#61AFEF"><a href="https://discord.gg/PfrcRpt7Sv">  Join the Discord to claim your  coupon！ </a></span></p></div>
+                 <div class="notice-body"> Join the Discord to claim your  coupon！ <a href="https://discord.gg/PfrcRpt7Sv">Discord - </a>  </div> 
+                </div>
+
+              </div>
+              -->
+            <!--<div class="notice tip">
+               <div class="notice-head"><svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0ZM12 2.4C6.69807 2.4 2.4 6.69807 2.4 12C2.4 17.3019 6.69807 21.6 12 21.6C17.3019 21.6 21.6 17.3019 21.6 12C21.6 6.69807 17.3019 2.4 12 2.4ZM15.9515 7.55147L9.6 13.9029L8.04853 12.3515C7.5799 11.8828 6.8201 11.8828 6.35147 12.3515C5.88284 12.8201 5.88284 13.5799 6.35147 14.0485L8.75147 16.4485C9.2201 16.9172 9.9799 16.9172 10.4485 16.4485L17.6485 9.24853C18.1172 8.7799 18.1172 8.0201 17.6485 7.55147C17.1799 7.08284 16.4201 7.08284 15.9515 7.55147Z" fill="currentColor"></path></svg><p class="my-0 ml-1.5">We have digitized the content of this article and trained it into our <a href="https://www.senseiai.me">Linkjob</a> Interview Assistant. You can click the icon in the upper left corner to visit our product homepage. <a href="https://www.senseiai.me">Linkjob</a> is a real-time AI interview assistant that provides AI-generated reference answers to interviewers’ questions during live interviews. Additionally, you can use our AI Mock Interview  feature for in-depth practice sessions tailored to your target job position and resume.</p></div>
+                <div class="notice-body">We have digitized the content of this article and trained it into our Linkjob Interview Assistant. You can click the icon in the upper left corner to visit our product homepage. Linkjob is a real-time AI interview assistant that provides AI-generated reference answers to interviewers’ questions during live interviews. Additionally, you can use our AI Mock Interview  feature for in-depth practice sessions tailored to your target job position and resume.</div>
+            </div> -->
+
+            <!-- Linkjob ad placement - new design -->
+            <div class="rounded-lg p-0 mb-8 overflow-hidden">
+              <div class="text-center py-12 px-6" style="background-color: #f2f2f2;">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">Try Linkjob for<br>Smarter Interview Prep</h2>
+                
+                <p class="text-xl text-gray-800 mb-4">Experience real-time AI support tailored to your Resume.</p>
+                <p class="text-xl text-gray-800 mb-8">Boost your confidence and ace every question with<br>AI Mock Interview.</p>
+                
+                <div class="flex justify-center">
+                  <a href="https://app.aihirely.com" class="bg-indigo-600 hover:bg-indigo-700 text-white py-4 px-10 rounded-lg text-center text-xl font-medium transition-colors duration-300">
+                    Start Free Trial
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            
+        
+
+        <div class="content mb-10">
+          <Content />
+        </div>
+
+        <div class="row items-start justify-between">
+          <!-- <div class="mb-12 flex items-start lg:col-12 lg:mb-0">
+            <h5 class="mr-3">Tags：</h5>
+            <ul>
+              {
+                 tags.slice(0, 20).map((tag: string) => (
+                  <li class="inline-block">
+                    <a
+                      class="inline-block rounded bg-secondary px-3 py-1 text-sm font-medium capitalize mr-1"
+                      href={`/tags/${slugify(tag)}`}
+                    >
+                      {humanize(tag)}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div> -->
+          <div class="flex items-center lg:col-8">
+            <h5 class="mr-3">Share Linkjob to ： </h5>
+            <Share
+              className="social-icons-2"
+              title={title}
+              description={description}
+              slug={post.slug}
+            />
+          </div>
+        </div>
+
+        <!-- <Disqus className="mt-20" client:load /> -->
+      </article>
+      
+      <!-- Right sidebar -->
+      <div class="hidden lg:block" style="width: 220px; min-height: 300px; border-left: 1px solid #eaeaea; position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto;">
+        <div class="p-4">
+          <h4 class="text-lg font-semibold mb-3">Quick Guide:</h4>
+          <div id="table-of-contents" class="toc-container">
+            <!-- Table of contents will be dynamically generated via JavaScript -->
+          </div>
+          
+          <!-- Right sidebar ad -->
+          <div class="mt-6">
+            <div class="rounded-lg overflow-hidden" style="border: 1px solid #e5e7eb; background-color: #f9f9ff; max-width: 220px;">
+              <div class="p-4">
+                <div class="flex items-center mb-2">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-indigo-500">
+                    <path d="M10 9V14M10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 14.9706 14.9706 19 10 19ZM10.0498 6V6.1L9.9502 6.1002V6H10.0498Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <p class="text-sm font-medium ml-2 text-indigo-600">Special Offer</p>
+                </div>
+                <h5 class="font-bold text-gray-800 mb-2">First-time users get 35% off!</h5>
+                <p class="text-sm text-gray-600 mb-3">Join Discord to claim your coupon!</p>
+                <a href="https://discord.gg/PfrcRpt7Sv" class="inline-block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium transition-colors duration-300">
+                  <div class="flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2" viewBox="0 0 16 16">
+                      <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/>
+                    </svg>
+                    Join Now
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      <script>
+        // Run after page has loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          // Get all h2 headings
+          const headings: NodeListOf<Element> = document.querySelectorAll('.content h2');
+          const tocContainer: HTMLElement | null = document.getElementById('table-of-contents');
+          
+          // Exit if no TOC container or no h2 headings found
+          if (!tocContainer || headings.length === 0) return;
+          
+          // Create ID for each heading (if not already set)
+          headings.forEach((heading, index) => {
+            if (!heading.id) {
+              heading.id = `heading-${index}`;
+            }
+          });
+          
+          // Create table of contents
+          const tocList = document.createElement('ul');
+          tocList.className = 'toc-list';
+          tocList.setAttribute('style', 'list-style-type: none; padding: 0;');
+          
+          headings.forEach((heading) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'toc-item';
+            listItem.setAttribute('style', 'margin: 8px 0;');
+            
+            const link = document.createElement('a');
+            link.href = `#${heading.id}`;
+            link.textContent = heading.textContent || '';
+            link.className = 'toc-link';
+            link.setAttribute('style', 'color: #393939; text-decoration: none; font-size: 14px; display: block;');
+            
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          });
+          
+          tocContainer.appendChild(tocList);
+
+          // Add scroll listener to highlight current visible heading
+          const tocLinks: NodeListOf<Element> = document.querySelectorAll('.toc-link');
+          
+          function highlightTocOnScroll() {
+            // Get positions of all headings
+            const headingPositions = Array.from(headings).map(heading => {
+              return {
+                id: heading.id,
+                top: heading.getBoundingClientRect().top
+              };
+            });
+            
+            // Find the current visible heading (first one below viewport top)
+            let currentHeadingId: string | null = null;
+            for (const position of headingPositions) {
+              if (position.top > 0 && position.top < window.innerHeight / 2) {
+                currentHeadingId = position.id;
+                break;
+              }
+            }
+            
+            // If no current heading found, use the first heading
+            if (!currentHeadingId && headingPositions.length > 0) {
+              if (window.scrollY > 0) {
+                // Find the last heading above the viewport
+                for (let i = headingPositions.length - 1; i >= 0; i--) {
+                  if (headingPositions[i].top <= 0) {
+                    currentHeadingId = headingPositions[i].id;
+                    break;
+                  }
+                }
+              } else if (headingPositions[0]) {
+                currentHeadingId = headingPositions[0].id;
+              }
+            }
+            
+            // Update TOC link styles
+            tocLinks.forEach((link) => {
+              if (link instanceof HTMLElement) {
+                const href = link.getAttribute('href');
+                if (href && href.substring(1) === currentHeadingId) {
+                  link.setAttribute('style', 'color: #000; font-weight: bold; display: block; padding: 4px 0; text-decoration: none; font-size: 14px;');
+                } else {
+                  link.setAttribute('style', 'color: #9ca2ac; font-weight: normal; display: block; padding: 4px 0; text-decoration: none; font-size: 14px;');
+                }
+              }
+            });
+          }
+          
+          // Initialize highlighting
+          highlightTocOnScroll();
+          
+          // Add scroll event listener
+          window.addEventListener('scroll', highlightTocOnScroll);
+        });
+      </script>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Wait for DOM to load
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggleNavBtn');
+    const leftNavbar = document.getElementById('leftNavbar');
+    const leftNavPlaceholder = document.getElementById('leftNavPlaceholder');
+    const collapseIcon = document.getElementById('collapseIcon');
+    const expandIcon = document.getElementById('expandIcon');
+    const menuLinks = document.querySelectorAll('.menu-link');
+    const menuTexts = document.querySelectorAll('.menu-text');
+    const groupTitles = document.querySelectorAll('.group-title');
+    
+    // Check if required DOM elements exist
+    if (!toggleBtn || !leftNavbar || !leftNavPlaceholder || !collapseIcon || !expandIcon) {
+      console.error('Required DOM elements for navbar not found');
+      return;
+    }
+    
+    let isExpanded = true;
+    
+    // Toggle navbar state function
+    function toggleNavbar() {
+      isExpanded = !isExpanded;
+      
+      if (isExpanded) {
+        // Expanded state
+        (leftNavbar as HTMLElement).style.width = '277px';
+        (leftNavPlaceholder as HTMLElement).style.width = '277px';
+        if (collapseIcon && expandIcon) {
+          collapseIcon.classList.remove('hidden');
+          expandIcon.classList.add('hidden');
+        }
+        
+        // Restore menu items to horizontal layout
+        menuLinks.forEach(link => {
+          link.classList.remove('flex-col', 'items-center', 'text-center');
+          link.classList.add('flex-row', 'items-center');
+        });
+        
+        // Show text
+        menuTexts.forEach(text => {
+          text.classList.remove('hidden');
+          (text as HTMLElement).style.marginTop = '0';
+        });
+        
+        // Show group titles
+        groupTitles.forEach(title => {
+          title.classList.remove('text-center', 'px-1');
+          title.classList.add('px-4');
+        });
+      } else {
+        // Collapsed state
+        (leftNavbar as HTMLElement).style.width = '80px';
+        (leftNavPlaceholder as HTMLElement).style.width = '80px';
+        if (collapseIcon && expandIcon) {
+          collapseIcon.classList.add('hidden');
+          expandIcon.classList.remove('hidden');
+        }
+        
+        // Change menu items to vertical layout
+        menuLinks.forEach(link => {
+          link.classList.remove('flex-row');
+          link.classList.add('flex-col', 'items-center', 'text-center');
+        });
+        
+        // Hide or adjust text
+        menuTexts.forEach(text => {
+          (text as HTMLElement).style.marginTop = '4px';
+          text.classList.add('text-xs');
+        });
+        
+        // Adjust group titles
+        groupTitles.forEach(title => {
+          title.classList.remove('px-4');
+          title.classList.add('text-center', 'px-1', 'text-sm');
+        });
+      }
+    }
+    
+    // Add click event listener
+    toggleBtn.addEventListener('click', toggleNavbar);
+  });
+</script>
+
+<!-- Related posts -->
+<section class="section section-gradient pb-0">
+  <div class="container">
+    <div class="section-heading-shape" aria-label="shape" data-aos="fade-up-sm">
+    </div>
+    <h2 class="mb-6" data-aos="fade-up-sm" data-aos-delay="50">
+      Related Posts
+    </h2>
+    <div class="row gy-4" data-aos="fade-up-sm" data-aos-delay="150">
+      {similarPosts.slice(0, 3).map((post) => <BlogCard data={post} />)}
+    </div>
+  </div>
+</section>
+
+<CallToAction />

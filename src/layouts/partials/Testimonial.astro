@@ -1,0 +1,672 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import { SUPPORTED_LOCALES } from "@/lib/i18n/config";
+
+type VideoTestimonial = {
+  videoWebm: string;
+  videoMp4: string;
+  poster: string;
+  jobTitle: string;
+  quote: string;
+  ariaLabel: string;
+  personName?: string;
+  company?: string;
+};
+
+const { testimonial } = Astro.props;
+const { enable, videoTestimonials = [] } = testimonial.data as {
+  enable: boolean;
+  videoTestimonials?: VideoTestimonial[];
+};
+const { titleHtml, descriptionHtml, className } = Astro.props as {
+  titleHtml?: string;
+  descriptionHtml?: string;
+  className?: string;
+};
+
+const figmaTitle =
+  "<span style=\"color:#58ACF2;\">Proven Results with</span> <br />Linkjob AI Interview Assistant";
+const figmaDescription =
+  "Every testimonial below comes from a real user of Linkjob AI. Read their firsthand experiences with our AI interview assistant, shared in their own words.";
+
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+const isHomepage =
+  pathSegments.length === 0 ||
+  (pathSegments.length === 1 &&
+    SUPPORTED_LOCALES.some((locale) => locale === pathSegments[0]));
+---
+
+{
+  enable && (
+    <section class="section pt-8 md:pt-16 pb-16 md:pb-32">
+      <div class="container">
+        <div class="row">
+          <div class="mx-auto text-center lg:col-12" data-aos="fade-up-sm">
+            {/* <div class="section-heading-shape" aria-label="shape" /> */}
+            <h2
+              class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+              style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+              data-aos="fade-up-sm"
+              data-aos-delay="100"
+              set:html={markdownify(figmaTitle)}
+            />
+            <p
+              class="mb-8 mx-auto text-[15px] md:text-[20px] lg:text-[20px] w-full max-w-[70ch]"
+              style="max-width: 750px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+              set:html={markdownify(figmaDescription)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {isHomepage && videoTestimonials.length > 0 && (
+        <div
+          class="w-full px-4 sm:px-6 md:px-10 lg:px-20"
+          data-video-testimonials
+        >
+              <div
+                class="video-testimonial-marquee mx-auto max-w-[1440px]"
+                aria-label="Video testimonials"
+              >
+                <div class="video-testimonial-track">
+                  {[false, true].map((isClone) => (
+                    <div
+                      class="video-testimonial-group"
+                      data-marquee-clone={isClone ? "" : undefined}
+                      aria-hidden={isClone ? "true" : undefined}
+                    >
+                      {videoTestimonials.map((item, index) => (
+                        <article class="video-testimonial-card">
+                          <div class="video-testimonial-media">
+                            <button
+                              type="button"
+                              class="video-testimonial-play"
+                              aria-label={item.ariaLabel}
+                              tabindex={isClone ? "-1" : undefined}
+                              data-video-id={String(index + 1)}
+                              data-video-webm={item.videoWebm}
+                              data-video-mp4={item.videoMp4}
+                              data-video-poster={item.poster}
+                              data-video-label={item.ariaLabel}
+                              data-clone-trigger={isClone ? "" : undefined}
+                            >
+                              <img
+                                src={item.poster}
+                                alt=""
+                                width="432"
+                                height="768"
+                                loading="lazy"
+                                decoding="async"
+                                fetchpriority="low"
+                              />
+                              <span
+                                class="video-testimonial-gradient"
+                                aria-hidden="true"
+                              />
+                              <span class="video-testimonial-badge">
+                                {item.jobTitle}
+                              </span>
+                              <span class="video-testimonial-quote">
+                                {item.quote}
+                              </span>
+                              <span
+                                class="video-testimonial-play-icon"
+                                aria-hidden="true"
+                              >
+                                <svg viewBox="0 0 24 24" focusable="false">
+                                  <path d="M8 5.5v13l10-6.5z" />
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div
+                class="video-testimonial-player-layer"
+                data-testimonial-player-layer
+                hidden
+              >
+                <video
+                  data-testimonial-player
+                  preload="none"
+                  controls
+                  playsinline
+                >
+                  Your browser does not support HTML video.
+                </video>
+                <button
+                  type="button"
+                  class="video-testimonial-player-close"
+                  data-testimonial-player-close
+                  aria-label="Close video testimonial"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+                <p
+                  class="video-testimonial-status"
+                  data-testimonial-video-status
+                  aria-live="polite"
+                />
+              </div>
+        </div>
+      )}
+
+      <div
+        class="w-full px-4 sm:px-6 md:px-10 lg:px-20 mt-10 md:mt-14"
+        data-testimonial-images
+        data-aos="fade-up-sm"
+        data-aos-delay="150"
+      >
+        <div class="rounded-[22px] border p-3 md:p-5 lg:p-6 bg-white mx-auto max-w-[1440px]">
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <img
+              src="/images/testimonial/testimonial1.webp"
+              alt="testimonial column 1"
+              class="w-full rounded-[15px]"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              width="754"
+              height="1913"
+            />
+            <img
+              src="/images/testimonial/testimonial2.webp"
+              alt="testimonial column 2"
+              class="w-full rounded-[15px]"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              width="754"
+              height="1915"
+            />
+            <img
+              src="/images/testimonial/testimonial3.webp"
+              alt="testimonial column 3"
+              class="w-full rounded-[15px]"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              width="766"
+              height="1914"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const setupTestimonialMarquees = () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-video-testimonials]")
+      .forEach((region) => {
+        if (region.dataset.videoTestimonialsReady === "true") return;
+        region.dataset.videoTestimonialsReady = "true";
+
+        const playerLayer = region.querySelector<HTMLElement>(
+          "[data-testimonial-player-layer]",
+        );
+        const player = region.querySelector<HTMLVideoElement>(
+          "[data-testimonial-player]",
+        );
+        const closeButton = region.querySelector<HTMLButtonElement>(
+          "[data-testimonial-player-close]",
+        );
+        const status = region.querySelector<HTMLElement>(
+          "[data-testimonial-video-status]",
+        );
+        const videoTrack = region.querySelector<HTMLElement>(
+          ".video-testimonial-track",
+        );
+        const originalGroup = region.querySelector<HTMLElement>(
+          ".video-testimonial-group:not([data-marquee-clone])",
+        );
+        if (!playerLayer || !player || !closeButton || !status) return;
+
+        const controller = new AbortController();
+        const listenerOptions = { signal: controller.signal };
+        let lastTrigger: HTMLButtonElement | null = null;
+        let activeMedia: HTMLElement | null = null;
+
+        const updateTrackDuration = () => {
+          if (!videoTrack || !originalGroup) return;
+          const cycleWidth = originalGroup.getBoundingClientRect().width + 20;
+          if (cycleWidth > 0) {
+            videoTrack.style.setProperty(
+              "--video-marquee-duration",
+              `${Math.max(cycleWidth / 42, 30)}s`,
+            );
+          }
+        };
+
+        const releasePlayer = () => {
+          player.pause();
+          player
+            .querySelectorAll("source")
+            .forEach((source) => source.remove());
+          player.removeAttribute("src");
+          player.removeAttribute("poster");
+          player.load();
+        };
+
+        const visibilityObserver = new IntersectionObserver(
+          ([entry]) => {
+            if (activeMedia && !entry.isIntersecting) player.pause();
+          },
+          { threshold: 0.25 },
+        );
+
+        const closePlayer = (restoreFocus = true) => {
+          if (!activeMedia) return;
+          visibilityObserver.unobserve(activeMedia);
+          releasePlayer();
+          playerLayer.hidden = true;
+          region.append(playerLayer);
+          activeMedia.removeAttribute("data-video-active");
+          region.removeAttribute("data-player-open");
+          status.textContent = "";
+          if (restoreFocus) lastTrigger?.focus();
+          activeMedia = null;
+          lastTrigger = null;
+        };
+
+        const playInCard = (trigger: HTMLButtonElement) => {
+          const webm = trigger.dataset.videoWebm;
+          const mp4 = trigger.dataset.videoMp4;
+          const poster = trigger.dataset.videoPoster;
+          const media = trigger.closest<HTMLElement>(
+            ".video-testimonial-media",
+          );
+          if (!webm || !mp4 || !poster || !media) return;
+
+          if (activeMedia) closePlayer(false);
+
+          const videoId = trigger.dataset.videoId;
+          lastTrigger =
+            region.querySelector<HTMLButtonElement>(
+              `.video-testimonial-play[data-video-id="${videoId}"]:not([data-clone-trigger])`,
+            ) || trigger;
+          activeMedia = media;
+          activeMedia.dataset.videoActive = "true";
+          region.dataset.playerOpen = "true";
+          playerLayer.hidden = false;
+          media.append(playerLayer);
+          visibilityObserver.observe(media);
+          status.textContent = "Loading video…";
+
+          player.poster = poster;
+          player.setAttribute(
+            "aria-label",
+            trigger.dataset.videoLabel || "Video testimonial",
+          );
+
+          const sourceWebm = document.createElement("source");
+          sourceWebm.src = webm;
+          sourceWebm.type = "video/webm";
+          const sourceMp4 = document.createElement("source");
+          sourceMp4.src = mp4;
+          sourceMp4.type = "video/mp4";
+          player.append(sourceWebm, sourceMp4);
+          player.load();
+          player.play().catch(() => {
+            status.textContent = "Video is ready. Press play to continue.";
+          });
+          closeButton.focus();
+        };
+
+        region.addEventListener(
+          "pointerdown",
+          (event) => {
+            const target = event.target as Element | null;
+            if (target?.closest("[data-clone-trigger]")) event.preventDefault();
+          },
+          listenerOptions,
+        );
+        region.addEventListener(
+          "click",
+          (event) => {
+            const target = event.target as Element | null;
+            const trigger = target?.closest<HTMLButtonElement>(
+              ".video-testimonial-play",
+            );
+            if (trigger) playInCard(trigger);
+          },
+          listenerOptions,
+        );
+        closeButton.addEventListener(
+          "click",
+          (event) => closePlayer(event.detail === 0),
+          listenerOptions,
+        );
+        playerLayer.addEventListener(
+          "keydown",
+          (event) => {
+            if (event.key === "Escape") {
+              event.preventDefault();
+              closePlayer();
+            }
+          },
+          listenerOptions,
+        );
+        player.addEventListener(
+          "loadeddata",
+          () => {
+            status.textContent = "";
+          },
+          listenerOptions,
+        );
+        player.addEventListener(
+          "error",
+          () => {
+            status.textContent =
+              "This video could not be played. Please try again.";
+          },
+          listenerOptions,
+        );
+        player.addEventListener(
+          "ended",
+          () => {
+            status.textContent = "Video ended.";
+          },
+          listenerOptions,
+        );
+
+        const handleVisibilityChange = () => {
+          if (document.hidden) {
+            player.pause();
+            region.dataset.pageHidden = "true";
+          } else {
+            region.removeAttribute("data-page-hidden");
+          }
+        };
+        document.addEventListener(
+          "visibilitychange",
+          handleVisibilityChange,
+          listenerOptions,
+        );
+        window.addEventListener("resize", updateTrackDuration, listenerOptions);
+        document.addEventListener(
+          "astro:before-swap",
+          () => {
+            closePlayer(false);
+            visibilityObserver.disconnect();
+            controller.abort();
+          },
+          { once: true },
+        );
+        updateTrackDuration();
+      });
+  };
+
+  document.addEventListener("astro:page-load", setupTestimonialMarquees);
+</script>
+
+<style>
+  @keyframes videoTestimonialMarquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-50% - 10px));
+    }
+  }
+
+  .video-testimonial-marquee {
+    --video-edge-fade-width: clamp(20px, 4vw, 60px);
+    position: relative;
+    overflow: hidden;
+    padding: 4px 0 10px;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--video-edge-fade-width),
+      #000 calc(100% - var(--video-edge-fade-width)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--video-edge-fade-width),
+      #000 calc(100% - var(--video-edge-fade-width)),
+      transparent 100%
+    );
+  }
+
+  .video-testimonial-track,
+  .video-testimonial-group {
+    display: flex;
+    width: max-content;
+    gap: 20px;
+  }
+
+  .video-testimonial-track {
+    animation: videoTestimonialMarquee var(--video-marquee-duration, 78s) linear
+      infinite;
+    will-change: transform;
+  }
+
+  .video-testimonial-marquee:hover .video-testimonial-track,
+  .video-testimonial-marquee:focus-within .video-testimonial-track,
+  [data-video-testimonials][data-player-open] .video-testimonial-track,
+  [data-video-testimonials][data-page-hidden] .video-testimonial-track {
+    animation-play-state: paused;
+  }
+
+  .video-testimonial-card {
+    width: 270px;
+    height: 480px;
+    flex: 0 0 auto;
+    overflow: hidden;
+    border: 1px solid #e4e4e4;
+    border-radius: 20px;
+    scroll-snap-align: start;
+  }
+
+  .video-testimonial-card,
+  .video-testimonial-media,
+  .video-testimonial-player-layer {
+    background: transparent;
+  }
+
+  .video-testimonial-media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .video-testimonial-play {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  .video-testimonial-play img,
+  .video-testimonial-player-layer video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-testimonial-play:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: -4px;
+  }
+
+  .video-testimonial-gradient {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.6) 70%,
+      #000 100%
+    );
+    pointer-events: none;
+  }
+
+  .video-testimonial-play-icon,
+  .video-testimonial-player-close {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(16, 24, 40, 0.82);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  }
+
+  .video-testimonial-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    transition: transform 180ms ease;
+  }
+
+  .video-testimonial-play:hover .video-testimonial-play-icon,
+  .video-testimonial-play:focus-visible .video-testimonial-play-icon {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  .video-testimonial-play-icon svg {
+    width: 25px;
+    height: 25px;
+    fill: currentColor;
+  }
+
+  .video-testimonial-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    max-width: calc(100% - 20px);
+    overflow: hidden;
+    padding: 5px 15px;
+    border-radius: 30px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+  }
+
+  .video-testimonial-quote {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    color: #fff;
+    font-family: "DM Sans", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 20.4px;
+    text-align: left;
+  }
+
+  .video-testimonial-player-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+  }
+
+  .video-testimonial-player-layer[hidden] {
+    display: none;
+  }
+
+  .video-testimonial-player-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 0;
+    cursor: pointer;
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  .video-testimonial-player-close:focus-visible {
+    outline: 3px solid #58acf2;
+    outline-offset: 2px;
+  }
+
+  .video-testimonial-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 849px) {
+    .video-testimonial-marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .video-testimonial-marquee {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      touch-action: pan-x pan-y;
+    }
+
+    .video-testimonial-track {
+      animation: none;
+      will-change: auto;
+    }
+
+    .video-testimonial-group[data-marquee-clone] {
+      display: none;
+    }
+
+    .video-testimonial-card {
+      width: 270px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-testimonial-marquee {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+
+    .video-testimonial-track {
+      animation: none;
+      will-change: auto;
+    }
+
+    .video-testimonial-group[data-marquee-clone] {
+      display: none;
+    }
+
+    .video-testimonial-play-icon {
+      transition: none;
+    }
+  }
+</style>

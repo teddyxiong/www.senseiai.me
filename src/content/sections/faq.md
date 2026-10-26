@@ -1,0 +1,37 @@
+---
+title: "FAQ | If you still have questions, here are the answers."
+description: "If you have any further questions, join our **[<u>Discord community</u>](https://discord.com/invite/PfrcRpt7Sv)** or **[<u>WhatsApp group</u>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t)** to ask us."
+meta_title: ""
+accordion:
+  enable: true
+  items:
+    - accordion_header: "1. What is an AI interview assistant, and how does Linkjob AI work?" 
+      accordion_content: "An AI interview assistant helps you answer questions in real time during live interviews and online assessments. Linkjob AI supports both scenarios by analyzing spoken questions or screenshots and generating relevant answer suggestions.<br /><br />During live online interviews, Linkjob AI listens to the interviewer’s questions and suggests personalized answers based on the conversation, your resume, and the job description.<br /><br />During online assessments, Linkjob AI analyzes screenshots of coding problems and other on-screen test questions, then provides suggested answers, solutions, and explanations."
+
+    - accordion_header: "2. Can I try your AI interview assistant for free, and what does the trial include?"
+      accordion_content: "Yes. The free trial lets you experience all Linkjob AI features using a selection of basic AI models, including live interview assistance, coding support, online assessments, mock interviews, and personalized responses. Paid plans offer access to more advanced AI models, depending on the plan you choose. If you need more time to explore the features, contact our team through Discord or WhatsApp to ask about additional trial access."
+
+    - accordion_header: "3. Will my interviewer be able to see your AI interview assistant when I share my screen?"
+      accordion_content: "Linkjob AI is completely invisible during screen sharing on all meeting platforms, including when you share your entire screen. Only you can see the assistant; your interviewer cannot. **[<span style='color: #253B80; text-decoration: underline;'>The Zoom desktop app requires one special setting.</span>](https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1)** Other desktop meeting apps and browser-based meetings, including Zoom in a browser, do not require additional settings for screen-sharing invisibility."
+
+    - accordion_header: " 4. How can I avoid detection when using your AI interview assistant during an online assessment?"
+      accordion_content: "You need to follow two requirements:<br /><br />1. Your test must take place in a regular web browser, rather than through specialized desktop monitoring software.<br />2. Open Linkjob AI and complete all setup before the test begins. During the test, do not open Settings or use the Cmd/Ctrl + \ shortcut to show or hide the app.<br /><br />Once both requirements are met, you can confidently use all the features of the Linkjob App without worrying about being detected.<br /><br />To learn why Linkjob AI cannot be detected, please **[<span style='color: #253B80; text-decoration: underline;'>read this technical explanation</span>](https://www.senseiai.me/hub/invisible-ai-interview-assistant/)**. If you still have any questions, feel free to contact us through customer support, our Discord group, or WhatsApp. Our customer support team is available 24/7."
+
+    - accordion_header: "5. Does your AI interview assistant help during live interviews, or is it only for practice?"
+      accordion_content: "Linkjob AI supports both live interviews and practice. During a live interview, it provides suggestions as questions come up, including behavioral and technical questions. You can also use its mock interview features beforehand to rehearse responses and become familiar with the app before your actual interview."
+
+    - accordion_header: "6. Does Linkjob AI work with Zoom, Microsoft Teams, and Google Meet, and which computers does it support?"
+      accordion_content: "Yes. Linkjob AI works alongside Zoom, Microsoft Teams, and Google Meet, with desktop versions available for Windows, macOS, and Linux.<br /><br />To test your audio setup, enable listening in Linkjob AI, play any YouTube video, and check whether the AI provides a relevant response. If you’re wearing headphones, select your headphones as the system audio output device in the app’s audio settings.<br /><br />**[<span style='color: #253B80; text-decoration: underline;'>Zoom desktop users also need to enable one special setting</span>](https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1)**, demonstrated in this video. Once enabled, you can use Linkjob AI normally. Other meeting platforms and browser-based meetings do not require this additional setting and are ready to use after the audio setup above."
+
+    - accordion_header: "7. How does your AI coding interview assistant help during live coding interviews?"
+      accordion_content: "Our AI coding interview assistant supports all programming languages and a broad range of technical questions, including algorithms, debugging, code optimization, technical concepts, and complex system design problems. It can analyze question screenshots, suggest code or reference solutions, and explain the reasoning behind an approach. You can also use it to work through follow-up questions about complexity, edge cases, architecture, scalability, and design trade-offs."
+
+    - accordion_header: "8. Can your AI interview helper give personalized answers based on my resume and the job description?"
+      accordion_content: "Yes. Add your resume, the job description, and relevant preparation notes so Linkjob AI can tailor suggestions to your experience and target role. You can also provide custom instructions to guide the response style and level of detail, including concise talking points that are easier to use during a conversation."
+
+    - accordion_header: "9. Is your interview copilot fast enough to keep up with live questions and follow-ups?"
+      accordion_content: "Linkjob AI is designed for low-latency responses and uses conversation context to help with follow-up questions. For fast-paced spoken interviews, Gemini Flash is a good option for quick responses. For coding, system design, and questions that require deeper reasoning, Claude Opus is a strong option when included in your plan."
+
+    - accordion_header: "10. How does Linkjob AI compare with other AI interview tools?"
+      accordion_content: "Linkjob AI stands out in two key areas: access to leading AI models and a dedicated focus on real-time interviews and online assessments.<br /><br />Some AI interview tools rely on basic models or offer limited model choices. Linkjob AI continuously updates its lineup with leading AI models to keep improving response speed and answer quality. Depending on your plan, you can choose the model that best fits your needs, from quick responses to spoken questions to deeper reasoning for coding problems and system design.<br /><br />Other tools combine interview assistance with sales support, meeting notes, and general productivity features. Linkjob AI is built specifically for live interviews and online assessments. Its features focus on listening to interview questions, analyzing screenshots of test problems, tailoring answers to your resume and the job description, and responding to follow-up questions. That specialization keeps the product focused on what you need throughout an interview or assessment."
+---
