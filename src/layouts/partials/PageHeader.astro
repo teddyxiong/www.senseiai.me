@@ -2,12 +2,12 @@
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import { humanize } from "@/lib/utils/textConverter";
 
-const { title = "" }: { title?: string } = Astro.props;
+const { title = "", compact = false }: { title?: string; compact?: boolean } =
   Astro.props;
 ---
 
 <section
-  class="bg-index-hero bg-index-hero--pageheader relative overflow-hidden pb-10 pt-10"
+  class={`bg-index-hero bg-index-hero--pageheader relative overflow-hidden ${compact ? "pb-4 pt-4" : "pb-10 pt-10"}`}
 >
   <div class="container text-center" data-aos="fade-up-sm">
     <div class="px-4 sm:px-8">

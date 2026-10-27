@@ -750,7 +750,7 @@ test("payment success captures a PayPal order before trusting /api/me entitlemen
         plan: "monthly_one_time",
         canceled: false,
         provider: "paypal",
-        expiresAt: "2026-10-22T00:00:00.000Z",
+        expiresAt: "2099-10-22T00:00:00.000Z",
         cancellationUrls: { paypal: "", stripe: "", creem: "" },
       },
     });
@@ -766,7 +766,7 @@ test("payment success captures a PayPal order before trusting /api/me entitlemen
     {
       kind: "active",
       plan: "monthly_one_time",
-      expiresAt: "2026-10-22T00:00:00.000Z",
+      expiresAt: "2099-10-22T00:00:00.000Z",
     },
   );
   assert.equal(requests.length, 2);
