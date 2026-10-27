@@ -1,9 +1,9 @@
 ---
 # Banner
 banner:
-  title: "**Sensei AI Copilot** for Every Interview Your Real-Time AI Interview Assistant"
+  title: "**Sensei AI Copilot** for Every Interview<br />100% Invisible, Real-Time AI Guidance"
   title2: ""
-  content: "Sensei AI Copilot listens to interview questions, analyzes coding screenshots, and suggests personalized answers in real time. View AI-generated answers on your desktop or phone."
+  content: "Sensei AI listens to live questions, analyzes coding tasks, and delivers instant answers via a zero-trace desktop overlay or phone. Completely undetectable during screen sharing."
   content2: ""
   
   badge: "Faster AI answers, smart screenshot modes and Dual-Device viewing."

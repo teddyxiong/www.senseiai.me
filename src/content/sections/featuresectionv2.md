@@ -45,7 +45,7 @@ cards:
 
   platform:
     title: "Works with Zoom, Google Meet, Microsoft Teams & More"
-    description: "Use Sensei AI alongside popular interview and meeting platforms, including Zoom, Google Meet, Microsoft Teams, Webex and browser-based interview tools. Zoom's desktop app requires one [<span style='color: #253B80; text-decoration: underline;'>specific setup step</span>](https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1) for the overlay to remain hidden; browser-based Zoom and other supported meeting platforms do not require that extra step."
+    description: "Sensei AI supports Zoom, Google Meet, Microsoft Teams, Webex, and browser-based interviews. Zoom's desktop app requires a [<span style='color: #253B80; text-decoration: underline;'>specific setup step</span>](https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1) to hide the overlay during screen sharing. Other supported platforms don't need this step."
 
   multilingual:
     title: "AI Interview Support in 30+ Languages"
