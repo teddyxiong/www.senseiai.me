@@ -32,7 +32,7 @@
     "ru": "Русский",
     "pl": "Polski"
   },
-  "publishedLocales": ["en","ja","es","it","ar","pt","zh-hant","pl","ko","fr"],
+  "publishedLocales": ["en"],
   "switcherEnabled": true,
-  "switcherLocales": ["en","ja","es","it","ar","pt","zh-hant","pl","ko","fr"]
+  "switcherLocales": ["en"]
 }

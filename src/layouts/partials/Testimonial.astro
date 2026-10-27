@@ -25,9 +25,9 @@ const { titleHtml, descriptionHtml, className } = Astro.props as {
 };
 
 const figmaTitle =
-  "<span style=\"color:#58ACF2;\">Proven Results with</span> <br />Linkjob AI Interview Assistant";
+  "<span style=\"color:#58ACF2;\">Sensei AI Reviews</span> <br />& Real Interview Assistant Experiences";
 const figmaDescription =
-  "Every testimonial below comes from a real user of Linkjob AI. Read their firsthand experiences with our AI interview assistant, shared in their own words.";
+  "See how real users describe the interview assistant experience, from more natural conversations to coding screenshots and tailored responses.";
 
 const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
 const isHomepage =
@@ -45,7 +45,7 @@ const isHomepage =
             {/* <div class="section-heading-shape" aria-label="shape" /> */}
             <h2
               class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
-              style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+              style="max-width: 800px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
               data-aos="fade-up-sm"
               data-aos-delay="100"
               set:html={markdownify(figmaTitle)}
@@ -157,12 +157,12 @@ const isHomepage =
       )}
 
       <div
-        class="w-full px-4 sm:px-6 md:px-10 lg:px-20 mt-10 md:mt-14"
+        class="w-full px-4 sm:px-6 md:px-10 lg:px-20 xl:px-[120px] 2xl:px-[168px] mt-10 md:mt-14"
         data-testimonial-images
         data-aos="fade-up-sm"
         data-aos-delay="150"
       >
-        <div class="rounded-[22px] border p-3 md:p-5 lg:p-6 bg-white mx-auto max-w-[1440px]">
+        <div class="rounded-[22px] border p-3 md:p-5 lg:p-6 bg-white mx-auto">
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <img
               src="/images/testimonial/testimonial1.webp"

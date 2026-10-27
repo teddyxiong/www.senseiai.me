@@ -1,43 +1,43 @@
 ---
 enable: true
-title: "Features of Linkjob"
-meta_title: "Advanced features | LinkJob AI"
-meta_description: "Discover LinkJob AI's advanced features,Learn more about why LinkJob AI is the best AI interview assistant in the tech and finance fields"
-description: "Discover LinkJob AI's advanced features,Learn more about why LinkJob AI is the best AI interview assistant in the tech and finance fields"
+title: "Sensei AI Copilot Features"
+meta_title: "Sensei AI Copilot Features | Interview & Coding Help"
+meta_description: "Discover Sensei AI's advanced features,Learn more about why Sensei AI is the best AI interview assistant in the tech and finance fields"
+description: "Explore Sensei AI Copilot features: live interview answers, resume-based guidance, coding screenshots, 30+ languages and private desktop or phone viewing."
 image: ""
 
 feature_items:
-  - title: Polish Your Interview Game
-    description: Our AI Interview Copilot helps you hone your interview skills, practice sharp responses, communicate smoothly and confidently, tweak your approach, and get ready to nail the big moment.
-    image: "/images/linkjob-features5.jpg"
+  - title: Stay Focused During Live Interviews
+    description: Sensei AI Copilot turns computer audio into concise interview suggestions while you stay focused on the conversation. From an unexpected behavioral question to a technical follow-up, get the guidance you need as the discussion moves forward.
+    image: "/images/sensei-features5.jpg"
     lists:
-      - "A sleek, user-friendly interface that keeps you focused and lets you easily navigate content during virtual interviews."
-      - "Precise translations in your native language to ensure you fully grasp interview questions and responses."
-      - "Concise bullet points to structure your answers and emphasize key points for impactful communication."
+      - "Get concise AI answers from the interviewer's questions played through your computer while keeping your screen organized."
+      - "Respond in 30+ languages with wording suited to your interview."
+      - "Use clear talking points for behavioral questions, technical explanations, and unexpected follow-ups."
     button:
       enable: true
       label: Download Now
       link: "https://www.senseiai.me/downloads/"
 
-  - title: Shift to a New Career Path
-    description: Receive customized feedback tailored to specific industries to enhance your interview performance and increase your job prospects.
-    image: "/images/linkjob-features6.jpg"
+  - title: Smart Screenshot Modes for Coding Interviews
+    description: From algorithm prompts to system design diagrams, Sensei AI Coding Copilot helps turn what is on your screen into actionable guidance. Choose the capture mode that matches your question and preferred workflow.
+    image: "/images/sensei-features6.jpg"
     lists:
-      - "Create customized responses tailored to your experience, job requirements, and resume specifics."
-      - "Upload preparation notes beforehand to use as a handy reference during interviews."
-      - "Access all materials during the interview to answer confidently and excel."
+      - "Auto Answer: capture one screenshot and get an AI response based on your preset instructions."
+      - "Manual Control: capture up to six screenshots, then type or dictate a custom prompt before sending."
+      - "Auto-Interval: set a capture interval for automatic screenshots and AI-generated responses."
     button:
       enable: true
       label: Download Now
       link: "https://www.senseiai.me/downloads/"
 
-  - title: Get Ready for Senior Positions
-    description: Tackle interviews for critical roles in any industry with assurance. The Interview Copilot crafts tailored, industry-specific scenarios and personalized recommendations to make sure you’re well-prepared for your ideal role.
-    image: "/images/linkjob-features7.jpg"
+  - title: Personalized Support for Your Next Role
+    description: Whether you are interviewing for an entry-level position or a senior technical role, Sensei AI Copilot adapts its answer suggestions to your experience, target job, and interview format.
+    image: "/images/sensei-features7.jpg"
     lists:
-      - "Responses customized to interview questions and role requirements across key industries."
-      - "Endless practice interviews crafted for your desired role and career aspirations."
-      - "Polished and confident language to ensure you come across as professional and ready for interviews."
+      - "Add your resume and job description to receive role-specific examples and interview talking points."
+      - "Prepare for coding, system design, product, finance, and leadership interviews with relevant guidance."
+      - "Choose the desktop overlay or Dual-Device Mode to view live answers on your phone."
     button:
       enable: false
       label: Download Now

@@ -1,9 +1,9 @@
 export type OsType = "windows" | "mac" | "other";
 export type MacArch = "intel" | "arm" | "unknown";
 
-const WINDOWS_URL = "https://www.senseiai.me/download/LinkjobAI_x64-setup.exe";
-const MAC_INTEL_URL = "https://www.senseiai.me/download/LinkjobAI_x64.dmg";
-const MAC_ARM_URL = "https://www.senseiai.me/download/LinkjobAI_aarch64.dmg";
+const WINDOWS_URL = "https://www.senseiai.me/download/SenseiAI_x64-setup.exe";
+const MAC_INTEL_URL = "https://www.senseiai.me/download/SenseiAI_x64.dmg";
+const MAC_ARM_URL = "https://www.senseiai.me/download/SenseiAI_aarch64.dmg";
 
 export function detectOS(): OsType {
   const ua = navigator.userAgent.toLowerCase();

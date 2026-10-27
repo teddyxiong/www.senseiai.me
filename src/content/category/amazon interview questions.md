@@ -5,7 +5,7 @@ slug: "amazon-interview-questions"
 featured_image: "https://statics.mylandingpages.co/static/aaajw3c2xescdfxu/image/c08eb45a5fb14c98848776af90af716d.jpg"
 category: []
 date: "2025-05-29"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # Get Hired at Amazon: The Only Interview Guide You'll Ever Need

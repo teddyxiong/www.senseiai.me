@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 TARGET_FILE="${PROJECT_DIR}/src/content/downloads/-index.md"
 LATEST_JSON_URL="https://www.senseiai.me/download/latest/latest.json"
-DOWNLOAD_URL_PATTERN='url: "https://www\.linkjob\.ai/download/latest/'
+DOWNLOAD_URL_PATTERN='url: "https://www\.Sensei\.ai/download/latest/'
 
 sed_inplace() {
   local expr=$1
@@ -126,7 +126,7 @@ sed_inplace "s/^title: \"\(.*\)V${old_version_re}\"/title: \"\1V${latest_version
 sed_inplace "s/^current_version: \"[^\"]*\"/current_version: \"${latest_version}\"/"
 
 # 2) 所有下载链接里的版本号：dmg / exe / rpm / AppImage / deb
-sed_inplace "s/LinkjobAI\([-_]\)${old_version_re}\([-_.]\)/LinkjobAI\1${latest_version}\2/g"
+sed_inplace "s/SenseiAI\([-_]\)${old_version_re}\([-_.]\)/SenseiAI\1${latest_version}\2/g"
 
 # 3) Update last_updated from latest.json pub_date
 sed_inplace "s/^last_updated: \"[^\"]*\"/last_updated: \"${latest_pub_date}\"/"

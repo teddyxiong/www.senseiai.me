@@ -5,7 +5,7 @@ slug: "chime-interview"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/5553edd8f25e4f55b1276447dfc75929.webp"
 category: []
 date: "2025-05-30"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # Top 15 Chime Interview Questions — Answer Like a Pro and Get Hired

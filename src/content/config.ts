@@ -863,6 +863,7 @@ const sectionsCollection = defineCollection({
       header: z.object({
         title_line_1: z.string(),
         title_line_2: z.string(),
+        description: z.string().optional(),
       }),
       hero_card: z.object({
         title: z.string(),
@@ -976,6 +977,7 @@ export type FeaturesSectionV2Data = {
   header: {
     title_line_1: string;
     title_line_2: string;
+    description?: string;
   };
   hero_card: {
     title: string;

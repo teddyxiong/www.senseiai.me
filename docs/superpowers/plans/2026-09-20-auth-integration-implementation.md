@@ -1,10 +1,10 @@
-# Linkjob 与 Auth 登录集成升级 Implementation Plan
+# Sensei 与 Auth 登录集成升级 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 让 Linkjob 任意合法英文站内页面的 Google/GitHub 登录安全回到原 pathname、query 和 hash，并交付可复用登录保护与 Customer Portal 客户端，同时修复缓存、退出和 One Tap 状态错误。
+**Goal:** 让 Sensei 任意合法英文站内页面的 Google/GitHub 登录安全回到原 pathname、query 和 hash，并交付可复用登录保护与 Customer Portal 客户端，同时修复缓存、退出和 One Tap 状态错误。
 
-**Architecture:** Auth 继续作为会话与 callback 的最终安全边界：浏览器和服务端执行等价的站内回跳规则，服务端非法 callback 保持 400。Linkjob 只通过 `/api/me` 判断会话，session 层负责状态分类与缓存，`authFlow.ts` 负责通用登录跳转，`customerPortal.ts` 保持纯数据客户端；AccountNav 只负责 UI 编排。
+**Architecture:** Auth 继续作为会话与 callback 的最终安全边界：浏览器和服务端执行等价的站内回跳规则，服务端非法 callback 保持 400。Sensei 只通过 `/api/me` 判断会话，session 层负责状态分类与缓存，`authFlow.ts` 负责通用登录跳转，`customerPortal.ts` 保持纯数据客户端；AccountNav 只负责 UI 编排。
 
 **Tech Stack:** Astro 5.16.6、React 18、TypeScript 5.6、Node 内置测试、Cloudflare Workers、Hono、Better Auth 1.6.17、Vitest 4。
 
@@ -13,17 +13,17 @@
 ## Global Constraints
 
 - 开始每个仓库的实现前，重新记录分支、HEAD 和 `git status --short`；不得覆盖用户已有改动。
-- Linkjob 权威仓库：`/Users/silvia/Documents/dist/linkjob`；Auth 权威仓库：`/Users/silvia/Documents/dist/auth`。
+- Sensei 权威仓库：`/Users/silvia/Documents/dist/Sensei`；Auth 权威仓库：`/Users/silvia/Documents/dist/auth`。
 - 只支持 Google、GitHub 和 Google One Tap；不新增邮件登录/注册产品能力。
 - 不修改 Pricing、套餐/支付按钮、Checkout、新购订阅或 PayPal Portal。
 - 不修改 Auth `/api/me` 的 Billing 契约；该解耦保持后续独立事项。
-- 不新增测试框架、浏览器测试框架或运行时依赖；Auth 使用现有 Vitest，Linkjob 使用现有 Node 测试脚本。Linkjob 必须把测试加载器直接导入的 `esbuild` 显式声明为 devDependency，并提交对应 lockfile 变更，禁止依赖 Astro/Vite 偶然提升的传递依赖。
-- Linkjob 不修改 `src/config/account-menu.json`；只修正其 TypeScript 类型和死代码。
+- 不新增测试框架、浏览器测试框架或运行时依赖；Auth 使用现有 Vitest，Sensei 使用现有 Node 测试脚本。Sensei 必须把测试加载器直接导入的 `esbuild` 显式声明为 devDependency，并提交对应 lockfile 变更，禁止依赖 Astro/Vite 偶然提升的传递依赖。
+- Sensei 不修改 `src/config/account-menu.json`；只修正其 TypeScript 类型和死代码。
 - 保留提交 `9cdc6b5c` 已完成的账户菜单样式、hover/focus 下拉逻辑和头像尺寸。
 - 浏览器非法 `next` 安全降级到 `/dashboard/`；Auth 服务端非法 callback 必须返回 `400 INVALID_CALLBACK_URL`。
 - 只有明确 HTTP 401 表示未登录；503、网络失败、离线、`skipped` 和非法响应不得触发登录。
 - `sessionExpiresAt` 缺失仍是有效登录响应；存在但无法解析才是非法响应。
-- Linkjob TypeScript 基线已有 7 个错误：2 个 i18n locale、3 个 Cloudflare 全局类型、1 个正则 target、1 个账户菜单 TS1360。本期必须消除 TS1360，其他 6 个不得增加或改变。
+- Sensei TypeScript 基线已有 7 个错误：2 个 i18n locale、3 个 Cloudflare 全局类型、1 个正则 target、1 个账户菜单 TS1360。本期必须消除 TS1360，其他 6 个不得增加或改变。
 - Auth 当前基线：相关 5 个测试文件 41 项通过，`npm run build` 通过。
 - 每个任务只提交本任务文件；两个仓库分别提交，禁止跨仓库拼成一个 Git 提交。
 
@@ -446,9 +446,9 @@ git commit -m "fix: gate one tap on explicit signed-out status"
 
 ---
 
-### Task 4: Linkjob session 状态分类与账户类型收敛
+### Task 4: Sensei session 状态分类与账户类型收敛
 
-**Repository:** `/Users/silvia/Documents/dist/linkjob`
+**Repository:** `/Users/silvia/Documents/dist/Sensei`
 
 **Files:**
 - Modify: `src/lib/account/types.ts`
@@ -465,7 +465,7 @@ git commit -m "fix: gate one tap on explicit signed-out status"
 
 - [ ] **Step 1: 显式声明构建工具并建立行为测试加载器**
 
-先把当前被 Astro/Vite 传递依赖提升的 esbuild 变成 Linkjob 自己声明的开发依赖：
+先把当前被 Astro/Vite 传递依赖提升的 esbuild 变成 Sensei 自己声明的开发依赖：
 
 ```bash
 npm install --save-dev esbuild@0.25.11
@@ -688,7 +688,7 @@ Expected:
 - TS1360 消失。
 - 命令仍因 6 个历史错误 exit 2：2 个 locale、3 个 Cloudflare 全局类型、1 个 regex target；不得出现新的 account 文件错误。
 
-- [ ] **Step 7: 提交 Linkjob session 基础**
+- [ ] **Step 7: 提交 Sensei session 基础**
 
 ```bash
 git add src/lib/account/types.ts src/lib/account/session.ts scripts/account-auth.test.mjs package.json package-lock.json
@@ -697,9 +697,9 @@ git commit -m "refactor: separate account session checks"
 
 ---
 
-### Task 5: Linkjob 通用登录保护、完整回跳和缓存刷新
+### Task 5: Sensei 通用登录保护、完整回跳和缓存刷新
 
-**Repository:** `/Users/silvia/Documents/dist/linkjob`
+**Repository:** `/Users/silvia/Documents/dist/Sensei`
 
 **Files:**
 - Create: `src/lib/account/authFlow.ts`
@@ -907,7 +907,7 @@ npm run test:account
 
 Expected: 账户测试 PASS；仅剩 6 个既有非账户类型错误。
 
-- [ ] **Step 6: 提交 Linkjob 登录保护和回跳**
+- [ ] **Step 6: 提交 Sensei 登录保护和回跳**
 
 ```bash
 git add src/lib/account/authFlow.ts src/lib/account/constants.ts src/layouts/helpers/AccountNav.tsx scripts/account-auth.test.mjs scripts/account-nav-dropdown.test.mjs
@@ -916,9 +916,9 @@ git commit -m "feat: add reusable authenticated navigation"
 
 ---
 
-### Task 6: Linkjob 退出登录 CSRF 与 One Tap 冷却收敛
+### Task 6: Sensei 退出登录 CSRF 与 One Tap 冷却收敛
 
-**Repository:** `/Users/silvia/Documents/dist/linkjob`
+**Repository:** `/Users/silvia/Documents/dist/Sensei`
 
 **Files:**
 - Modify: `src/lib/account/authFlow.ts`
@@ -933,7 +933,7 @@ git commit -m "feat: add reusable authenticated navigation"
 - Produces: `signOutAndReturn(): Promise<SignOutResult>`；DEV success 清一次缓存并 reload，生产 success 通过 `redirectToSignIn(currentReturnTo())` 清一次缓存并导航。
 - Preserves: 生产退出成功后返回登录页，并携带退出前的完整站内地址。
 - Preserves: dev override 退出仍只在 `import.meta.env.DEV` 为 true 时生效，且不发送网络请求。
-- Removes: Linkjob 自己的 10 分钟 One Tap localStorage cooldown；保留最小触发间隔和 in-flight 去重。
+- Removes: Sensei 自己的 10 分钟 One Tap localStorage cooldown；保留最小触发间隔和 in-flight 去重。
 
 - [ ] **Step 1: 写退出成功与失败导航回归测试**
 
@@ -1088,7 +1088,7 @@ export async function signOutAndReturn(): Promise<SignOutResult> {
 
 AccountNav 删除现有 DEV 专用退出分支，只调用 `signOutAndReturn()`；结果为 unavailable 时 `setSigningOut(false)` 并保留已登录 UI，不再自行写 localStorage、清缓存或导航。DEV success 的缓存清理与 reload、生产 success 的缓存清理与 `/auth/sign-in?next=<当前 pathname+query+hash>` 导航都由封装完成。
 
-- [ ] **Step 4: 删除 Linkjob 长期 One Tap cooldown**
+- [ ] **Step 4: 删除 Sensei 长期 One Tap cooldown**
 
 从 constants 和 `oneTap.ts` 删除 `ONE_TAP_COOLDOWN_KEY`、`ONE_TAP_COOLDOWN_MS`、`getCooldownUntil()`、`setCooldownUntil()`；保留：
 
@@ -1117,9 +1117,9 @@ git commit -m "fix: make account sign-out fail closed"
 
 ---
 
-### Task 7: Linkjob 纯 Customer Portal 客户端
+### Task 7: Sensei 纯 Customer Portal 客户端
 
-**Repository:** `/Users/silvia/Documents/dist/linkjob`
+**Repository:** `/Users/silvia/Documents/dist/Sensei`
 
 **Files:**
 - Create: `src/lib/account/customerPortal.ts`
@@ -1307,7 +1307,7 @@ git commit -m "feat: add customer portal client"
 **Repositories:** 两个仓库；此任务不修改业务代码。
 
 **Files:**
-- Verify only: Auth 和 Linkjob 上述全部文件。
+- Verify only: Auth 和 Sensei 上述全部文件。
 
 **Interfaces:**
 - Consumes: Tasks 1–7 的最终提交。
@@ -1324,10 +1324,10 @@ git status --short
 
 Expected: 全部 Vitest PASS；build exit 0；状态只包含计划内文件或完全干净。
 
-- [ ] **Step 2: 验证 Linkjob 定向测试和类型基线**
+- [ ] **Step 2: 验证 Sensei 定向测试和类型基线**
 
 ```bash
-cd /Users/silvia/Documents/dist/linkjob
+cd /Users/silvia/Documents/dist/Sensei
 npm run test:account
 ./node_modules/.bin/tsc --noEmit --incremental false
 git status --short
@@ -1335,7 +1335,7 @@ git status --short
 
 Expected: account tests PASS；TS1360 消失，只有记录的 6 个历史错误。
 
-- [ ] **Step 3: 执行 Linkjob 构建，不触发远端同步**
+- [ ] **Step 3: 执行 Sensei 构建，不触发远端同步**
 
 `npm run build` 会先运行 `sync-public` 并访问 R2，不用于默认本地验证。直接调用 Astro：
 
@@ -1366,15 +1366,15 @@ Expected: Astro build 成功；随后只检查构建产物，不提交 `dist/`�
 ```bash
 git -C /Users/silvia/Documents/dist/auth diff --check
 git -C /Users/silvia/Documents/dist/auth log --oneline -3
-git -C /Users/silvia/Documents/dist/linkjob diff --check
-git -C /Users/silvia/Documents/dist/linkjob log --oneline -4
+git -C /Users/silvia/Documents/dist/Sensei diff --check
+git -C /Users/silvia/Documents/dist/Sensei log --oneline -4
 ```
 
 Expected: 无 whitespace 错误；没有 Pricing、邮件产品、多语言、Billing 契约或无关文件改动。验证任务不创建额外提交。
 
 ## Execution Notes
 
-- 推荐按 Task 1→3 完成 Auth，再按 Task 4→7 完成 Linkjob，最后执行 Task 8；不要并行修改共享文件 `app.js`、`AccountNav.tsx`、`session.ts` 或 `scripts/account-auth.test.mjs`。
+- 推荐按 Task 1→3 完成 Auth，再按 Task 4→7 完成 Sensei，最后执行 Task 8；不要并行修改共享文件 `app.js`、`AccountNav.tsx`、`session.ts` 或 `scripts/account-auth.test.mjs`。
 - 每个任务通过自己的定向验证后立即提交，便于单独审阅和回滚。
 - 若执行时两个仓库 HEAD 或调用链已变化，先更新本计划中的文件行号和测试基线，再开始该任务；不得盲套旧 diff。
 - Pricing 接入必须另开需求与分支；本计划完成后只提供通用 API，不连接具体支付按钮。

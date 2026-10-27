@@ -1,10 +1,10 @@
 ---
-meta_title: "Plans & Pricing | Linkjob AI"
-meta_description: "Check out Linkjob AI's pricing page for a comprehensive overview of our subscription plans, empowering you to find the perfect plan and the best AI models."
+meta_title: "Plans & Pricing | Sensei AI"
+meta_description: "Check out Sensei AI's pricing page for a comprehensive overview of our subscription plans, empowering you to find the perfect plan and the best AI models."
 pricing:
   enable: true
   header:
-    title: "Plans & Pricing | Linkjob AI"
+    title: "Plans & Pricing | Sensei AI"
     subtitle_line_1: "Stay ahead with the latest top-tier AI models."
     subtitle_line_2: "We continuously add the newest high-performing models for better answers."
     tabs:
@@ -67,7 +67,7 @@ pricing:
             logo: "/images/ailogo/gemini.webp"
             tag: "Unlimited"
       features:
-        title: "Unlock all the features of Linkjob AI"
+        title: "Unlock all the features of Sensei AI"
         list:
           - "Unlimited real-time interview assistant"
           - "Unlimited AI mock interview practice"
@@ -136,7 +136,7 @@ pricing:
             logo: "/images/ailogo/gemini.webp"
             tag: "Unlimited"
       features:
-        title: "Unlock all the features of Linkjob AI"
+        title: "Unlock all the features of Sensei AI"
         list:
           - "Unlimited real-time interview assistant"
           - "Unlimited AI mock interview practice"
@@ -217,7 +217,7 @@ pricing:
             logo: "/images/ailogo/grok.webp"
             tag: "Unlimited"
       features:
-        title: "Unlock all the features of Linkjob AI"
+        title: "Unlock all the features of Sensei AI"
         list:
           - "Unlimited real-time interview assistant"
           - "Unlimited AI mock interview practice"
@@ -299,7 +299,7 @@ pricing:
             logo: "/images/ailogo/vip.png"
             tag: "Latest"
       features:
-        title: "Unlock all the features of Linkjob AI"
+        title: "Unlock all the features of Sensei AI"
         list:
           - "Unlimited real-time interview assistant"
           - "Unlimited AI mock interview practice"
@@ -315,7 +315,7 @@ pricing:
 
 
 promotions:
-  title: "Try LinkJob AI for free"
+  title: "Try Sensei AI for free"
   steps:
     - image: "/images/Promotion-1.png"
       caption: "Get a 30-minute free trial instantly when you **[<span style='color: #253B80; text-decoration: underline;'>download the app</span>](https://www.senseiai.me/downloads/)**."
@@ -323,16 +323,16 @@ promotions:
         - "Email Address"
         - "free 30-minute"
     - image: "/images/Promotion-2.png"
-      caption: "Join our **[<span style='color: #253B80; text-decoration: underline;'>Discord</span>](https://discord.com/invite/PfrcRpt7Sv)** or **[<span style='color: #253B80; text-decoration: underline;'>WhatsApp</span>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t)** community to unlock a 45-minute free trial."
+      caption: "Join our **[<span style='color: #253B80; text-decoration: underline;'>Discord</span>](https://discord.com/invite/BnAksURmTY)** or **[<span style='color: #253B80; text-decoration: underline;'>WhatsApp</span>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t)** community to unlock a 45-minute free trial."
       highlight:
         - "WhatsApp & Discord"
         - "free 45-minute"
     - image: "/images/Promotion-3.png"
-      caption: "Leave a review on **[<span style='color: #253B80; text-decoration: underline;'>Reddit</span>](https://www.reddit.com/r/jobs/comments/1oburqn/has_anyone_used_linkjob_ai_and_how_was_the/)** or **[<span style='color: #253B80; text-decoration: underline;'>Trustpilot</span>](https://www.trustpilot.com/review/senseiai.me)** to receive a one-hour free trial."
+      caption: "Leave a review on **[<span style='color: #253B80; text-decoration: underline;'>Reddit</span>](https://www.reddit.com/r/jobs/comments/1oburqn/has_anyone_used_Sensei_ai_and_how_was_the/)** or **[<span style='color: #253B80; text-decoration: underline;'>Trustpilot</span>](https://www.trustpilot.com/review/senseiai.me)** to receive a one-hour free trial."
       highlight:
         - "Leave Your Review"
         - "free 1-hour"
-  footer_text: "Need a longer free trial? Check out this article:<br>[How to Get a LinkJob AI License Key for Free in 2026](https://www.senseiai.me/hub/how-to-get-linkjob-ai-license-key-free-in-2026/)"
+  footer_text: "Need a longer free trial? Check out this article:<br>[How to Get a Sensei AI License Key for Free in 2026](https://www.senseiai.me/hub/how-to-get-Sensei-ai-license-key-free-in-2026/)"
 
 secure_payments:
   label: "Pay safely and securely with"

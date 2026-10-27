@@ -4,7 +4,7 @@
 
 ## 1) 新增：src/config/account-menu.json
 
-[account-menu.json](file:///Users/teddy/Documents/aaa/linkjob/src/config/account-menu.json)
+[account-menu.json](file:///Users/teddy/Documents/aaa/Sensei/src/config/account-menu.json)
 
 ```json
 {
@@ -29,7 +29,7 @@
 
 ## 2) 新增：src/lib/account/menuConfig.ts（类型化配置入口）
 
-[menuConfig.ts](file:///Users/teddy/Documents/aaa/linkjob/src/lib/account/menuConfig.ts)
+[menuConfig.ts](file:///Users/teddy/Documents/aaa/Sensei/src/lib/account/menuConfig.ts)
 
 ```ts
 import type { AccountMenuConfig } from "@/lib/account/types";
@@ -40,7 +40,7 @@ export default menu satisfies AccountMenuConfig;
 
 ## 3) 新增：src/lib/account/types.ts
 
-[types.ts](file:///Users/teddy/Documents/aaa/linkjob/src/lib/account/types.ts)
+[types.ts](file:///Users/teddy/Documents/aaa/Sensei/src/lib/account/types.ts)
 
 ```ts
 export type AccountMenuConfig = {
@@ -97,7 +97,7 @@ export const isAuthedMeResponse = (resp: MeResponse): resp is MeResponseAuthed =
 
 ## 4) 新增：src/lib/account/constants.ts（单一来源常量）
 
-[constants.ts](file:///Users/teddy/Documents/aaa/linkjob/src/lib/account/constants.ts)
+[constants.ts](file:///Users/teddy/Documents/aaa/Sensei/src/lib/account/constants.ts)
 
 ```ts
 import config from "@/config/config.json";
@@ -126,7 +126,7 @@ export const FALLBACK_AVATAR_URL = `${ASSET_ORIGIN}/images/favicon.png`;
 
 ## 5) 新增：src/lib/account/session.ts（缓存 + 网络层：去重/退避/离线）
 
-[session.ts](file:///Users/teddy/Documents/aaa/linkjob/src/lib/account/session.ts)
+[session.ts](file:///Users/teddy/Documents/aaa/Sensei/src/lib/account/session.ts)
 
 ```ts
 import {
@@ -270,7 +270,7 @@ export const revalidateMe = async (): Promise<MeRevalidateResult> => {
 
 ## 6) 新增：src/lib/account/oneTap.ts（动态 import + 冷却）
 
-[oneTap.ts](file:///Users/teddy/Documents/aaa/linkjob/src/lib/account/oneTap.ts)
+[oneTap.ts](file:///Users/teddy/Documents/aaa/Sensei/src/lib/account/oneTap.ts)
 
 ```ts
 import {
@@ -336,7 +336,7 @@ export const maybeRunOneTap = (pathname: string) => {
 
 ## 7) 新增：src/layouts/helpers/AccountNav.tsx（组件：UI + 状态编排）
 
-[AccountNav.tsx](file:///Users/teddy/Documents/aaa/linkjob/src/layouts/helpers/AccountNav.tsx)
+[AccountNav.tsx](file:///Users/teddy/Documents/aaa/Sensei/src/layouts/helpers/AccountNav.tsx)
 
 ```tsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";

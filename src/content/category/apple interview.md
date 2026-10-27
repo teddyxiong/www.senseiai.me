@@ -5,7 +5,7 @@ slug: "apple-interview"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/920c9250d8b8438c892b40c8793965cc.png"
 category: []
 date: "2025-05-29"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # Crush Your Apple Interview — These Questions Are Your Secret Weapon
@@ -274,7 +274,7 @@ The time you need depends on your job and experience. Usually, 4-6 weeks is enou
 
 ### 2\. What are the best tools for practice for Apple interviews?
 
-For Apple coding interviews, websites like LeetCode are helpful. For system design, try Grokking the System Design Interview. For behavioral interviews, use an AI interview assistant like [Linkjob](https://www.senseiai.me).
+For Apple coding interviews, websites like LeetCode are helpful. For system design, try Grokking the System Design Interview. For behavioral interviews, use an AI interview assistant like [Sensei](https://www.senseiai.me).
 
 ### 3\. What should I wear to an Apple interview?
 

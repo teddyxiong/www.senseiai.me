@@ -1,7 +1,6 @@
 import config from "@/config/config.json";
 
 export const API_ORIGIN = config.site.base_url.replace(/\/$/, "");
-export const ASSET_ORIGIN = config.site.asset_base_url.replace(/\/$/, "");
 
 export const ME_URL = `${API_ORIGIN}/api/me`;
 export const CHECKOUT_URL = `${API_ORIGIN}/api/billing/checkout`;
@@ -23,7 +22,7 @@ export const AUTH_PATH_PREFIX = "/auth/";
 export const ONE_TAP_MODULE_URL = "/auth/one-tap.js";
 export const ONE_TAP_MIN_INTERVAL_MS = 3_000;
 
-export const FALLBACK_AVATAR_URL = `${ASSET_ORIGIN}/images/favicon.png`;
+export const FALLBACK_AVATAR_URL = "/images/favicon.png";
 
 export const DEV_AUTH_STORAGE_KEY = "account.dev.authenticated";
 export const DEV_USER_STORAGE_KEY = "account.dev.user";

@@ -3,7 +3,7 @@ import {
   PUBLISHED_LOCALES,
 } from "@/lib/i18n/config";
 
-const COOKIE_NAME = "linkjob_locale";
+const COOKIE_NAME = "Sensei_locale";
 const COOKIE_MAX_AGE = 31_536_000;
 const publishedLocales = new Set(PUBLISHED_LOCALES);
 

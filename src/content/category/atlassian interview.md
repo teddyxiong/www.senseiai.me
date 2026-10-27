@@ -5,7 +5,7 @@ slug: "atlassian-interview"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/496f0eb1363b49da8c0eed4918712fd9.png"
 category: []
 date: "2025-05-30"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # How I Got the Atlassian Offer: My 15-Question Survival Kit

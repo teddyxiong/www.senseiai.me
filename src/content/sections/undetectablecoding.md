@@ -18,7 +18,7 @@ items:
     image: "/images/undetectable/screensharingproof.webp"
   item4:
     title: Completely Click-Through
-    description: "Even when your cursor hovers or clicks on Linkjob AI, your system and apps won't detect it. No focus shifts. No flags. No traces."
+    description: "Even when your cursor hovers or clicks on Sensei AI, your system and apps won't detect it. No focus shifts. No flags. No traces."
     image: "/images/undetectable/clickthrough.webp"
 background:
   - image: "/images/undetectable/bgblue.webp"

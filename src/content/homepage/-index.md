@@ -1,12 +1,12 @@
 ---
 # Banner
 banner:
-  title: "Your Undetectable **AI Interview Assistant** Real-time AI Help for Every Interview"
+  title: "**Sensei AI Copilot** for Every Interview Your Real-Time AI Interview Assistant"
   title2: ""
-  content: "Provide answers to interview questions, analyze your coding test screenshots, and give you stealthy AI assistance during live interviews."
+  content: "Sensei AI Copilot listens to interview questions, analyzes coding screenshots, and suggests personalized answers in real time. View AI-generated answers on your desktop or phone."
   content2: ""
   
-  badge: "Tested daily to stay completely invisible and undetectable on all meeting and assessment platforms."
+  badge: "Faster AI answers, smart screenshot modes and Dual-Device viewing."
   image: "/images/banner1.png"
   button:
     enable: true
@@ -23,14 +23,14 @@ banner:
 
 # Key results below the homepage download buttons
 hero_stats:
-  - value: "36,000+"
-    label: "Offers Received"
-  - value: "172,800+"
-    label: "Interviews Aced"
-  - value: "29+"
+  - value: "30+"
     label: "Languages Supported"
-  - value: "1700+"
-    label: "Companies Landed"
+  - value: "3"
+    label: "Smart Screenshot Modes"
+  - value: "2"
+    label: "Viewing Options"
+  - value: "3+"
+    label: "Core Interview Types"
 
 # Company logos below the homepage demo
 company_logos:
@@ -98,16 +98,16 @@ brands:
 # Experience
 experience:
   enable: true
-  title:  "Linkjob AI Interview Helper: Tested Daily on Every Platform"
+  title: "Use Sensei AI on Your <span style=\"color: #58ACF2;\">Interview Platform</span>"
   description:
-    "Get AI support for live coding and technical discussions, with daily compatibility checks across supported interview platforms. Explore the demos below to see how Linkjob AI works with your interview setup."
+    "From video interviews to technical assessment sites, explore setup guides and workflow examples for common interview platforms. Use the desktop overlay for supported screen-sharing and regular-browser sessions, and choose phone viewing when you need a separate display."
   image: "/images/coding-invisible.webp"
   items:
-    - title: Share Your Code. Keep Your AI Support Private.
-      description: "Walk through your solution with your interviewer while keeping AI guidance on your own screen. Linkjob AI’s desktop window is designed to stay hidden during supported screen-sharing sessions, so you can present your code and explain your approach with confidence."
+    - title: Keep Your Sensei AI Answers Where You Need Them
+      description: "Choose the viewing setup that matches your interview. Use the invisible desktop overlay during supported meetings and regular browser-based sessions, or enable Dual-Device Mode to read live answers on your phone while Sensei AI runs on your computer."
       icon: "FaCommentDots"
-    - title: Solve, Debug, and Explain Your Code.
-      description: "Get real-time guidance based on the problem on your screen and your interviewer’s questions. Explore solution approaches, identify potential bugs and edge cases, and get help explaining time and space complexity—even as follow-up questions take the discussion deeper."
+    - title: Code, Debugging, DSA and System Design
+      description: "Work through data structures and algorithms, Python, Java, JavaScript, C++ and other common programming languages. Get help comparing approaches, spotting edge cases, explaining time and space complexity, or discussing architecture, databases and scalability."
       icon: "FaRegCompass"
 
   title2:  "Our AI Interview Helper leverages the latest mainstream AI models to <span style=\"color:#7C3AED;\">ensure lightning-fast, high-quality responses</span>."
@@ -116,7 +116,7 @@ experience:
   image2: "/images/coding2.png"
   items2:
     - title: High-quality AI answer
-      description: "Linkjob AI guarantees to always connect to the latest AI models, providing you with the highest quality answers. You can also input your personalized requirements in the settings to make the AI's responses more precise."
+      description: "Sensei AI guarantees to always connect to the latest AI models, providing you with the highest quality answers. You can also input your personalized requirements in the settings to make the AI's responses more precise."
       icon: "FaCommentDots"
     - title: Super fast AI generation speed
       description: "We have integrated 9 of the fastest AI generative models, including OpenAI Whisper, Google STT, Azure STT, and others, to provide you with the most timely AI assistance during interviews or coding tests."
@@ -141,9 +141,9 @@ experience:
 
 # Nav Buttons (between hero animation and features)
 nav_buttons:
-  - label: "Watch Linkjob AI Interview Copilot in Action"
+  - label: "Watch Sensei AI Interview Copilot in Action"
     link: "https://www.youtube.com/embed/tEF3DXagKgQ?si=3k5-nqQKZjHc7ZZV&rel=0&modestbranding=1&playsinline=1"
-  - label: "Watch Linkjob AI Coding Interview Assistant in Action"
+  - label: "Watch Sensei AI Coding Interview Assistant in Action"
     link: "https://www.youtube.com/embed/KX75MMEwQ7A?si=4oTkf2VAYTR9Ja8V&rel=0&modestbranding=1&playsinline=1"
 
 

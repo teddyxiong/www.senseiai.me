@@ -1,26 +1,26 @@
 ---
 enable: true
-title: "The Best AI Interview Tool for Technical Interviews"
-description: "Linkjob AI’s interview assistant remains 100% undetectable during all assessments, so you can use it with confidence."
+title: "A Real-Time <span style=\"color: #58ACF2;\">AI Interview Assistant</span> for Coding and System Design"
+description: "Stay focused on the technical problem in front of you. Sensei AI combines the interviewer's spoken questions with on-screen context to suggest code, debugging ideas, architectural trade-offs and clearer explanations of your solution."
 
 base_image: "/images/undetectable/lynccontainer.webp"
 overlay_image: "/images/undetectable/overlay.webp"
 
 highlights:
-  - title: "No one sees Linkjob AI"
-    description: "Stays invisible during screen sharing"
+  - title: "Only You See the Overlay"
+    description: "Designed to stay out of supported screen shares."
     image: "/images/undetectable/eye-off.svg"
-  - title: "Works on any platform"
-    description: "Zoom, Google Meet, Teams, and more"
+  - title: "Technical Help in Real Time"
+    description: "Move from requirements to an approach, code and explanation."
     image: "/images/undetectable/app-window.svg"
-  - title: "Focus on your performance"
-    description: "Get answers, not distractions"
+  - title: "Built for Follow-Up Questions"
+    description: "Discuss complexity, edge cases, performance and scale."
     image: "/images/undetectable/flash.svg"
 
 items:
   header:
-    title: "The No. 1 Undetectable AI Assistant For Interviews"
-    description: "20+ advanced stealth features, tested every single day across every interview platform to ensure 100% undetectability."
+    title: "Discreet AI Interview Help, Built Around Your Workflow"
+    description: "Sensei AI keeps interview guidance unobtrusive, with a desktop overlay designed for private viewing while you share your work and discuss your answers."
   expand_icon:
     title: ""
     description: ""
@@ -38,39 +38,40 @@ items:
     description: ""
     image: "/images/undetectable/bglarge.webp"
   item1:
-    title: Invisible on Screen Share
-    description: "Share your screen while Linkjob AI stays completely invisible to others."
-    expanded_description: "If someone you’re talking to asks you to share your screen, Linkjob AI can be open on your computer, but will be completely invisible to them."
+    title: "Hidden on Screen Share"
+    description: "Keep Sensei AI Copilot hidden while sharing your interview screen."
+    expanded_description: "Use Sensei AI Copilot to receive real-time AI interview answers while sharing your screen. The desktop overlay stays invisible in supported screen-sharing and recording views, so interviewers only see the content you choose to share. Zoom's desktop app requires a one-time setup."
     image: "/images/undetectable/screensharingproof.webp"
     compact_image: "/images/undetectable/screen-share.svg"
   item2:
-    title: Invisible in Dock
-    description: "The app stays hidden from the Dock, with no icon or activity indicator."
-    expanded_description: "Linkjob AI icon is hidden in the dock, and there is no status bar title change whenever you're interacting with the app."
+    title: "Hidden from the Dock"
+    description: "Sensei AI stays hidden from the Dock without distracting app indicators."
+    expanded_description: "Sensei AI Copilot keeps its app icon hidden from the macOS Dock and avoids visible status bar title changes when you interact with the application. Access personalized interview answers while keeping your desktop appearance consistent."
     image: "/images/undetectable/dock2.webp"
     compact_image: "/images/undetectable/dock-white.svg"
     video: "/images/undetectable/dock.webm"
   item3:
-    title: Invisible in Activity Monitor
-    description: "The process has no visible name or icon in Activity Monitor."
-    expanded_description: "We made sure if anyone asks you to share your screen and show them your activity monitor or task manager that Linkjob AI stays invisible. No process to show."
+    title: "Discreet in Activity Monitor"
+    description: "Designed to minimize recognizable app details in system process views."
+    expanded_description: "Sensei AI Copilot is designed to operate discreetly during live interviews, minimizing recognizable application names and icons in supported system process views, including Activity Monitor and Task Manager."
     image: "/images/undetectable/activitymonitor2.webp"
     compact_image: "/images/undetectable/list-x.svg"
     video: "/images/undetectable/activity.webm"
   item4:
-    title: Invisible to Tab Switching
-    description: "Switch tabs or windows without platforms detecting that you moved away."
-    expanded_description: "Some platforms detect if you click on another tab or window and move your focus away from the app you should be using. Linkjob AI bypasses that detection."
+    title: "Invisible to Tab Switching"
+    description: "Access real-time interview answers without leaving your current browser tab."
+    expanded_description: "Some online interview platforms and coding assessments monitor tab switching or changes in window focus. Sensei AI Copilot displays AI-generated answers in a desktop overlay, letting you review interview guidance without repeatedly switching browser tabs or leaving your current assessment page."
     image: "/images/undetectable/tab.webp"
     compact_image: "/images/undetectable/arrow-left-right.svg"
     video: "/images/undetectable/tab.webm"
   item5:
-    title: Cursor Undetectability
-    description: "Your cursor stays unchanged when hovering, clicking, or adjusting settings."
-    expanded_description: "We made sure the cursor does not change the shape whenever you're interacting with our app - either by hovering, changing settings or clicking buttons."
+    title: "Unchanged Cursor"
+    description: "Interact with Sensei AI without distracting cursor shape changes."
+    expanded_description: "Sensei AI Copilot keeps your cursor appearance consistent while you interact with the desktop overlay. Whether you're hovering, clicking buttons, or adjusting settings, the pointer retains its familiar appearance so you can navigate AI interview answers naturally."
     image: "/images/undetectable/clickthrough.webp"
     compact_image: "/images/undetectable/mouse-pointer.svg"
     video: "/images/undetectable/cursor.webm"
+
 
 background:
   - image: "/images/undetectable/bglarge.webp"

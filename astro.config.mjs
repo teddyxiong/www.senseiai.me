@@ -4,11 +4,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
-import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { readFile, writeFile, readdir } from "node:fs/promises";
-import { join, relative, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import config from "./src/config/config.json";
@@ -144,84 +140,7 @@ export default defineConfig({
         "@/shortcodes/Tab",
       ],
     }),
-mdx(),
-    {
-      name: 'r2-asset-rewrite',
-      hooks: {
-        'astro:build:done': async ({ dir }) => {
-          const base = config.site.asset_base_url;
-          if (!base) return;
-          const publicDir = fileURLToPath(new URL("./public/", import.meta.url));
-
-          async function* walk(dirPath) {
-            const entries = await readdir(dirPath, { withFileTypes: true });
-            for (const entry of entries) {
-              const full = join(dirPath, entry.name);
-              if (entry.isDirectory()) {
-                yield* walk(full);
-              } else {
-                yield full;
-              }
-            }
-          }
-
-          const assetVersions = new Map();
-          for await (const file of walk(publicDir)) {
-            const assetPath = relative(publicDir, file).split(sep).join("/");
-            if (!/^(images|fonts|videos)\//.test(assetPath)) continue;
-            const hash = createHash("sha256")
-              .update(await readFile(file))
-              .digest("hex")
-              .slice(0, 12);
-            assetVersions.set(assetPath, hash);
-          }
-
-          const versionedAssetUrl = (type, assetPath) => {
-            if (
-              type === "images" &&
-              (assetPath.startsWith("features/icon_") ||
-                assetPath === "features/interviewer.png" ||
-                assetPath === "features/linkjob-mark.png")
-            ) {
-              return `/${type}/${assetPath}`;
-            }
-            if (type === "images" && assetPath.startsWith("dual-device/")) {
-              return `/${type}/${assetPath}`;
-            }
-            const version = assetVersions.get(`${type}/${assetPath}`);
-            return `${base}/${type}/${assetPath}${version ? `?v=${version}` : ""}`;
-          };
-          const escapedBase = base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          const absoluteAssetPattern = new RegExp(
-            `${escapedBase}/(images|fonts|videos)/([^\\"'\`\\s)<>?#]+)`,
-            "g",
-          );
-
-          const files = [];
-          for await (const f of walk(dir.pathname)) {
-            if (/\.(html|js|css)$/.test(f)) files.push(f);
-          }
-
-          await Promise.all(files.map(async (fullPath) => {
-            let content = await readFile(fullPath, 'utf-8');
-            const updated = content
-              .replace(
-                absoluteAssetPattern,
-                (_, type, assetPath) => versionedAssetUrl(type, assetPath),
-              )
-              .replace(
-                /([\"'`])\/(?:[a-z]{2}(?:-[a-z]+)?\/)?(images|fonts|videos)\/([^\"'`\s)<>?#]+)/g,
-                (_, quote, type, assetPath) => `${quote}${versionedAssetUrl(type, assetPath)}`,
-              )
-              .replace(
-                /url\(\s*(['"])?\s*\/(?:[a-z]{2}(?:-[a-z]+)?\/)?(images|fonts|videos)\/([^'"\s)<>?#]+)/g,
-                (_, quote, type, assetPath) => `url(${quote || ""}${versionedAssetUrl(type, assetPath)}`,
-              );
-            if (updated !== content) await writeFile(fullPath, updated, 'utf-8');
-          }));
-        }
-      }
-    },
+    mdx(),
   ],
 
   markdown: {

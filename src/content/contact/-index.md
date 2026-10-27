@@ -1,7 +1,7 @@
 ---
-title: "Contact Us"
-meta_title: "Contact Us | Linkjob  AI"
-description: "Contact details for Linkjob, the AI-powered interview assistant for job seekers. Get in touch for support, inquiries, or feedback."
+title: "Contact Sensei AI Support"
+meta_title: "Contact Sensei AI | Support, Login & Billing Help"
+description: "Contact Sensei AI support for help with Sensei AI Copilot, account login, app setup, payments, subscriptions, or technical issues. Send us a message."
 draft: false
 form:
   name_label: "*Name"
@@ -19,7 +19,7 @@ form:
   success_message: "Thanks for contact. Message sent successfully!"
 info:
   title: "We're always here to assist you!"
-  description: "If you need to cancel your subscription, you can do it yourself:<br />If you paid via Stripe, please **[<span style='color: #253B80; text-decoration: underline;'>click here</span>](https://billing.stripe.com/p/login/eVq8wIaPq1RE2PM6d96Zy00)**.<br />If you paid via PayPal, please **[<span style='color: #253B80; text-decoration: underline;'>click here</span>](https://www.paypal.com/billing/subscriptions)**.<br /><br />Not sure which payment method you used? No worries—just contact us, and we’ll take care of it for you within 24 hours."
+  description: "Need help with Sensei AI Copilot? Whether you have questions about downloading the app, logging in, setting up your interview assistant, or managing your subscription, our support team is here to help.<br /><br />Simply fill out the contact form with your question or issue. For account, billing, or subscription inquiries, please include the email address associated with your Sensei AI account so we can assist you more efficiently.<br /><br />We'll review your message and get back to you as soon as possible."
   phone_label: "Cell Phone"
   email_label: "Email"
   address_label: "Address"
@@ -32,5 +32,5 @@ cards:
     description: "24/7 online support"
   resources:
     title: "Other resources"
-    description: "You can directly join our [<u>Discord community</u>](https://discord.gg/PfrcRpt7Sv) or our [<u>WhatsApp group</u>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t) to get in touch with us."
+    description: "You can directly join our [<u>Discord community</u>](https://discord.com/invite/BnAksURmTY) or our [<u>WhatsApp group</u>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t) to get in touch with us."
 ---

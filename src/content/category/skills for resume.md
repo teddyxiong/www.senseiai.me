@@ -5,7 +5,7 @@ slug: "skills-for-resume"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/fc932addbf4d45e590293c61abc0212d.png"
 category: []
 date: "2025-06-04"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # How to Choose the Perfect Skills for Your Resume
@@ -168,11 +168,11 @@ Here’s how I decide which skills to highlight:
 
 For example, if I’m applying for a finance position, I highlight my experience with financial modeling and market analysis. If it’s a tech role, I focus on algorithms and system design.
 
-This approach not only improves my chances of landing an interview but also helps me stand out in competitive fields like tech and finance. Tools like **Linkjob** make this process even easier. They simulate realistic mock interviews, providing instant feedback on my responses. This helps me refine my answers and showcase my skills effectively.
+This approach not only improves my chances of landing an interview but also helps me stand out in competitive fields like tech and finance. Tools like **Sensei** make this process even easier. They simulate realistic mock interviews, providing instant feedback on my responses. This helps me refine my answers and showcase my skills effectively.
 
-But the real magic happens during live interviews. What if I get a tricky question about a financial case study or a complex coding problem? That’s where Linkjob’s Real-Time AI [Interview Assistant](https://www.senseiai.me/) comes in. It listens to the conversation, detects the interviewer’s question, and generates smart, context-aware answer suggestions. This feature helps me stay composed and deliver impressive responses, even under pressure.
+But the real magic happens during live interviews. What if I get a tricky question about a financial case study or a complex coding problem? That’s where Sensei’s Real-Time AI [Interview Assistant](https://www.senseiai.me/) comes in. It listens to the conversation, detects the interviewer’s question, and generates smart, context-aware answer suggestions. This feature helps me stay composed and deliver impressive responses, even under pressure.
 
-Linkjob is specifically designed for tech and finance interviews. Its vast knowledge base ensures the feedback and suggestions are highly relevant. By combining tailored resumes with real-time interview support, I feel confident tackling even the toughest questions.
+Sensei is specifically designed for tech and finance interviews. Its vast knowledge base ensures the feedback and suggestions are highly relevant. By combining tailored resumes with real-time interview support, I feel confident tackling even the toughest questions.
 
 ## Structuring and Showcasing Skills for Resume
 

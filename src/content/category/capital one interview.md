@@ -5,7 +5,7 @@ slug: "capital-one-interview"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/70002e441a5147caa47d64f9a849b284.webp"
 category: []
 date: "2025-05-30"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # Want the Capital One Job? You Need to Answer These Right

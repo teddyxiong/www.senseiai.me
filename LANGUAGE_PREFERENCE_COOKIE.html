@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Linkjob Language Preference Cookie</title>
+    <title>Sensei Language Preference Cookie</title>
     <style>
       :root {
         color-scheme: light;
@@ -193,13 +193,13 @@
   <body>
     <main>
       <header>
-        <h1>Linkjob Language Preference Cookie</h1>
+        <h1>Sensei Language Preference Cookie</h1>
         <p>
-          本文档说明 Linkjob 如何在同一浏览器中长期记录最后明确生效的语言，以及
+          本文档说明 Sensei 如何在同一浏览器中长期记录最后明确生效的语言，以及
           Dashboard 和未来页面应该如何安全消费这项状态。
         </p>
         <p class="callout">
-          <strong>当前交付边界：</strong>Linkjob 已作为 Cookie 生产端实现该契约；
+          <strong>当前交付边界：</strong>Sensei 已作为 Cookie 生产端实现该契约；
           Dashboard、Auth 和其他消费端尚未改造，应按照本文档单独接入。
         </p>
       </header>
@@ -210,12 +210,12 @@
           <tbody>
             <tr>
               <th scope="row">名称</th>
-              <td><code>linkjob_locale</code></td>
+              <td><code>Sensei_locale</code></td>
             </tr>
             <tr>
               <th scope="row">值</th>
               <td>
-                Linkjob 已发布语言集合中的规范小写值，例如 <code>en</code>、
+                Sensei 已发布语言集合中的规范小写值，例如 <code>en</code>、
                 <code>fr</code>、<code>ja</code> 或 <code>zh-hant</code>。
               </td>
             </tr>
@@ -255,18 +255,18 @@
           </tbody>
         </table>
 
-        <h3>当前 Linkjob 已发布值</h3>
+        <h3>当前 Sensei 已发布值</h3>
         <p>
           <code>en</code>、<code>ja</code>、<code>es</code>、<code>it</code>、
           <code>ar</code>、<code>pt</code>、<code>zh-hant</code>、
           <code>pl</code>、<code>ko</code>、<code>fr</code>。
-          Linkjob 的权威来源仍然是根目录 <code>i18n.config.json</code> 中的
+          Sensei 的权威来源仍然是根目录 <code>i18n.config.json</code> 中的
           <code>publishedLocales</code>；消费端应维护并验证自己真正支持的子集。
         </p>
       </section>
 
       <section id="write-rules">
-        <h2>2. Linkjob 如何记录语言</h2>
+        <h2>2. Sensei 如何记录语言</h2>
         <ol class="flow">
           <li>
             用户进入带有受支持语言前缀的页面，例如 <code>/fr/</code> 或
@@ -297,8 +297,8 @@
         <h3>语言解析优先级</h3>
         <ol>
           <li>当前 URL 中明确、受支持的语言前缀；</li>
-          <li>经过消费端白名单验证的 <code>linkjob_locale</code>；</li>
-          <li>消费端配置的默认语言，当前 Linkjob 默认值是 <code>en</code>。</li>
+          <li>经过消费端白名单验证的 <code>Sensei_locale</code>；</li>
+          <li>消费端配置的默认语言，当前 Sensei 默认值是 <code>en</code>。</li>
         </ol>
         <p class="callout">
           Cookie 表示“最后明确生效的语言”，不是“最后尝试点击的语言”。非法值、大小写错误值、
@@ -310,7 +310,7 @@
         <h2>3. 未来消费端如何接入</h2>
         <p>浏览器端消费页面建议遵循以下顺序：</p>
         <ol>
-          <li>从 <code>document.cookie</code> 中只查找 <code>linkjob_locale</code>；</li>
+          <li>从 <code>document.cookie</code> 中只查找 <code>Sensei_locale</code>；</li>
           <li>安全解码，并用消费端自己的受支持语言集合验证；</li>
           <li>缺失、非法或解码失败时使用 <code>en</code>；</li>
           <li>只有在验证完成后，才把语言值映射或编码到 URL；</li>
@@ -318,7 +318,7 @@
         </ol>
 
         <h3>浏览器端参考实现</h3>
-        <pre><code>const COOKIE_NAME = "linkjob_locale";
+        <pre><code>const COOKIE_NAME = "Sensei_locale";
 const SUPPORTED_LOCALES = new Set(["en", "fr", "ja", "zh-hant"]);
 
 function readPreferredLocale(cookie = document.cookie) {
@@ -356,7 +356,7 @@ buildMainSiteUrl("/pricing/");
             不要把 Cookie 值直接拼接进 URL，也不要接受 <code>zh-Hant</code> 等非规范大小写。
           </li>
           <li>
-            消费端的语言集合可以小于 Linkjob 的发布集合；不支持的值必须回退到
+            消费端的语言集合可以小于 Sensei 的发布集合；不支持的值必须回退到
             <code>en</code>，不能猜测转换。
           </li>
           <li>
@@ -393,14 +393,14 @@ buildMainSiteUrl("/pricing/");
             在 <code>/dashboard/</code> 下会回到英文。
           </li>
           <li>
-            Dashboard 的硬编码语言列表使用 <code>zh-Hant</code>，而 Linkjob 的规范值是
+            Dashboard 的硬编码语言列表使用 <code>zh-Hant</code>，而 Sensei 的规范值是
             <code>zh-hant</code>。Cookie 校验区分大小写，因此二者不能视为同一个合法值。
           </li>
           <li>
             Home、Pricing、Downloads、Logo、套餐入口，以及没有支付平台信息时的订阅管理入口，
             仍包含固定英文目标地址。
           </li>
-          <li>Dashboard 目前还没有读取或验证 <code>linkjob_locale</code>。</li>
+          <li>Dashboard 目前还没有读取或验证 <code>Sensei_locale</code>。</li>
         </ul>
         <p class="callout warning">
           Dashboard 后续接入时应删除“从 <code>/dashboard/</code> pathname 猜主站语言”的依赖，
@@ -415,7 +415,7 @@ buildMainSiteUrl("/pricing/");
         </h2>
         <p>
           <code>/checkout/continue/</code> 是无语言前缀的流程页面，因此加载它不会覆盖已有的
-          <code>linkjob_locale</code>。但当待处理支付流程缺少可用的返回地址时，当前实现仍固定回退到
+          <code>Sensei_locale</code>。但当待处理支付流程缺少可用的返回地址时，当前实现仍固定回退到
           <code>/pricing/</code>。这个回退地址没有使用已保存的语言，可能使用户回到英文 Pricing。
         </p>
         <p class="callout warning">

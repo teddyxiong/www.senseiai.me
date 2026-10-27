@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (recommended) or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Persist Linkjob's last explicitly effective website language in a one-year first-party cookie and document the contract for future consumers without changing Dashboard, Auth, or `/checkout/continue/`.
+**Goal:** Persist Sensei's last explicitly effective website language in a one-year first-party cookie and document the contract for future consumers without changing Dashboard, Auth, or `/checkout/continue/`.
 
-**Architecture:** A focused `localePreference` module owns validation and cookie serialization using `i18n.config.json` through the existing i18n configuration module. The shared Linkjob layout records only explicit non-default URL prefixes, while the existing language switcher records successful selections and the actual English fallback. Consumers remain decoupled and integrate later through the documented `linkjob_locale` cookie contract.
+**Architecture:** A focused `localePreference` module owns validation and cookie serialization using `i18n.config.json` through the existing i18n configuration module. The shared Sensei layout records only explicit non-default URL prefixes, while the existing language switcher records successful selections and the actual English fallback. Consumers remain decoupled and integrate later through the documented `Sensei_locale` cookie contract.
 
 **Tech Stack:** Astro 5, TypeScript, browser cookies, Node's built-in test runner, esbuild test bundling.
 
@@ -12,15 +12,15 @@
 
 ## Global Constraints
 
-- Cookie name is exactly `linkjob_locale`.
+- Cookie name is exactly `Sensei_locale`.
 - Cookie path is `/`, lifetime is `Max-Age=31536000`, and `SameSite=Lax`.
 - Add `Secure` on HTTPS and omit it for local HTTP development.
 - Do not set `Domain` or `HttpOnly`.
-- Values are canonical lowercase locales from Linkjob's published locale set; `i18n.config.json` remains the Linkjob source of truth.
+- Values are canonical lowercase locales from Sensei's published locale set; `i18n.config.json` remains the Sensei source of truth.
 - Explicit supported URL locale takes precedence over cookie; valid cookie takes precedence over `defaultLocale`.
 - Unprefixed paths do not automatically write `en`.
 - Do not modify Auth, Dashboard, Billing, product mappings, or `/checkout/continue/`.
-- Create `LANGUAGE_PREFERENCE_COOKIE.html` in the Linkjob repository root.
+- Create `LANGUAGE_PREFERENCE_COOKIE.html` in the Sensei repository root.
 - Do not add dependencies, test frameworks, automatic redirects, database state, or deployment steps.
 - All new user-visible UI text remains English; the root integration guide may explain the contract in Chinese with English identifiers and code examples.
 
@@ -88,7 +88,7 @@ test("locale preference persists published locales and explicit localized paths"
 
   assert.equal(locale.writeLocalePreference("fr"), true);
   assert.equal(locale.readLocalePreference(), "fr");
-  assert.match(browser.lastWrite, /^linkjob_locale=fr; Path=\/; Max-Age=31536000; SameSite=Lax; Secure$/);
+  assert.match(browser.lastWrite, /^Sensei_locale=fr; Path=\/; Max-Age=31536000; SameSite=Lax; Secure$/);
 
   assert.equal(locale.rememberExplicitLocaleFromPath("/ja/pricing/"), true);
   assert.equal(locale.readLocalePreference(), "ja");
@@ -101,7 +101,7 @@ test("locale preference persists published locales and explicit localized paths"
 });
 
 test("locale preference rejects malformed, incorrectly cased, and unsupported values", async () => {
-  const browser = installCookieBrowser({ cookie: "linkjob_locale=zh-Hant" });
+  const browser = installCookieBrowser({ cookie: "Sensei_locale=zh-Hant" });
   const locale = await loadLocaleModule();
 
   assert.equal(locale.readLocalePreference(), null);
@@ -109,7 +109,7 @@ test("locale preference rejects malformed, incorrectly cased, and unsupported va
   assert.equal(locale.writeLocalePreference("xx"), false);
   assert.equal(browser.lastWrite, "");
 
-  installCookieBrowser({ cookie: "linkjob_locale=%E0%A4%A" });
+  installCookieBrowser({ cookie: "Sensei_locale=%E0%A4%A" });
   assert.equal(locale.readLocalePreference(), null);
 });
 ```
@@ -134,7 +134,7 @@ import {
   PUBLISHED_LOCALES,
 } from "@/lib/i18n/config";
 
-const COOKIE_NAME = "linkjob_locale";
+const COOKIE_NAME = "Sensei_locale";
 const COOKIE_MAX_AGE = 31_536_000;
 const publishedLocales = new Set(PUBLISHED_LOCALES);
 
@@ -191,7 +191,7 @@ git add src/lib/i18n/localePreference.ts scripts/i18n-locale-preference.test.mjs
 git commit -m "feat: persist locale preference in a cookie"
 ```
 
-### Task 2: Record Effective Locale in Linkjob Navigation
+### Task 2: Record Effective Locale in Sensei Navigation
 
 **Files:**
 - Modify: `src/layouts/Base.astro:271-284`
@@ -313,7 +313,7 @@ Expected: exit code 0 and generated localized-link client code. Existing remote 
 
 Serve `dist/` locally and verify with an isolated/system Chrome profile:
 
-1. Load an explicit localized page such as `/fr/` and confirm `linkjob_locale=fr`; rely on the focused serialization test for the exact `Path`, max-age, `SameSite`, and HTTPS `Secure` attributes because the local static server uses HTTP.
+1. Load an explicit localized page such as `/fr/` and confirm `Sensei_locale=fr`; rely on the focused serialization test for the exact `Path`, max-age, `SameSite`, and HTTPS `Secure` attributes because the local static server uses HTTP.
 2. Load an unprefixed route and confirm it does not overwrite an existing `fr` value.
 3. Exercise a normal language-switch target and confirm the selected locale is recorded immediately before navigation.
 4. Confirm no new console errors.
@@ -336,7 +336,7 @@ git commit -m "feat: remember effective site language"
 - Create: `LANGUAGE_PREFERENCE_COOKIE.html`
 
 **Interfaces:**
-- Consumes: the exact `linkjob_locale` contract implemented by Tasks 1 and 2.
+- Consumes: the exact `Sensei_locale` contract implemented by Tasks 1 and 2.
 - Produces: a standalone human-readable integration guide for Dashboard and future consumers; no runtime code consumes this file.
 
 - [ ] **Step 1: Create the standalone root HTML guide**
@@ -344,7 +344,7 @@ git commit -m "feat: remember effective site language"
 Create `LANGUAGE_PREFERENCE_COOKIE.html` with semantic HTML and embedded CSS only. It must include these sections and exact facts:
 
 ```html
-<h1>Linkjob Language Preference Cookie</h1>
+<h1>Sensei Language Preference Cookie</h1>
 <section id="contract">...</section>
 <section id="write-rules">...</section>
 <section id="consumer-example">...</section>
@@ -356,7 +356,7 @@ Create `LANGUAGE_PREFERENCE_COOKIE.html` with semantic HTML and embedded CSS onl
 The consumer example must validate against its own supported set before constructing a URL:
 
 ```js
-const COOKIE_NAME = "linkjob_locale";
+const COOKIE_NAME = "Sensei_locale";
 const SUPPORTED_LOCALES = new Set(["en", "fr", "ja", "zh-hant"]);
 
 function readPreferredLocale(cookie = document.cookie) {
@@ -382,9 +382,9 @@ Document these current Dashboard issues without changing them:
 
 - Dashboard is served from Auth at `/dashboard/`, so its pathname has no public-site locale.
 - `public/dashboard/sidebar.js` incorrectly derives locale from the Dashboard pathname.
-- Dashboard uses `zh-Hant`, while Linkjob's canonical locale is `zh-hant`.
+- Dashboard uses `zh-Hant`, while Sensei's canonical locale is `zh-hant`.
 - Home, Pricing, Downloads, logo, plan, and provider-less subscription links include fixed English destinations.
-- Dashboard does not yet read `linkjob_locale`.
+- Dashboard does not yet read `Sensei_locale`.
 
 Document this deferred checkout issue without changing it:
 

@@ -2,12 +2,13 @@
 enable: true
 
 header:
-  title_line_1: "Unlock Your"
-  title_line_2: "Stealth AI Interview Copilot"
+  title_line_1: "Meet Your"
+  title_line_2: "Sensei AI Interview Copilot"
+  description: "From your first HR screening to a difficult technical interview, Sensei AI brings real-time answers, personalized context and flexible viewing into one interview assistant."
 
 hero_card:
-  title: "100% Invisible and Undetctable"
-  description: "AI Interview Copilot operates in complete stealth across all platforms, running quietly in the background even during screen sharing. With no visible interface or pop-ups, you can leverage real-time AI support without worrying about eye-tracking or proctoring detection. Stay focused and confident while the interview remains completely natural."
+  title: "An Invisible Overlay for Screen Sharing"
+  description: "Keep AI suggestions on your own desktop without displaying the overlay in supported screen shares or recordings. Sensei AI is designed to stay out of the interviewer's view while you read answers and keep your conversation moving."
   video:
     src: "https://www.youtube.com/embed/GRlpVJAoPuc?rel=0&showinfo=0&modestbranding=1&playsinline=1"
     title: "Interview Copilot Demo"
@@ -17,38 +18,38 @@ hero_card:
 
 cards:
   pressure:
-    title: "Real-Time Answers You Can Rely On"
-    description: "Linkjob AI listens to your interviewer, follows the conversation, and delivers clear, concise answers in real time. From unexpected questions to follow-ups, our AI interview assistant helps you respond promptly and keep the conversation flowing."
+    title: "Fast Answers That Follow the Conversation"
+    description: "Sensei AI responds to audio coming from your computer, including the interviewer's questions. It keeps track of the discussion to suggest concise, context-aware answers when a new question or unexpected follow-up appears."
 
   personalized:
-    title: "Answers That Sound Like You"
-    description: "Add your resume and job details to get answers tailored to your experience, skills, and target role. Linkjob AI draws on your background to suggest relevant examples and natural wording, helping you stay specific and consistent through follow-up questions."
+    title: "Answers Personalized to Your Resume and Job Description"
+    description: "Add your resume, the job description and your preferred answer style before the interview. Sensei AI uses this context to suggest examples, terminology and talking points that fit your experience and the role you're applying for."
     input_cards:
       - label: "Your Resume"
         icon: "/images/features/resume.svg"
       - label: "Job Description"
         icon: "/images/features/jd.svg"
     resume_items:
-      - text: "Based on Your Resume"
+      - text: "Resume-Based AI Answers"
         color: "#EF4933"
         image: "/images/features/lightbulb.png"
-      - text: "Tailored to Your Role"
+      - text: "Role-Specific Guidance"
         color: "#9747FF"
         image: "/images/features/gem.png"
-      - text: "Relevant Examples"
+      - text: "Interview-Ready Examples"
         color: "#1C2CFF"
         image: "/images/features/quote.png"
-      - text: "Natural Wording"
+      - text: "Natural-Sounding Answers"
         color: "#00C861"
         image: "/images/features/key.png"
 
   platform:
-    title: "Works on Any Platform"
-    description: "Linkjob AI’s interview assistant is completely invisible on all meeting and assessment platforms. Only the Zoom desktop app requires a [<span style='color: #253B80; text-decoration: underline;'>special setting</span>](https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1) to be enabled beforehand. No additional setup is needed on any other platform."
+    title: "Works with Zoom, Google Meet, Microsoft Teams & More"
+    description: "Use Sensei AI alongside popular interview and meeting platforms, including Zoom, Google Meet, Microsoft Teams, Webex and browser-based interview tools. Zoom's desktop app requires one [<span style='color: #253B80; text-decoration: underline;'>specific setup step</span>](https://www.youtube.com/embed/IXwMPIPaxEc?si=rqnjZzgm2y5KjI6Y&rel=0&modestbranding=1&playsinline=1) for the overlay to remain hidden; browser-based Zoom and other supported meeting platforms do not require that extra step."
 
   multilingual:
-    title: "Multilingual Support"
-    description: "Understands your interviewer’s questions and helps you respond naturally in your chosen language, with support for 30+ languages."
+    title: "AI Interview Support in 30+ Languages"
+    description: "Interview in the language that works for you. Sensei AI recognizes questions and generates suggested answers in more than 30 languages, helping you prepare for both local and international opportunities."
     languages:
       - "こんにちは"
       - "Hallo"
@@ -72,8 +73,8 @@ cards:
       - "Halo"
 
   interview_types:
-    title: "One AI Assistant for Every Interview"
-    description: "From coding and system design to behavioral questions, Linkjob AI provides real-time support in multiple languages. Whether you're applying for a role in engineering, product, finance, or marketing, get relevant answers and guidance tailored to your field."
+    title: "One AI Assistant for Different Interview Types"
+    description: "Use Sensei AI for behavioral interviews, HR screenings, coding interviews, system design, product management, finance and more. Switch between quick talking points and detailed explanations depending on what the question needs."
     items:
       - label: "Coding interview"
         icon: "/images/features/coding.svg"
@@ -89,7 +90,7 @@ cards:
 rotating_logos:
   enable: true
   center_icon:
-    src: "/images/features/center-icon.png"
+    src: "/images/features/Sensei-mark.png"
     alt: "Center Icon"
   logos:
     - name: "Google"

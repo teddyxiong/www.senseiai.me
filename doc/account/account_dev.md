@@ -33,7 +33,7 @@
 适配方式（两种选项，按你们当前发布流程选择其一）：
 
 1) 单语言构建/发布（推荐与当前 `activeLocale` 发布流程一致）
-- 每次 build 只针对一个 locale 产出静态站（例如输出到 `linkjobdist/ja`）
+- 每次 build 只针对一个 locale 产出静态站（例如输出到 `Senseidist/ja`）
 - 在该 locale 的代码/产物中，`src/config/account-menu.json` 已经是对应语言的内容
 
 2) 多语言一次性构建（如果未来切换为一次 build 同时产出 /ja /es 等）

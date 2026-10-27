@@ -1,18 +1,16 @@
 {
-  "name": "Linkjob",
+  "name": "Sensei",
   "version": "2.0.0",
-  "description": "Linkjob",
-  "author": "Linkjob",
+  "description": "Sensei",
+  "author": "Sensei",
   "packageManager": "yarn@1.22.19",
   "license": "UNLICENSED",
   "scripts": {
-    "sync-public": "rclone copy ./public r2:public --config ./rclone.conf --checksum --verbose --metadata-set cache-control=public,max-age=31536000,immutable",
-    "predev": "node scripts/sync-public.mjs",
-    "prebuild": "node scripts/sync-public.mjs",
     "dev": "ASTRO_BASE=/ node --max-old-space-size=8192 ./node_modules/.bin/astro dev",
     "build": "ASTRO_BASE=/ node --max-old-space-size=8192 ./node_modules/.bin/astro build",
     "postbuild": "node scripts/postbuild-sitemap.mjs",
     "preview": "node --max-old-space-size=8192 ./node_modules/.bin/astro preview",
+    "test:same-origin-assets": "node --test scripts/same-origin-assets.test.mjs",
     "test:account": "node --test scripts/account-nav-dropdown.test.mjs scripts/account-auth.test.mjs",
     "format": "prettier -w ./src"
   },

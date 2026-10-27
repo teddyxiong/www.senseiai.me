@@ -1,4 +1,4 @@
-# 《Linkjob 与 Auth 登录集成升级设计说明（第五版）》复核意见
+# 《Sensei 与 Auth 登录集成升级设计说明（第五版）》复核意见
 
 > 复核对象：`docs/2026-09-20-auth-integration-design.md`（第五版，提交 `756e497b`）
 >
@@ -12,7 +12,7 @@
 
 本轮逐段核对了 `756e497b` 对第四版的全部改动（+49 / -22），并回到源码验证新增结论。
 
-Linkjob 仓库与设计文档的权威工作区是同一份代码（本机可见 `473f8a82`、`75ca3245` 等提交），因此 Linkjob 侧结论可直接采信。Auth 仓库为另一份检出，涉及 `public/auth/sign-in.js` 内部语句顺序的结论本文一律不引用；本文引用的其他 Auth 文件（`public/auth/desktop.js`、`legacy-claim-start.js`、`src/routes/legacy-claim.ts`）需在权威提交 `aa2c1e41` 上复核一次。
+Sensei 仓库与设计文档的权威工作区是同一份代码（本机可见 `473f8a82`、`75ca3245` 等提交），因此 Sensei 侧结论可直接采信。Auth 仓库为另一份检出，涉及 `public/auth/sign-in.js` 内部语句顺序的结论本文一律不引用；本文引用的其他 Auth 文件（`public/auth/desktop.js`、`legacy-claim-start.js`、`src/routes/legacy-claim.ts`）需在权威提交 `aa2c1e41` 上复核一次。
 
 总体结论：第五版闭环了上一轮全部 6 条意见，其中问题 4 的机制描述由设计方纠正，纠正正确。本轮新发现 2 个问题、2 处小修。设计层面在此之后没有其他未闭环意见。
 
@@ -49,7 +49,7 @@ Linkjob 仓库与设计文档的权威工作区是同一份代码（本机可见
 事实链：
 
 - `src/layouts/Base.astro:11` 与 `:188` 启用了 `ViewTransitions`。
-- Header 登录入口是 `<a href={buildNextUrl(menuConfig.links.login, next)}>`，而 `src/config/account-menu.json` 的 `links.login` 是绝对地址 `https://www.senseiai.me/auth/sign-in`。生产环境下 Linkjob 与 Auth 同源（§10 已确认），因此这是一个**同源 anchor**。
+- Header 登录入口是 `<a href={buildNextUrl(menuConfig.links.login, next)}>`，而 `src/config/account-menu.json` 的 `links.login` 是绝对地址 `https://www.senseiai.me/auth/sign-in`。生产环境下 Sensei 与 Auth 同源（§10 已确认），因此这是一个**同源 anchor**。
 - Astro 客户端路由会拦截同源 anchor 导航，走 fetch + DOM swap。而 `/auth/sign-in` 不是 Astro 页面，是 Auth Worker 提供的独立文档，自带 `<head>` 与 module script。
 - 项目里已经为同类问题打过补丁，但只覆盖 mailto —— `src/layouts/Base.astro:344-351`：
 
@@ -63,9 +63,9 @@ document.addEventListener('astro:page-load', () => {
 
 全仓 `data-astro-reload` 仅此一处，`/auth/*` 没有覆盖。
 
-后果范围：轻则 Astro 判定后回退为整页加载（无害），重则把 Auth 登录页的 HTML swap 进 Linkjob 文档，而 `transition:persist` 的 AccountNav 仍留在页面上，形成混合的坏页面。本次复核无法运行站点确认落在哪一档，但这条路径正好压在验收标准 2、5、6、7 上。
+后果范围：轻则 Astro 判定后回退为整页加载（无害），重则把 Auth 登录页的 HTML swap 进 Sensei 文档，而 `transition:persist` 的 AccountNav 仍留在页面上，形成混合的坏页面。本次复核无法运行站点确认落在哪一档，但这条路径正好压在验收标准 2、5、6、7 上。
 
-**最需要注意的是环境差异**：本地 dev 环境下 Linkjob 跑在 localhost，`https://www.senseiai.me/auth/sign-in` 属于跨源，路由不会拦截，一切表现正常。**该问题只在生产出现，本地验证不到。**
+**最需要注意的是环境差异**：本地 dev 环境下 Sensei 跑在 localhost，`https://www.senseiai.me/auth/sign-in` 属于跨源，路由不会拦截，一切表现正常。**该问题只在生产出现，本地验证不到。**
 
 建议第六版：
 
@@ -80,7 +80,7 @@ document.addEventListener('astro:page-load', () => {
 规则本身正确，但成本没有讨论：
 
 - 两个 AccountNav 实例（mobile 与 desktop）都是 persist 的，各自监听、各自触发。`src/lib/account/constants.ts` 的 `ME_IN_FLIGHT_MAX_AGE_MS = 5_000` 能合并同一时刻的两次请求，但每次站内跳转仍是一次真实请求。
-- Linkjob 是内容站（`src/pages/[regular].astro` 生成大量页面），未登录访客的 `/api/me` 请求量会随 PV 线性增长，全部打到 Auth Worker。
+- Sensei 是内容站（`src/pages/[regular].astro` 生成大量页面），未登录访客的 `/api/me` 请求量会随 PV 线性增长，全部打到 Auth Worker。
 
 而从**正确性**看，必须覆盖的只有「新 document 的初次 hydration」—— OAuth 回跳与 One Tap 的 `window.location.reload()` 都是新 document，都落在这一条里。pathname 变化那一条是额外附加的。
 
@@ -103,7 +103,7 @@ document.addEventListener('astro:page-load', () => {
 
 `473f8a82` 是 `review.md` 提交。实际最后一次改动登录调用链的提交是 `9cdc6b5c 账号按钮修改`（其后只有 docs 与 review 提交）。直接写 `9cdc6b5c` 更能说明「分析基于哪一份代码」。
 
-另外 §1 把 Linkjob HEAD 记为 `75ca3245`，而第五版自身是 `756e497b`，记录当下即过期。建议只保留业务代码基线，删掉会自我过期的 HEAD 记录。
+另外 §1 把 Sensei HEAD 记为 `75ca3245`，而第五版自身是 `756e497b`，记录当下即过期。建议只保留业务代码基线，删掉会自我过期的 HEAD 记录。
 
 ## 5. 已核实正确的第五版内容
 

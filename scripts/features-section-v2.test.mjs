@@ -68,7 +68,7 @@ test("design assets live directly in images/features", async () => {
   assert.doesNotMatch(config, /features\/figma/);
   assert.doesNotMatch(content, /images\/features\/figma/);
   assert.doesNotMatch(component, /images\/features\/figma/);
-  assert.match(config, /assetPath\.startsWith\("features\/icon_"\)/);
+  assert.doesNotMatch(config, /r2-asset-rewrite/);
 });
 
 test("section heading uses the approved layout without changing its color treatment", async () => {

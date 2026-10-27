@@ -1,13 +1,13 @@
 ---
-title: "About Linkjob AI"
-meta_title: "About Linkjob | The AI Interview Assistant Built for Job Seekers"
-description: "Learn more about who Linkjob AI is and why we are the best AI interview assistant for finance and tech job seekers."
-image: "/images/about/feature-1.jpg"
+title: "About Sensei AI Copilot"
+meta_title: "About Sensei AI Copilot | Our Mission & AI Interview Assistant"
+description: "Meet Sensei AI Copilot, a real-time AI interview assistant for live answers, coding help, and personalized guidance. Learn about our mission and support."
+image: "images/og-image.png"
 draft: false
 
 hero_section:
-  title: "Thrive in a Tough Job Market and Secure Your Ideal Role with Linkjob AI"
-  description: "Overcome challenging hiring periods and land your dream job with  Linkjob AI’s guidance. Our AI Interview Copilot offers personalized feedback, unlimited practice interviews, and customized responses tailored to your target position, ensuring you shine and succeed across any industry."
+  title: "Built for the Moments That Matter in Interviews"
+  description: "Interviews move fast. Questions change, follow-ups arrive unexpectedly, and technical prompts demand clear thinking. We created Sensei AI Copilot to make useful guidance available during those moments. Our real-time AI interview assistant responds to audio coming from your computer, analyzes screenshots, and uses your resume and target role to suggest relevant answers."
   image: "/images/about/banner.jpg"
   button:
     enable: true
@@ -29,8 +29,8 @@ counter_section:
 feature_section:
   enable: true
   items:
-    - title: "Anytime you're prepping for an interview, count on us to support you."
-      description: "Linkjob AI is the leading AI interview assistant for job seekers, providing real-time guidance with immediate, customized feedback and intelligent recommendations. Perfect for tech and finance interviews, it also includes free AI-powered mock interview practice."
+    - title: "Made for Real Interviews, Not Just Practice."
+      description: "Preparation matters, but real interviews rarely follow a script. Sensei AI Copilot keeps up with spoken questions through computer audio and suggests concise talking points as the conversation unfolds. For coding tasks, it can analyze screenshots and help you work through algorithms, edge cases, and system design trade-offs. Choose a private desktop overlay or view live responses on your phone with Dual-Device Mode."
       image: "/images/about/feature-1.jpg"
       slider:
         - title: "Support Interview Platforms"
@@ -38,8 +38,8 @@ feature_section:
         - title: "Answer Accuracy"
           percent: 95
 
-    - title: "We have strong support."
-      description: "Linkjob AI harnesses advanced AI technology that evolves and refines itself to optimize your user experience. Our three main strengths are Fluid Usability, Exactness and Precision, and Natural Comprehension. Moreover, its performance is consistently enhanced to provide you with the most current, impactful interview techniques and personalized content aligned with your career goals."
+    - title: "Support That Goes Beyond Setup."
+      description: "An AI interview assistant should be straightforward to set up and dependable to use. We focus on practical guidance and continuous improvements, from audio configuration and meeting-platform compatibility to screenshot workflows and AI model choices. If you need help with your account, setup, or subscription, our support page and community are here to help."
       image:
         - "/images/about/feature-2.1.jpg"
       button:

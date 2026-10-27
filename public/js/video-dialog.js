@@ -10,7 +10,7 @@ export function openVideoDialog(url) {
   const embed = toEmbedUrl(url);
   const separator = embed.includes("?") ? "&" : "?";
   const src = `${embed}${separator}autoplay=1`;
-  const closeIconUrl = ["", "images", "icons", "close.svg"].join("/");
+  const closeIconUrl = "/images/icons/close.svg";
 
   const overlay = document.createElement("div");
   overlay.className = "home-video-overlay show video-overlay";

@@ -1,7 +1,7 @@
 ---
 title: "Changelog"
-meta_title: "Latest Product Updates and Feature Improvements | Linkjob AI"
-description: "Discover new features, upgrades, and real-time improvements that help you level up your interview preparation with Linkjob AI."
+meta_title: "Latest Product Updates and Feature Improvements | Sensei AI"
+description: "Discover new features, upgrades, and real-time improvements that help you level up your interview preparation with Sensei AI."
 draft: false
 updates:
   - date: "Sep 7, 2026"

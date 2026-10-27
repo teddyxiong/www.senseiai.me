@@ -1,4 +1,4 @@
-# Linkjob 与 Auth 登录集成升级设计说明（第六版，待审阅）
+# Sensei 与 Auth 登录集成升级设计说明（第六版，待审阅）
 
 > 状态：草案，等待审阅
 >
@@ -12,9 +12,9 @@
 
 审阅者使用的 `/Users/teddy/Documents/aaa/...` 是同一项目的另一份检出，并非错误路径；但它与本任务工作区在 `public/auth/sign-in.js` 等文件上存在版本差异。本任务的分析、计划和后续实现只以以下当前工作区为权威基准：
 
-- Linkjob：`/Users/silvia/Documents/dist/linkjob`
-- Linkjob 分支：`anqi`
-- Linkjob 业务代码核对基线：`9cdc6b5c631c058f6a79c77d3ab9013ad7b00b4f`；其后的提交包含设计/审阅文档和仓库配置调整，但未改变本文分析涉及的登录业务调用链。
+- Sensei：`/Users/silvia/Documents/dist/Sensei`
+- Sensei 分支：`anqi`
+- Sensei 业务代码核对基线：`9cdc6b5c631c058f6a79c77d3ab9013ad7b00b4f`；其后的提交包含设计/审阅文档和仓库配置调整，但未改变本文分析涉及的登录业务调用链。
 - Auth：`/Users/silvia/Documents/dist/auth`
 - Auth 当前分支/提交：`main` / `aa2c1e417e54288d4cf79f0138326851125fb30e`
 - Auth 接口文档：`/Users/silvia/Documents/dist/auth/API接口文档.html`
@@ -26,11 +26,11 @@
 
 ## 2. 目标
 
-1. 用户从 Linkjob 任意合法英文站内页面发起 Google 或 GitHub 登录后，回到发起登录的 pathname、query 和 hash，而不是固定进入 Dashboard。
+1. 用户从 Sensei 任意合法英文站内页面发起 Google 或 GitHub 登录后，回到发起登录的 pathname、query 和 hash，而不是固定进入 Dashboard。
 2. 未被 Auth 当前静态白名单枚举的真实页面，也能正常开始登录，不再收到 `400 INVALID_CALLBACK_URL`。
 3. 提供与具体页面无关的登录保护方法，供未来 Pricing 及其他页面复用。
 4. 提供与当前 Auth 契约一致的 Customer Portal 通用客户端，但本次不接入 Pricing 或任何具体按钮。
-5. 修正 Linkjob 登录缓存、401/503 状态、退出登录和 Google One Tap 的真实缺陷。
+5. 修正 Sensei 登录缓存、401/503 状态、退出登录和 Google One Tap 的真实缺陷。
 6. 保留已完成的账户菜单交互和样式，不在本期重做 Navbar。
 
 ## 3. 产品与开发边界
@@ -61,7 +61,7 @@
 - 改造 Auth `/api/me` 的 Billing 响应契约。
 - 重构与本目标无关的邮件、管理员、桌面端或支付逻辑。
 
-Auth 后端现有邮件和注册能力本期既不删除也不扩展；它们不进入 Linkjob 公共登录流程和验收范围。
+Auth 后端现有邮件和注册能力本期既不删除也不扩展；它们不进入 Sensei 公共登录流程和验收范围。
 
 ## 4. 已核实的当前事实与缺陷
 
@@ -100,7 +100,7 @@ Auth 浏览器侧应在 `public/auth/app.js` 增加一个复用 `safeNext()` 的
 400 INVALID_CALLBACK_URL
 ```
 
-当前 Linkjob 至少存在以下未被白名单覆盖的真实页面：
+当前 Sensei 至少存在以下未被白名单覆盖的真实页面：
 
 - `/interview-copilot`
 - `/coding-interview-copilot`
@@ -111,7 +111,7 @@ Auth 浏览器侧应在 `public/auth/app.js` 增加一个复用 `safeNext()` 的
 
 因此这不是一般的“未来覆盖率不足”，而是会阻断现有页面 Google/GitHub 登录的 P0 缺陷。
 
-### 4.4 Linkjob 没有采集和监听 hash
+### 4.4 Sensei 没有采集和监听 hash
 
 `AccountNav.tsx` 当前只保存 `pathname` 和 `search`，`buildNext()` 不含 hash，也没有监听 `hashchange`。用户进入页面后切换锚点，生成的 `next` 不会更新。
 
@@ -124,17 +124,17 @@ Auth 浏览器侧应在 `public/auth/app.js` 增加一个复用 `safeNext()` 的
 
 ### 4.5 OAuth 返回后可能继续显示未登录 60 秒
 
-Linkjob 在 `/api/me` 返回 401 后，会把 `authenticated:false` 写入 `sessionStorage`，TTL 为 60 秒。OAuth 是同一标签页中的整页导航，不会清除 `sessionStorage`。登录返回原页时，AccountNav 会命中新鲜的未登录缓存并停止 revalidate。
+Sensei 在 `/api/me` 返回 401 后，会把 `authenticated:false` 写入 `sessionStorage`，TTL 为 60 秒。OAuth 是同一标签页中的整页导航，不会清除 `sessionStorage`。登录返回原页时，AccountNav 会命中新鲜的未登录缓存并停止 revalidate。
 
 所以即使回跳地址正确，页头也可能继续显示 Sign in，最长约 60 秒。
 
-本期采用“主动清除 + 页面级兜底”两层规则解决，不在 Auth 中耦合 Linkjob 的缓存 key：
+本期采用“主动清除 + 页面级兜底”两层规则解决，不在 Auth 中耦合 Sensei 的缓存 key：
 
-- 所有 Linkjob 发起登录的入口都调用统一 `redirectToSignIn()`。
+- 所有 Sensei 发起登录的入口都调用统一 `redirectToSignIn()`。
 - `redirectToSignIn()` 在导航前执行 `clearMeCache()`。
 - Header 登录入口和未来 `requireAuthenticated()` 的 401 分支都必须走该方法。
 - Header 继续使用带真实 `href` 的 `<a>`；普通 click 只清缓存，不 `preventDefault()`，从而保留复制链接、在新标签页打开等原生行为。
-- 登录 anchor 必须带 `data-astro-reload`（或 Astro 当前版本的等效 opt-out），明确跳过 View Transitions 客户端路由。当前 Astro 5.16.6 在目标 Auth 文档缺少 View Transitions 标记时会回退为 `location.href`，不会把 Auth HTML swap 进 Linkjob；显式 opt-out 的作用是避免一次无意义的预取，并消除对框架回退细节的依赖。
+- 登录 anchor 必须带 `data-astro-reload`（或 Astro 当前版本的等效 opt-out），明确跳过 View Transitions 客户端路由。当前 Astro 5.16.6 在目标 Auth 文档缺少 View Transitions 标记时会回退为 `location.href`，不会把 Auth HTML swap 进 Sensei；显式 opt-out 的作用是避免一次无意义的预取，并消除对框架回退细节的依赖。
 - 任何新登录入口不得手写登录 URL；必须通过 `buildSignInUrl()` 生成地址，并在当前标签页导航前调用统一缓存清理方法。
 - 兜底规则：`authenticated:false` 缓存可以用于快速水合 UI，但不能阻止每个新 document 中 AccountNav 的首次 hydration revalidate。OAuth 回跳和 One Tap 的 `window.location.reload()` 都会创建新 document，因此能够立即确认新会话。
 - AccountNav 使用 `transition:persist`；同一 document 内的 Astro pathname 变化不重新 hydration，也不因为 signed-out 缓存而无条件重复请求 `/api/me`。两个 mobile/desktop AccountNav 的首次并发请求继续由共享 in-flight 去重合并。
@@ -158,7 +158,7 @@ Linkjob 在 `/api/me` 返回 401 后，会把 `authenticated:false` 写入 `sess
 
 Auth 只对 `/api/auth/sign-out` 强制双提交 CSRF：Cookie 中的 `csrf_token` 必须与 `X-CSRF-Token` 请求头一致。
 
-Linkjob 当前退出请求没有请求头，并且在 `finally` 中无条件清缓存和导航。因此服务端可返回 403，但页面仍表现为退出成功。
+Sensei 当前退出请求没有请求头，并且在 `finally` 中无条件清缓存和导航。因此服务端可返回 403，但页面仍表现为退出成功。
 
 CSRF cookie 由 Auth 在 `/auth/*` HTML 和 `/api/me` 响应中补种，属性为可被 JavaScript 读取、SameSite=Lax、Path=/、最长 24 小时。退出成功后 Auth 会清除它。
 
@@ -175,14 +175,14 @@ CSRF cookie 由 Auth 在 `/auth/*` HTML 和 `/api/me` 响应中补种，属性�
 
 `auth/public/auth/one-tap.js` 当前使用 `response.ok` 判断是否登录，catch 返回 false，所以 503 和网络错误都会触发 One Tap。
 
-Linkjob `src/lib/account/oneTap.ts` 还维护 10 分钟冷却，而 Auth One Tap 模块维护 24 小时关闭冷却，两套长期计时重复。
+Sensei `src/lib/account/oneTap.ts` 还维护 10 分钟冷却，而 Auth One Tap 模块维护 24 小时关闭冷却，两套长期计时重复。
 
 本期规则：
 
 - Auth One Tap 只在 `/api/me` 明确返回 401 时继续展示。
 - 200、503、网络失败或非法响应均不展示。
 - Auth 保留用户关闭后的 24 小时冷却。
-- Linkjob 删除自己的长期冷却，只保留同页最小触发间隔和 in-flight 去重。
+- Sensei 删除自己的长期冷却，只保留同页最小触发间隔和 in-flight 去重。
 
 One Tap 保留在本期，而不与 Billing 解耦合并到后续阶段：它是当前开放的 Google 登录方式之一，修复只涉及明确的 401/503 分流和删除重复冷却，且与本期“服务故障不得伪装成未登录”的统一状态规则直接相关。
 
@@ -224,7 +224,7 @@ Auth 浏览器导航策略与服务端 `isAllowedNext()` 共享同一份规范�
 
 该取舍避免引入第三份 loopback/PKCE 规则。一个结构完整但语义非法的 Desktop self-next 最多返回 Desktop 错误页，不会产生授权码或跳转到外部地址。
 
-浏览器收到非法目标时降级到 `/dashboard/`；服务端收到非法 callback 时返回 `400 INVALID_CALLBACK_URL`。Linkjob 自身的 returnTo 不需要 Auth 内部例外，直接拒绝全部 `/auth` 与 `/api` 保留命名空间。
+浏览器收到非法目标时降级到 `/dashboard/`；服务端收到非法 callback 时返回 `400 INVALID_CALLBACK_URL`。Sensei 自身的 returnTo 不需要 Auth 内部例外，直接拒绝全部 `/auth` 与 `/api` 保留命名空间。
 
 ### 5.2 浏览器侧的来源分类
 
@@ -252,7 +252,7 @@ Auth 浏览器导航策略与服务端 `isAllowedNext()` 共享同一份规范�
 
 `signInWithSocial()` 的空 callback 兜底从 `/auth/` 改为 `/dashboard/`，否则新的保留命名空间规则会让兜底请求必然返回 400。
 
-## 6. Linkjob 通用实现
+## 6. Sensei 通用实现
 
 ### 6.1 `authFlow.ts`
 
@@ -281,7 +281,7 @@ async function signOutAndReturn(): Promise<SignOutResult>;
 行为约束：
 
 - 默认 returnTo 为 `pathname + search + hash`。
-- returnTo 必须通过结构校验，并拒绝 Linkjob 页面不应使用的 `/auth`、`/api` 保留命名空间。
+- returnTo 必须通过结构校验，并拒绝 Sensei 页面不应使用的 `/auth`、`/api` 保留命名空间。
 - `redirectToSignIn()` 导航前清除 `/api/me` 缓存。
 - `/api/me` 200 且响应结构有效：authenticated。
 - 401：不写入新的 signed-out 缓存；清除已有缓存后调用 `redirectToSignIn()`，进入 redirecting。
@@ -299,7 +299,7 @@ session 层需要：
 - 把无缓存副作用的网络读取与 UI revalidate 分开：底层 fetch 返回 unauthorized/ok/error；后台 revalidate 决定是否写缓存；authFlow 的 401 跳转不先写 false 再清除。
 - 为后台刷新和用户显式刷新提供清晰参数，例如 `revalidateMe({ force: true })`；最终命名在开发计划确定。
 - 保留 401、服务不可用、离线/冷却跳过和响应非法之间的区别。
-- 运行时验证 200 响应至少包含 `authenticated:true`、有效 user id 和 email。`sessionExpiresAt` 当前在 Linkjob 类型中可选：缺失时仍视为已登录，只按普通缓存 TTL；存在但格式非法时才视为 invalid response。
+- 运行时验证 200 响应至少包含 `authenticated:true`、有效 user id 和 email。`sessionExpiresAt` 当前在 Sensei 类型中可选：缺失时仍视为已登录，只按普通缓存 TTL；存在但格式非法时才视为 invalid response。
 - 缓存只用于 UI 快速渲染，不作为服务端授权依据。
 - signed-out 缓存只负责快速水合，不能阻止每个新 document 中 AccountNav 的首次 hydration revalidate；之后同一 document 内的 Astro pathname 变化继续使用缓存，不无条件请求。signed-in 缓存仍可按 TTL 使用。
 - `error` 和 `skipped` 在冷启动时保持 unknown/error，不显示 signed out。
@@ -376,7 +376,7 @@ Auth 当前会在 Billing binding 缺失或查询失败时让 `/api/me` 返回 5
 
 部分现有 UI 使用 optional chaining，直接返回 `billing:null` 可能把服务故障静默显示成“订阅消失”。因此原第一版低估了影响面。
 
-本期采取最小安全方案：Linkjob 按 HTTP 状态区分 401 与 503，不改 Auth `/api/me` 契约。Billing 解耦记录为独立后续需求，必须先盘点全部消费者并为“Billing 暂不可用”定义显式 UI 状态。
+本期采取最小安全方案：Sensei 按 HTTP 状态区分 401 与 503，不改 Auth `/api/me` 契约。Billing 解耦记录为独立后续需求，必须先盘点全部消费者并为“Billing 暂不可用”定义显式 UI 状态。
 
 ## 9. 状态与责任矩阵
 
@@ -401,18 +401,18 @@ Auth 当前会在 Billing binding 缺失或查询失败时让 `/api/me` 返回 5
 
 - Auth 无合法 `next` 时的安全默认目标统一写作 `/dashboard/`。
 - Auth Worker 同时支持 `/dashboard` 和 `/dashboard/`；账户菜单当前绝对链接无尾斜杠只是兼容别名，不作为登录默认值。
-- Linkjob `config.json` 的 `trailing_slash:false` 适用于站点页面；验收比较回跳时以浏览器最终规范化 URL 为准，不因等价的单次尾斜杠重定向判失败。
-- Linkjob 与 Auth 的生产路由都位于 `https://www.senseiai.me`，当前登录调用是同源请求，不需要新增 CORS 或 `SameSite=None`。
+- Sensei `config.json` 的 `trailing_slash:false` 适用于站点页面；验收比较回跳时以浏览器最终规范化 URL 为准，不因等价的单次尾斜杠重定向判失败。
+- Sensei 与 Auth 的生产路由都位于 `https://www.senseiai.me`，当前登录调用是同源请求，不需要新增 CORS 或 `SameSite=None`。
 
 ## 11. 预计修改文件
 
-### 11.1 Linkjob
+### 11.1 Sensei
 
 预计新增：
 
 - `src/lib/account/authFlow.ts`
 - `src/lib/account/customerPortal.ts`
-- Linkjob 行为测试文件和必要的最小测试配置；具体名称在开发计划确定。
+- Sensei 行为测试文件和必要的最小测试配置；具体名称在开发计划确定。
 
 预计修改：
 
@@ -445,7 +445,7 @@ Auth 当前会在 Billing binding 缺失或查询失败时让 `/api/me` 返回 5
 - `public/auth/register.js`、`public/auth/verify-email.js`、`public/auth/forgot-password.js`：仅把现有 `next` 消费接入同一导航策略，不扩展邮件或注册产品能力。
 - `src/auth/index.ts`：结构校验、保留命名空间拒绝和精确内部例外。
 - `public/auth/one-tap.js`：只在明确 401 时展示。
-- `tests/allowed-next.test.ts`：重写现有白名单断言并加入真实 Linkjob 路径。
+- `tests/allowed-next.test.ts`：重写现有白名单断言并加入真实 Sensei 路径。
 - `tests/safe-next.test.ts`：保留结构测试，并增加浏览器导航策略、保留命名空间和精确例外测试。
 - `tests/legacy-claim-route.test.ts`：固定三种服务端生成中转地址、嵌套 next 和 email 编码契约。
 - 现有 Desktop/device 测试：确认语义非法参数不能进入确认或产生授权码，不新增第三套校验实现。
@@ -463,7 +463,7 @@ Auth 当前会在 Billing binding 缺失或查询失败时让 `/api/me` 返回 5
 
 - P0：Auth 浏览器和服务端统一回跳策略，消除现有英文页面的 400，并关闭客户端导航绕过。
 - P0：盘点 `/auth/*`、`/api/*`、Legacy Claim 和 Desktop callback，固定精确例外及 query 规则。
-- P0：Auth 登录页已有会话尊重 `next`；Linkjob 补全 hash 和 `hashchange`。
+- P0：Auth 登录页已有会话尊重 `next`；Sensei 补全 hash 和 `hashchange`。
 - P1：登录前主动清缓存；signed-out 缓存不得阻止每个新 document 的首次 hydration revalidate，但站内 pathname 变化不无条件增加请求。
 - P1：401、503、network、skipped 分流；显式动作绕过失败冷却。
 - P1：退出登录 CSRF token、补种和成功后清缓存。
@@ -477,11 +477,11 @@ Auth 当前会在 Billing binding 缺失或查询失败时让 `/api/me` 返回 5
 
 Auth 已使用 Vitest，可直接扩充现有测试。
 
-Linkjob 当前没有 test script 或测试框架；现有 `scripts/account-nav-dropdown.test.mjs` 只是源码结构检查，不能验证 HTTP 分支。本期不能再用正则扫描源码假装覆盖 200/401/404/503 行为。
+Sensei 当前没有 test script 或测试框架；现有 `scripts/account-nav-dropdown.test.mjs` 只是源码结构检查，不能验证 HTTP 分支。本期不能再用正则扫描源码假装覆盖 200/401/404/503 行为。
 
 开发计划的第一个技术任务必须在以下最小方案中定案：
 
-- 推荐：为 Linkjob 添加最小 Vitest 配置，直接测试 TypeScript 纯逻辑和 mock fetch；不引入 DOM 测试库，除非 AccountNav 行为无法通过抽出的纯函数验证。
+- 推荐：为 Sensei 添加最小 Vitest 配置，直接测试 TypeScript 纯逻辑和 mock fetch；不引入 DOM 测试库，除非 AccountNav 行为无法通过抽出的纯函数验证。
 - 备选：把纯逻辑保持为零依赖、Node 可直接加载的模块并使用内置 `node:test`。不得复制一套仅供测试的实现。
 
 无论采用哪种方案，都必须记录现有 `tsc` 基线错误，并保证本期不新增类型错误。
@@ -569,7 +569,7 @@ Legacy Claim 路由测试必须分别覆盖三种服务端生成中转地址，�
 5. 没有合法 `next` 时使用 `/dashboard/`，社交登录 helper 的空 callback 也使用该默认值。
 6. 登录发起时缓存立即失效；One Tap reload 或 OAuth 回跳产生新 document 后，signed-out 缓存不能阻止 AccountNav 首次 hydration revalidate；同 document 的站内 pathname 变化不会无条件重复请求。
 7. Header 仍是带真实 href 和 `data-astro-reload` 的 anchor，点击登录直接执行整页导航；缓存清理不破坏复制链接和新标签页等原生行为。
-8. Linkjob 提供不依赖具体页面的通用登录保护方法。
+8. Sensei 提供不依赖具体页面的通用登录保护方法。
 9. 只有 401 触发登录；503、网络错误、离线请求失败、skipped 和非法响应不触发登录。
 10. 显式用户动作忽略失败冷却和 `navigator.onLine` 短路，真实请求失败后才返回 unavailable。
 11. 缺少可选 `sessionExpiresAt` 不会把已登录用户误判为 unavailable。
@@ -581,7 +581,7 @@ Legacy Claim 路由测试必须分别覆盖三种服务端生成中转地址，�
 17. Customer Portal 通用客户端完成且有行为测试，但未接入 Pricing/支付按钮。
 18. Portal 404 不被误判为未登录；Portal 不被描述为首次购买或 Checkout。
 19. 本期不新增邮件登录、独立注册、多语言或 PayPal 动态 Portal。
-20. Auth 相关测试通过；Linkjob 本期新增行为测试通过；本期不新增 TypeScript 错误。
+20. Auth 相关测试通过；Sensei 本期新增行为测试通过；本期不新增 TypeScript 错误。
 
 ## 15. 后续独立事项
 
@@ -624,7 +624,7 @@ Legacy Claim 路由测试必须分别覆盖三种服务端生成中转地址，�
 | 14 | 采纳 | `/api/me` Billing 解耦影响面被低估，因此移到独立需求。 |
 | 15 | 采纳 | Portal 客户端保持纯；缓存失效和登录跳转由调用方负责。 |
 | 16 | 采纳 | 登录安全默认值统一 `/dashboard/`，另说明无尾斜杠兼容入口。 |
-| 17 | 采纳 | Linkjob 需要真实行为测试策略，不能用源码正则验证 HTTP 分支。 |
+| 17 | 采纳 | Sensei 需要真实行为测试策略，不能用源码正则验证 HTTP 分支。 |
 | 18 | Claude 第二轮接受不采纳 | 用户已明确要求本期先做通用 Customer Portal 方法、Pricing 后续调用；保留交付并补充 expiresAt 语义及无副作用边界。 |
 | 19 | 采纳 | resume 只保留技术事实，不提前规定参数和协议。 |
 | 20 | 采纳 | `/api/me` Billing 解耦移出本期，保留为独立后续事项。 |
@@ -640,14 +640,14 @@ Legacy Claim 路由测试必须分别覆盖三种服务端生成中转地址，�
 4. 第一版把已经移除的 `tryFree` / `register` 配置写成待办，没有指出真正的类型错误和死变量。
 5. 第一版混淆了浏览器非法 `next` 的安全降级与服务端 callback 的 fail-closed。
 6. 第一版未说明结构校验替换业务白名单后的站内认证钓鱼取舍，也未保留遗留账户流程的精确例外。
-7. 第一版提出了过早的 `resume` 具体协议，并给 Linkjob 列出无法落地的 Node 源码测试方案。
+7. 第一版提出了过早的 `resume` 具体协议，并给 Sensei 列出无法落地的 Node 源码测试方案。
 8. 第二版把 `menuConfig.ts` 列为预计修改文件；实际只需由 `types.ts` 修正后重新通过其类型约束，不需要修改该文件。
 
 第三版新引入或仍未闭环、已由第四版开始纠正并在第五版继续收敛的错误：
 
 1. 把保留命名空间 deny-list 只放在服务端，遗漏了已有会话和其他浏览器 `location.href` 导航不会经过服务端 callback 校验。
 2. 精确例外只列出 Legacy Claim complete，遗漏了 Desktop 设备登录使用的 `/auth/desktop?...`，也没有定义 pathname、query 和 hash 的匹配边界。
-3. 登录缓存方案过度依赖 Linkjob 主动调用 `redirectToSignIn()`，没有覆盖 One Tap reload 和其他非 Linkjob 发起的会话变化。
+3. 登录缓存方案过度依赖 Sensei 主动调用 `redirectToSignIn()`，没有覆盖 One Tap reload 和其他非 Sensei 发起的会话变化。
 4. 401 状态矩阵同时要求写 signed-out 缓存和立即清缓存，未区分后台 revalidate 与显式受保护动作。
 5. 把可选的 `sessionExpiresAt` 当作 200 响应的必填有效性条件。
 6. 把 `navigator.onLine === false` 当作显式用户动作的硬短路，而不是只作为后台刷新优化。
@@ -671,7 +671,7 @@ Legacy Claim 路由测试必须分别覆盖三种服务端生成中转地址，�
 | 2 | 采纳并补充 | v3 例外盘点不全。除 `/auth/legacy-claim/complete` 外，Desktop OAuth 需要 pathname 精确为 `/auth/desktop` 且携带 query。Legacy Claim 的 sign-in/verify-email 是服务端生成中转，不作为任意 callback 例外。 |
 | 2A | 采纳并在 v6 收敛 | One Tap reload 不经过 `redirectToSignIn()`。signed-out 缓存可用于水合，但不能阻止每个新 document 的首次 hydration revalidate；由于 AccountNav 持久化，站内 pathname 变化不无条件重复请求。 |
 | 3 | 采纳 | 后台 revalidate 的 401 可以写 signed-out；显式 authFlow 的 401 不写 false，直接清旧缓存并跳登录。 |
-| 4 | 采纳 | `sessionExpiresAt` 在 Linkjob 类型中可选；缺失使用普通 TTL，只有存在但非法才判 invalid response。 |
+| 4 | 采纳 | `sessionExpiresAt` 在 Sensei 类型中可选；缺失使用普通 TTL，只有存在但非法才判 invalid response。 |
 | 5 | 采纳 | `navigator.onLine` 只可用于后台优化，显式用户动作必须真实发请求。 |
 | 6 | 采纳 | 当前未发现 `/api/*` callback 依赖，设备 authorize 不是 callback；但开发前必须重新盘点再收紧。 |
 | 7 | 采纳 | 拒绝向量修正为实际的 `/\evil.example`。 |
@@ -694,7 +694,7 @@ Legacy Claim 路由测试必须分别覆盖三种服务端生成中转地址，�
 
 | 编号 | 裁决 | 权威工作区核对结果与第六版动作 |
 | --- | --- | --- |
-| 1 | 部分采纳，严重度下调 | 当前 Astro 5.16.6 确实会拦截生产同源登录 anchor；但其 loader 发现 Auth 文档没有 `astro-view-transitions-enabled` 后会 `preventDefault()` 并回退到 `location.href`，不会把 Auth HTML swap 进 Linkjob。仍为登录 anchor 增加 `data-astro-reload`，避免重复 fetch 并明确整页导航，不把它定为现存 P0/P1 功能故障。 |
+| 1 | 部分采纳，严重度下调 | 当前 Astro 5.16.6 确实会拦截生产同源登录 anchor；但其 loader 发现 Auth 文档没有 `astro-view-transitions-enabled` 后会 `preventDefault()` 并回退到 `location.href`，不会把 Auth HTML swap 进 Sensei。仍为登录 anchor 增加 `data-astro-reload`，避免重复 fetch 并明确整页导航，不把它定为现存 P0/P1 功能故障。 |
 | 2 | 采纳请求量问题，不采纳短 TTL | 每次 pathname 变化强制请求会让匿名流量随 PV 增长。第六版只要求每个新 document 的首次 hydration revalidate；OAuth 和 One Tap 都被覆盖。同 document 的持久化 AccountNav 不重复强制请求，也不新增没有当前需求支撑的 5–10 秒 TTL。 |
 | 3 | 采纳 | 删除 §5.2 对 Legacy Claim 中转规则的重复段落，保留来源分类第 2 条作为唯一规范。 |
-| 4 | 采纳 | 删除会随文档提交立即过期的 Linkjob HEAD；业务代码核对基线改为最后实际修改登录调用链的 `9cdc6b5c`。 |
+| 4 | 采纳 | 删除会随文档提交立即过期的 Sensei HEAD；业务代码核对基线改为最后实际修改登录调用链的 `9cdc6b5c`。 |

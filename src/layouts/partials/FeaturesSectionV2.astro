@@ -27,12 +27,19 @@ const waveBars = (base: number, count: number, delayStep = 0.04) =>
     <section class="features-v2-section w-full bg-white pb-8 pt-0 md:pb-10">
       <div class="mx-auto w-full max-w-[1350px] px-4 sm:px-5">
         <h2
-          class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
+          class="mb-3 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
           style="max-width: 800px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
         >
           <span>{data.header.title_line_1}</span>{" "}
           <span class="text-[#5b9cf2]">{data.header.title_line_2}</span>
         </h2>
+        {data.header.description && (
+          <p
+            class="mb-8 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
+            style="max-width: 850px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+            set:html={markdownify(data.header.description)}
+          />
+        )}
 
         <div class="features-v2-layout">
           <article class="feature-hero-card" data-feature-card="hero">
@@ -85,7 +92,7 @@ const waveBars = (base: number, count: number, delayStep = 0.04) =>
                   <img
                     class="platform-center-icon"
                     src={data.rotating_logos.center_icon.src}
-                    alt={data.rotating_logos.center_icon.alt || "Linkjob AI"}
+                    alt={data.rotating_logos.center_icon.alt || "Sensei AI"}
                     width="70"
                     height="70"
                     loading="lazy"
@@ -241,7 +248,7 @@ const waveBars = (base: number, count: number, delayStep = 0.04) =>
                 <img
                   class="realtime-bot"
                   src="/images/features/bot.svg"
-                  alt="Linkjob AI"
+                  alt="Sensei AI"
                   width="46"
                   height="46"
                 />
@@ -336,7 +343,7 @@ const waveBars = (base: number, count: number, delayStep = 0.04) =>
                 <div class="candidate-card" aria-hidden="true">
                   <img
                     class="candidate-logo"
-                    src="/images/features/linkjob-mark.png"
+                    src="/images/features/Sensei-mark.png"
                     alt=""
                     width="46"
                     height="46"

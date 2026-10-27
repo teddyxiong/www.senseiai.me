@@ -1,6 +1,6 @@
 ---
 enable: true
-title: People Love Linkjob AI
+title: People Love Sensei AI
 description: "See how real users review us and pass their interviews using our undetectable AI interview assistant."
 
 # Testimonials
@@ -9,7 +9,7 @@ testimonials:
     designation: "Join xAI as a Backend Engineer"
     avatar: "/images/avatar1.png"
     content:
-      "I learned about this AI interview assistant tool through an article on xAI CodeSignal from Linkjob AI. After downloading it, I asked a friend to help me test it out, and I was really surprised when I saw that it was indeed completely stealthy. Anyway, job interviews are a competition, and winning is more important than anything else."  
+      "I learned about this AI interview assistant tool through an article on xAI CodeSignal from Sensei AI. After downloading it, I asked a friend to help me test it out, and I was really surprised when I saw that it was indeed completely stealthy. Anyway, job interviews are a competition, and winning is more important than anything else."  
 
   - name: "I. Rossi"
     designation: "Join Goldman Sachs "
@@ -20,7 +20,7 @@ testimonials:
   - name: "Arjun M."
     designation: "Join Amazon as a SDE"
     avatar: "/images/avatar3.png"
-    content: "This time interviewing with Amazon, I finally got the SDE2, which is L5, offer. The salary is also very satisfactory, nothing much to say, Linkjob AI is definitely the best AI interview assistant."
+    content: "This time interviewing with Amazon, I finally got the SDE2, which is L5, offer. The salary is also very satisfactory, nothing much to say, Sensei AI is definitely the best AI interview assistant."
 
   - name: "Nia H."
     designation: "Join Google "

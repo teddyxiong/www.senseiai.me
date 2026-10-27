@@ -6,21 +6,21 @@ Proposed for implementation after user review.
 
 ## Goal
 
-Persist the last effective Linkjob website language in the same browser so that locale-neutral pages and future consumers can recover it after the locale disappears from the URL.
+Persist the last effective Sensei website language in the same browser so that locale-neutral pages and future consumers can recover it after the locale disappears from the URL.
 
-This phase establishes the producer and the shared cookie contract in the Linkjob repository. It does not update Dashboard, Auth, or any other consumer.
+This phase establishes the producer and the shared cookie contract in the Sensei repository. It does not update Dashboard, Auth, or any other consumer.
 
 ## Scope
 
 ### In scope
 
-- Add a Linkjob locale-preference module backed by a first-party cookie.
-- Treat `i18n.config.json` as the Linkjob source of truth for valid locales.
+- Add a Sensei locale-preference module backed by a first-party cookie.
+- Treat `i18n.config.json` as the Sensei source of truth for valid locales.
 - Record a non-default locale when an explicit localized URL becomes effective.
 - Record the actual fallback locale when the language switcher falls back to English.
 - Avoid overwriting the preference from locale-neutral pages.
 - Add focused tests for validation, cookie serialization, and effective-locale behavior.
-- Add an HTML guide in the Linkjob repository root that documents the contract, producer behavior, consumer integration, and known Dashboard issues.
+- Add an HTML guide in the Sensei repository root that documents the contract, producer behavior, consumer integration, and known Dashboard issues.
 
 ### Out of scope
 
@@ -37,7 +37,7 @@ This phase establishes the producer and the shared cookie contract in the Linkjo
 
 | Property | Value |
 | --- | --- |
-| Name | `linkjob_locale` |
+| Name | `Sensei_locale` |
 | Value | A canonical lowercase locale from the published locale set, such as `en`, `fr`, or `zh-hant` |
 | Path | `/` |
 | Lifetime | `Max-Age=31536000` (one year), refreshed when a language becomes effective |
@@ -53,14 +53,14 @@ The value is a display preference only. Consumers must treat it as user-controll
 The shared precedence contract is:
 
 1. An explicit, supported locale in the current URL.
-2. A valid `linkjob_locale` cookie.
+2. A valid `Sensei_locale` cookie.
 3. `defaultLocale` from `i18n.config.json`.
 
 The default locale is stored explicitly as `en` when the user selects English or when the language switcher actually falls back to English. When no cookie exists, consumers resolve the configured default without requiring an `en` cookie.
 
-Invalid, unsupported, incorrectly cased, or malformed values are ignored. Linkjob may expire an invalid cookie while resolving the default locale.
+Invalid, unsupported, incorrectly cased, or malformed values are ignored. Sensei may expire an invalid cookie while resolving the default locale.
 
-## Linkjob Producer Design
+## Sensei Producer Design
 
 Add one module under `src/lib/i18n/` with a small interface:
 
@@ -97,7 +97,7 @@ Locale-neutral pages preserve the existing cookie because unprefixed paths are n
 
 Future consumers such as Dashboard must:
 
-1. Read `linkjob_locale` from the first-party cookie.
+1. Read `Sensei_locale` from the first-party cookie.
 2. Validate the value against the consumer's supported locale set.
 3. Use canonical lowercase locale codes.
 4. Fall back to `en` when the cookie is missing or invalid.
@@ -110,17 +110,17 @@ The producer contract does not prescribe whether a future localized Dashboard us
 
 - Dashboard is served by the Auth repository under `/dashboard/`, so its pathname contains no public-site locale.
 - `public/dashboard/sidebar.js` currently attempts to derive locale from the Dashboard pathname and therefore resolves to English.
-- Its hard-coded list uses `zh-Hant`, while Linkjob's canonical configured value is `zh-hant`.
+- Its hard-coded list uses `zh-Hant`, while Sensei's canonical configured value is `zh-hant`.
 - Dashboard contains fixed English URLs for the home page, Pricing, Downloads, logo navigation, plan links, and provider-less subscription management.
-- Dashboard currently has no shared reader for `linkjob_locale`.
+- Dashboard currently has no shared reader for `Sensei_locale`.
 - Aligning those consumers is a separate task.
 
 ## Root HTML Guide
 
-After implementation, add `LANGUAGE_PREFERENCE_COOKIE.html` at the Linkjob repository root. It must be readable directly in a browser and include:
+After implementation, add `LANGUAGE_PREFERENCE_COOKIE.html` at the Sensei repository root. It must be readable directly in a browser and include:
 
 - The cookie table and security characteristics.
-- Linkjob write timing and precedence rules.
+- Sensei write timing and precedence rules.
 - JavaScript examples for safely reading and validating the cookie.
 - URL construction examples for `en`, `fr`, and `zh-hant`.
 - Guidance for future localized and locale-neutral consumers.
@@ -157,6 +157,6 @@ Then run:
 - `src/layouts/Base.astro` and/or the smallest existing shared client entry — page-load persistence hook.
 - `src/layouts/partials/Header.astro` — successful-target and English-fallback persistence.
 - Existing focused test file(s), without new test infrastructure.
-- One descriptive HTML guide in the Linkjob repository root.
+- One descriptive HTML guide in the Sensei repository root.
 
 No Auth or Billing files are changed.

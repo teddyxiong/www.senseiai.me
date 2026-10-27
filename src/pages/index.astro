@@ -40,11 +40,39 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
 ---
 
 <Base>
-  <!-- banner -->
+  <aside
+    data-home-migration-banner
+    aria-label="Sensei AI migration notice"
+    class="sticky top-[60px] z-20 w-full px-4 py-2 text-white sm:px-6 md:px-10 lg:px-20"
+    style="background-color: #1d40b0;"
+  >
+    <div
+      class="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-4 md:flex-row md:items-center"
+    >
+      <div class="max-w-[980px]">
+        <p class="mb-1 font-secondary text-xl font-bold leading-tight text-white">
+          🚀 We've Moved to Linkjob AI!
+        </p>
+        <p class="m-0 text-sm leading-relaxed text-white/90 sm:text-base">
+          Sensei AI has officially moved to <strong class="text-white">Linkjob AI</strong>!
+          Visit our new website to experience the latest version of our AI interview assistant.
+        </p>
+      </div>
+      <a
+        href="https://www.linkjob.ai/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-bold text-[#1d40b0] transition hover:-translate-y-0.5 hover:bg-[#eef3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      >
+        Go to Linkjob AI →
+      </a>
+    </div>
+  </aside>
+
   <!-- 1. navbar -->
   <!-- 2. webm demo -->
   <section
-    class="home-hero section pb-16 md:pb-32 bg-index-hero bg-index-hero--home bg-index-hero-overlay relative rounded-t-[10px] text-white md:rounded-t-[10px]"
+    class="home-hero section pt-12 md:pt-16 pb-16 md:pb-32 bg-index-hero bg-index-hero--home bg-index-hero-overlay relative rounded-t-[10px] text-white md:rounded-t-[10px]"
   >
     <div class="container relative z-10">
       <div class="row gy-4 items-center">
@@ -62,7 +90,7 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
             <span class="min-w-0" set:html={markdownify(banner?.badge)} />
           </div>
           <h1
-            class="home-hero-title mt-6 mb-7 w-full max-w-[1000px] text-center text-[30px] leading-[1.2] text-black md:text-[36px] lg:text-[45px]"
+            class="home-hero-title mt-6 mb-7 w-full max-w-[850px] text-center text-[30px] leading-[1.2] text-black md:text-[36px] lg:text-[45px]"
             set:html={markdownify(banner.title)}
           />
 
@@ -72,7 +100,7 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
             set:html={markdownify(banner.content)}
           />
 
-          <div class="hero-actions flex flex-col">
+          <div class="hero-actions flex flex-col mt-8">
             <div class="flex justify-center">
               {
                 banner.video_button.enable && (
@@ -91,7 +119,7 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
               }
             </div>
 
-            <div class="download-buttons">
+            <!-- <div class="download-buttons">
               {
                 banner.button.enable && (
                   <a
@@ -126,7 +154,7 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
                   </a>
                 )
               }
-            </div>
+              </div> -->
           </div>
 
           {
@@ -135,7 +163,7 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
                 class="home-hero-stats"
                 data-home-hero-stats
                 role="list"
-                aria-label="Linkjob AI results"
+                aria-label="Sensei AI results"
               >
                 {heroStats.map((item: any, index: number) => (
                   <>
@@ -174,7 +202,7 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
         >
           <div
             class="company-logo-marquee mx-auto max-w-[1440px]"
-            aria-label="Companies where Linkjob AI users have received offers"
+            aria-label="Companies where Sensei AI users have received offers"
           >
             <div class="company-logo-marquee-track" data-company-logo-track>
               {[...companyLogos, ...companyLogos].map((logo, index) => (
@@ -251,27 +279,17 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
                 /> */}
                 <h2
                   class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px]"
-                  style="max-width: 760px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+                  style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
                   data-aos="fade-up-sm"
-                >
-                  <span class="break-words md:whitespace-nowrap">
-                    Linkjob AI Interview Helper:
-                  </span>{" "}
-                  <span class="break-words text-[#58ACF2] md:whitespace-nowrap">
-                    Tested Daily on Every Platform
-                  </span>
-                </h2>
+                  set:html={markdownify(experience.title)}
+                />
                 <p
                   class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
-                  style="max-width: 1000px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+                  style="max-width: 950px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
                   data-aos="fade-up-sm"
                   data-aos-delay="150"
-                >
-                  Get AI support for live coding and technical discussions, with
-                  daily compatibility checks across supported interview
-                  platforms. Explore the demos below to see how Linkjob AI works
-                  with your interview setup.
-                </p>
+                  set:html={markdownify(experience.description)}
+                />
                 <div class="mt-8">
                   {experience?.items.map((item: any) => (
                     <div>
@@ -468,11 +486,10 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
 
   <!-- 7. blog -->
   <!-- blog -->
-  <section class="section pt-0">
+  <!-- <section class="section pt-0">
     <div class="container">
       <div class="row">
         <div class="mx-auto text-center lg:col-12" data-aos="fade-up-sm">
-          {/* <div class="section-heading-shape" aria-label="shape"></div> */}
           <h2
             class="mb-6 mx-auto text-[30px] md:text-[35px] lg:text-[40px]"
             style="max-width: 900px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
@@ -552,11 +569,11 @@ const { pricing } = pricingIndex?.data || {}; // Add empty object as default to 
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
   <!-- /.blog -->
 
   <!-- 7.5 popular posts -->
-  <PopularPosts />
+  <!-- <PopularPosts /> -->
 
   <!-- 8. faq -->
   <FAQ variant="home" />

@@ -1,12 +1,12 @@
 ---
 title: "Terms and Conditions"
-meta_title: "Terms and Conditions | Linkjob  AI"
-description: "Terms and Conditions for using Linkjob  AI, the AI-powered interview assistant. Learn about usage rules, responsibilities, and legal terms."
+meta_title: "Terms and Conditions | Sensei  AI"
+description: "Terms and Conditions for using Sensei  AI, the AI-powered interview assistant. Learn about usage rules, responsibilities, and legal terms."
 draft: false
 ---
 
-Thank you for choosing our Linkjob  AI products and services ("Service")!
-These Terms of Use ("Terms") describe your rights and obligations while using the Linkjob website, software, services, and other offerings (collectively, "Services"). These Terms, together with our Privacy Policy constitute an agreement between the user ("you") and Linkjob  AI ("we," "us," "our,"). By voluntarily agreeing to this agreement, or by registering, signing in, or using the service, you will be deemed to have accepted the terms of this agreement, and these documents together form the legal relationship between you and the company.
+Thank you for choosing our Sensei  AI products and services ("Service")!
+These Terms of Use ("Terms") describe your rights and obligations while using the Sensei website, software, services, and other offerings (collectively, "Services"). These Terms, together with our Privacy Policy constitute an agreement between the user ("you") and Sensei  AI ("we," "us," "our,"). By voluntarily agreeing to this agreement, or by registering, signing in, or using the service, you will be deemed to have accepted the terms of this agreement, and these documents together form the legal relationship between you and the company.
 
 ## 1. Acceptance of Terms
 
@@ -70,7 +70,7 @@ If we suspends or terminate your use of the Services for any reason, we will pro
 ## 6. Intellectual Property
 
 ### Ownership rights
-All photos, videos, images, and text on the Services, together with the design and layout of the Services (“Content”) are copyrighted and may not be used without our written permission. All intellectual property rights in the Services and in any Content of the Services (including, but not limited to, text, graphics, design, layout, software, photographs, and other images, videos, sound, trademarks, and logos) are owned by us or our licensors. Except as expressly set forth herein, nothing in the Terms gives you any rights in respect of any intellectual property owned by us or our licensors and you acknowledge that you do not acquire any ownership rights by downloading or using the Services. The Services and its Content, features, and functionality are and will remain the exclusive property of Linkjob. Our Services are protected by copyright, trademark, and other laws of both the United States and foreign countries. 
+All photos, videos, images, and text on the Services, together with the design and layout of the Services (“Content”) are copyrighted and may not be used without our written permission. All intellectual property rights in the Services and in any Content of the Services (including, but not limited to, text, graphics, design, layout, software, photographs, and other images, videos, sound, trademarks, and logos) are owned by us or our licensors. Except as expressly set forth herein, nothing in the Terms gives you any rights in respect of any intellectual property owned by us or our licensors and you acknowledge that you do not acquire any ownership rights by downloading or using the Services. The Services and its Content, features, and functionality are and will remain the exclusive property of Sensei. Our Services are protected by copyright, trademark, and other laws of both the United States and foreign countries. 
 ### Limited usage rights
 These Terms grant you a limited and non-exclusive right to use the Services. Except as indicated otherwise herein or in any additional terms or conditions, you may not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform, republish, download, store, transmit or otherwise exploit any of the Content on our Services. 
 ### Prohibited actions
@@ -85,7 +85,7 @@ You are expressly prohibited from:
 (iv) uploading Content to the Services which violates the intellectual property rights of others.
 
 ### User-submitted content
-Anything you send to us through the Services, email, or other means may be used by us for any purpose. By submitting material to us through the Services, email, or other means, you irrevocably transfer and assign to Linkjob, and forever waive, and agree never to assert, any copyrights or other rights that you may have in such material. We are free to use, without obligation of any kind, any ideas, concepts, techniques, or know-how contained in any communication you send to us or to the Services for any purpose whatsoever. This paragraph shall not apply to your personal information, which is defined in and governed by the Privacy Policy.
+Anything you send to us through the Services, email, or other means may be used by us for any purpose. By submitting material to us through the Services, email, or other means, you irrevocably transfer and assign to Sensei, and forever waive, and agree never to assert, any copyrights or other rights that you may have in such material. We are free to use, without obligation of any kind, any ideas, concepts, techniques, or know-how contained in any communication you send to us or to the Services for any purpose whatsoever. This paragraph shall not apply to your personal information, which is defined in and governed by the Privacy Policy.
 
 ## 7. Subscriptions
 ### Subscription
@@ -100,7 +100,7 @@ In no event will we be liable for any indirect, consequential, special, incident
 
 ## 9. Indemnity
 
-To the fullest extent permitted by applicable law, you agree to indemnify, defend and hold harmless Linkjob, and our respective past, present and future employees, officers, directors, contractors, consultants, equity holders, suppliers, vendors, service providers, parent companies, subsidiaries, affiliates, agents, representatives, predecessors, successors and assigns (individually and collectively, the Linkjob Parties”), from and against all actual or alleged claims, damages, awards, judgments, losses, liabilities of every kind and nature whatsoever, whether known or unknown, that are caused by, arise out of or are related to: 
+To the fullest extent permitted by applicable law, you agree to indemnify, defend and hold harmless Sensei, and our respective past, present and future employees, officers, directors, contractors, consultants, equity holders, suppliers, vendors, service providers, parent companies, subsidiaries, affiliates, agents, representatives, predecessors, successors and assigns (individually and collectively, the Sensei Parties”), from and against all actual or alleged claims, damages, awards, judgments, losses, liabilities of every kind and nature whatsoever, whether known or unknown, that are caused by, arise out of or are related to: 
 
 - your use or misuse of the Services.
 
@@ -108,7 +108,7 @@ To the fullest extent permitted by applicable law, you agree to indemnify, defen
 
 - your violation of any right(s) of any third party. 
 
-You agree to promptly notify us of any claim(s) and shall cooperate fully with Linkjob Parties in defending such claims. You further agree that Linkjob Parties shall have control of the defense or settlement of any third-party claims. Information about your computer and internet connection, including, but not limited to, the type of device you use, the IP address of your device, your operating system, the type of Internet browser you use, unique device identifiers and other diagnostic data. 
+You agree to promptly notify us of any claim(s) and shall cooperate fully with Sensei Parties in defending such claims. You further agree that Sensei Parties shall have control of the defense or settlement of any third-party claims. Information about your computer and internet connection, including, but not limited to, the type of device you use, the IP address of your device, your operating system, the type of Internet browser you use, unique device identifiers and other diagnostic data. 
 
 ## 10. Early Stage Service
 Please be aware that our services are in the early stages Of development. As such, they may be subject to stability issues and intermittent downtime. We are continuously working to improve the stability and functionality of our services, but we cannot guarantee uninterrupted service. The services and all content therein are provided on an “As Is,” “With All Faults,” and “As Available” basis and the entire risk as to aatisfactory quality, performance, accuracy, and effort is with you. 
@@ -153,7 +153,7 @@ To the extent that any court is required to weigh on the enforceability of Secti
 You hereby agree that any arbitration or other permitted action with respect to any dispute shall be conducted in their individual capacities only and not as a class action or other representative action, and expressly waive any right to file a class action or seek relief on a class basis. You may bring claims against us other only in your individual capacity, and not as a plaintiff or class member in any purported class or representative proceeding. If any court or arbitrator makes a final, binding and non-appealable determination that the class action waiver set forth in this section is void or unenforceable for any reason or that an arbitration can proceed on a class basis, then the arbitration provision set forth above shall be deemed null and void with respect to any dispute that would thus be required to be resolved by arbitration on a class basis, and the parties shall be deemed to have not agreed to arbitrate such dispute. In the event that, as a result of the application of the immediately preceding sentence or otherwise, any dispute is not subject to arbitration, the parties hereby agree to submit to the personal and exclusive jurisdiction of and venue of the courts in the State of Delaware to accept service of process by mail with respect to such dispute, and hereby waive any and all jurisdictional and venue defenses otherwise available with respect to such dispute.
 
 ## 12. External Links
-The services may contain links to other third-party website and/or applications or otherwise re-direct you to other third-party website, applications (including meeting software) or services (collectively, the “linked websites”). The linked websites are not under our control and we are not responsible for any linked websites, including, but not limited to, any content contained in a linked websites or any changes or updates to the linked websites. The linked websites may require you to agree to additional terms and conditions between you and such third party. When you click on a link to linked websites, we will not warn you that you have left the services and are subject to the terms and conditions (including privacy policies, if and as applicable) of another website or destination. We are not responsible for any such terms and conditions or any damages you may incur by using the linked websites. Linkjob provides these linked websites only as a convenience and does not review, approve, monitor, endorse, warrant or make any representations with respect to the linked websites or their products or services. You use all links in the linked websites at your own risk.
+The services may contain links to other third-party website and/or applications or otherwise re-direct you to other third-party website, applications (including meeting software) or services (collectively, the “linked websites”). The linked websites are not under our control and we are not responsible for any linked websites, including, but not limited to, any content contained in a linked websites or any changes or updates to the linked websites. The linked websites may require you to agree to additional terms and conditions between you and such third party. When you click on a link to linked websites, we will not warn you that you have left the services and are subject to the terms and conditions (including privacy policies, if and as applicable) of another website or destination. We are not responsible for any such terms and conditions or any damages you may incur by using the linked websites. Sensei provides these linked websites only as a convenience and does not review, approve, monitor, endorse, warrant or make any representations with respect to the linked websites or their products or services. You use all links in the linked websites at your own risk.
 
 ## 13. Assignment
 These Terms and any rights and licenses granted hereunder, may not be transferred or assigned by you, but we may assign them without restriction. Any attempted transfer or assignment in violation hereof will be null and void.
@@ -168,4 +168,4 @@ These Terms, together with any amendments and any additional agreements you may 
 No waiver of any term of the Terms shall be deemed a further or continuing waiver of such term or any other term, and our failure to assert any right or provision under the Terms shall not constitute a waiver of such right or provision.
 
 ## 17. Contact Information
-If you have any questions about these Terms, please contact us at: [support@senseiai.me](mailto:support@senseiai.me)
+If you have any questions about these Terms, please [contact us](https://www.senseiai.me/contact/).

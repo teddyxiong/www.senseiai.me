@@ -1,6 +1,6 @@
 ---
-meta_title: "Plans & Pricing | Linkjob AI"
-meta_description: "Check out Linkjob AI's pricing page for a comprehensive overview of our subscription plans, empowering you to find the perfect plan for you."
+meta_title: "Plans & Pricing | Sensei AI"
+meta_description: "Check out Sensei AI's pricing page for a comprehensive overview of our subscription plans, empowering you to find the perfect plan for you."
 # Pricing Section
 pricing:
   enable: true
@@ -61,7 +61,7 @@ pricing:
             logo: "/images/ailogo/grok.webp"
 
       features:
-        title: "Unlock all the features of Linkjob AI to help you land your dream job."
+        title: "Unlock all the features of Sensei AI to help you land your dream job."
         list:
          - "Real-time Interview Assistant: Unlimited"
          - "AI Mock Interview practice : Unlimited"
@@ -117,7 +117,7 @@ pricing:
 
 
       features:
-        title: "Unlock all the features of Linkjob AI to help you land your dream job."
+        title: "Unlock all the features of Sensei AI to help you land your dream job."
         list:
          - "Real-time Interview Assistant: Unlimited"
          - "AI Mock Interview practice : Unlimited"
@@ -166,7 +166,7 @@ pricing:
 
 
       features:
-        title: "Unlock all the features of Linkjob AI to help you land your dream job."
+        title: "Unlock all the features of Sensei AI to help you land your dream job."
         list:
          - "Real-time Interview Assistant: Unlimited"
          - "AI Mock Interview practice : Unlimited"
@@ -209,7 +209,7 @@ pricing:
             logo: ""
 
       features:
-        title: "Try most features of Linkjob AI for free."
+        title: "Try most features of Sensei AI for free."
         list:
           - "Real-time Interview Assistant: Free Trial"
           - "AI Mock Interview practice: Free Trial"
@@ -272,7 +272,7 @@ pricing:
 
 
       features:
-        title: "Unlock all the features of Linkjob AI to help you land your dream job."
+        title: "Unlock all the features of Sensei AI to help you land your dream job."
         list:
          - "Real-time Interview Assistant: Unlimited"
          - "AI Mock Interview practice : Unlimited"

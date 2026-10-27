@@ -96,15 +96,10 @@
 
 // Gradient Background
 .bg-gradient-primary {
-  background:
-    linear-gradient(to bottom, transparent 74%, #fff 100%),
-    radial-gradient(
-      ellipse 52% 42% at 50% 0%,
-      #c4d9f9 0%,
-      #d9e7fc 44%,
-      #e7effd 72%,
-      #edf4fe 100%
-    );
+  background-image: url("/images/indexbg-montereyblue.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .bg-index-hero {

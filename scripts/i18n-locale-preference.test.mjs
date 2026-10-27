@@ -50,7 +50,7 @@ test("locale preference persists published locales and explicit localized paths"
   assert.equal(locale.readLocalePreference(), "fr");
   assert.match(
     browser.lastWrite,
-    /^linkjob_locale=fr; Path=\/; Max-Age=31536000; SameSite=Lax; Secure$/,
+    /^Sensei_locale=fr; Path=\/; Max-Age=31536000; SameSite=Lax; Secure$/,
   );
 
   assert.equal(locale.rememberExplicitLocaleFromPath("/ja/pricing/"), true);
@@ -72,7 +72,7 @@ test("locale preference persists published locales and explicit localized paths"
 });
 
 test("locale preference rejects malformed, incorrectly cased, and unsupported values", async () => {
-  const browser = installCookieBrowser({ cookie: "linkjob_locale=zh-Hant" });
+  const browser = installCookieBrowser({ cookie: "Sensei_locale=zh-Hant" });
   const locale = await loadLocaleModule();
 
   assert.equal(locale.readLocalePreference(), null);
@@ -80,7 +80,7 @@ test("locale preference rejects malformed, incorrectly cased, and unsupported va
   assert.equal(locale.writeLocalePreference("xx"), false);
   assert.equal(browser.lastWrite, "");
 
-  installCookieBrowser({ cookie: "linkjob_locale=%E0%A4%A" });
+  installCookieBrowser({ cookie: "Sensei_locale=%E0%A4%A" });
   assert.equal(locale.readLocalePreference(), null);
 
   globalThis.document = {

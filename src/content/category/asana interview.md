@@ -5,7 +5,7 @@ slug: "asana-interview"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/c11364ed40ea4ffaa461109e2c2fe007.png"
 category: []
 date: "2025-05-29"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # Unlock Your Dream Job at Asana: 15 Interview Questions to Nail It

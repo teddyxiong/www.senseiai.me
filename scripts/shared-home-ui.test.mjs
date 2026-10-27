@@ -43,7 +43,7 @@ test("every published FAQ uses the homepage style and keeps its own content", as
     ["dist/interview-copilot/index.html", "What is an AI interview copilot"],
     [
       "dist/coding-interview-copilot/index.html",
-      "Why can Linkjob AI remain completely undetectable",
+      "Why can Sensei AI remain completely undetectable",
     ],
     ["dist/ai-mock-interview/index.html", "What is AI Mock Interview"],
   ];
@@ -63,7 +63,7 @@ test("the featured popular post renders trusted inline HTML in its title", async
 
   assert.match(
     homepage,
-    /Invisible AI Interview Assistant:<br\s*\/?>How Linkjob AI Works/,
+    /Invisible AI Interview Assistant:<br\s*\/?>How Sensei AI Works/,
   );
   assert.doesNotMatch(homepage, /Invisible AI Interview Assistant:&lt;br/);
 });
@@ -188,11 +188,10 @@ test("homepage defers non-critical scripts and live interview video bytes", asyn
 
 test("homepage preloads only the two above-the-fold font weights", async () => {
   const homepage = await readFile("dist/index.html", "utf8");
-  assert.match(
-    homepage,
-    /rel="preconnect" href="https:\/\/images\.linkjob\.ai" crossorigin/,
-  );
+  assert.doesNotMatch(homepage, /rel="preconnect" href="https:\/\/images\./);
   assert.equal((homepage.match(/rel="preload" as="font"/g) || []).length, 2);
+  assert.match(homepage, /href="\/fonts\/primary\/font-primary-regular\.woff2"/);
+  assert.match(homepage, /href="\/fonts\/secondary\/font-secondary-bold\.woff2"/);
   assert.doesNotMatch(homepage, /font-primary-normal\.woff2/);
 });
 
@@ -214,28 +213,17 @@ test("largest local homepage images stay within their transfer budgets", async (
   }
 });
 
-test("R2 assets use content versions and immutable upload metadata", async () => {
-  const [homepage, astroConfig, syncScript, packageJson] = await Promise.all([
+test("production assets stay on the site origin", async () => {
+  const [homepage, astroConfig, packageJson] = await Promise.all([
     readFile("dist/index.html", "utf8"),
     readFile("astro.config.mjs", "utf8"),
-    readFile("scripts/sync-public.mjs", "utf8"),
     readFile("package.json", "utf8"),
   ]);
 
   assert.doesNotMatch(homepage, /indexbg-gradient\.webp/);
-  assert.match(
-    homepage,
-    /https:\/\/images\.linkjob\.ai\/fonts\/primary\/font-primary-regular\.woff2\?v=[a-f0-9]{12}/,
-  );
-  assert.match(astroConfig, /createHash\("sha256"\)/);
-  assert.match(
-    syncScript,
-    /--metadata-set cache-control=public,max-age=31536000,immutable/,
-  );
-  assert.match(
-    packageJson,
-    /--metadata-set cache-control=public,max-age=31536000,immutable/,
-  );
+  assert.doesNotMatch(homepage, /https:\/\/images\.(?:senseiai\.me|linkjob\.ai)/i);
+  assert.doesNotMatch(astroConfig, /r2-asset-rewrite/);
+  assert.doesNotMatch(packageJson, /sync-public|rclone copy/);
 });
 
 test("the production build keeps dual-device layers on the site origin", async () => {
@@ -248,7 +236,10 @@ test("the production build keeps dual-device layers on the site origin", async (
     );
     assert.doesNotMatch(
       homepage,
-      new RegExp(`images\\.linkjob\\.ai/images/dual-device/${file}\\.webp`),
+      new RegExp(
+        `images\\.(?:senseiai\\.me|linkjob\\.ai)/images/dual-device/${file}\\.webp`,
+        "i",
+      ),
     );
   }
 
@@ -257,10 +248,8 @@ test("the production build keeps dual-device layers on the site origin", async (
     /\/images\/dual-device\/(?:highlight1|highlight2|question)\.webp/,
   );
 
-  assert.match(
-    homepage,
-    /https:\/\/images\.linkjob\.ai\/images\/liveinterview\/background\.webp\?v=/,
-  );
+  assert.match(homepage, /\/images\/liveinterview\/background\.webp/);
+  assert.doesNotMatch(homepage, /https:\/\/images\./);
 });
 
 test("homepage components do not retain superseded demo and RSS styles", async () => {
@@ -319,6 +308,33 @@ test("the navbar renders the correct breakpoint layout on the first paint", asyn
     /@media\(min-width:1344px\)[^{]*\{[\s\S]*?\.navbar[^,{]* \.navbar-nav[^,{]*\{[^}]*position:absolute;[^}]*left:50%;[^}]*transform:translate\(-50%\)/,
   );
   assert.match(stylesheets.join("\n"), /@media\(max-width:1343px\)/);
+});
+
+test("the header hides locale, account, and download controls", async () => {
+  const homepage = await readFile("dist/index.html", "utf8");
+
+  assert.doesNotMatch(homepage, /Language Package/);
+  assert.doesNotMatch(homepage, /js-locale-switch-link/);
+  assert.doesNotMatch(homepage, /account-nav-mobile/);
+  assert.doesNotMatch(homepage, />Download Now</);
+});
+
+test("the homepage shows the Linkjob migration banner directly below the header", async () => {
+  const homepage = await readFile("dist/index.html", "utf8");
+  const headerEnd = homepage.indexOf("</header>");
+  const bannerStart = homepage.indexOf("<aside data-home-migration-banner");
+  const heroStart = homepage.indexOf('class="home-hero');
+
+  assert.ok(headerEnd >= 0 && headerEnd < bannerStart);
+  assert.ok(bannerStart < heroStart);
+  assert.match(
+    homepage,
+    /<p[^>]*class="[^"]*font-secondary[^"]*"[^>]*>\s*🚀 We(?:'|&apos;|&#39;)ve Moved to Linkjob AI!\s*<\/p>/,
+  );
+  assert.match(homepage, /Sensei AI has officially moved to <strong[^>]*>Linkjob AI<\/strong>/);
+  assert.match(homepage, /background-color:\s*#1d40b0/);
+  assert.match(homepage, /href="https:\/\/www\.linkjob\.ai\/"/);
+  assert.match(homepage, />\s*Go to Linkjob AI →\s*<\/a>/);
 });
 
 test("homepage headings and account controls reserve stable geometry", async () => {

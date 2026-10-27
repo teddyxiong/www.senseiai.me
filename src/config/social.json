@@ -1,30 +1,9 @@
 {
   "main": [
     {
-      "name": "instagram",
-      "icon": "FaInstagram",
-      "link": "https://www.instagram.com/senseiai.me/"
-    },
-    {
-      "name": "tiktok",
-      "icon": "FaTiktok",
-      "link": "https://www.tiktok.com/@senseiai.me"
-    },
-    {
-      "name": "whatsapp",
-      "icon": "FaWhatsapp",
-      "link": "https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t"
-    },
-    {
       "name": "Discord",
       "icon": "FaDiscord",
-      "link": "https://discord.gg/PfrcRpt7Sv"
-    },
-    {
-      "name": "twitter",
-      "icon": "FaTwitter",
-      "link": "https://x.com/HirelyLiu"
-    }
-    
+      "link": "https://discord.com/invite/BnAksURmTY"
+    }    
   ]
 }

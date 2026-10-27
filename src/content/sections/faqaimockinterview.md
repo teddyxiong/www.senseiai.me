@@ -1,6 +1,6 @@
 ---
 title: "Frequently Asked Questions About AI Mock Interviews"
-description: "If you have any further questions, join our **[<u>Discord community</u>](https://discord.com/invite/PfrcRpt7Sv)** or **[<u>WhatsApp group</u>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t)** to ask us."
+description: "If you have any further questions, join our **[<u>Discord community</u>](https://discord.com/invite/BnAksURmTY)** or **[<u>WhatsApp group</u>](https://chat.whatsapp.com/B9fy6LKF1UsLZYIn5N7M87?mode=gi_t)** to ask us."
 meta_title: "FAQ - AI Mock Interview"
 accordion:
   enable: true
@@ -11,7 +11,7 @@ accordion:
     - accordion_header: "2. Is there a free AI platform for mock interviews?"
       accordion_content: "Yes! Our free AI mock interview platform includes basic practice sessions, allowing you to experience realistic interview simulations before exploring additional features."
       
-    - accordion_header: "3. Can I use Linkjob AI for mock interviews in specific fields?"
+    - accordion_header: "3. Can I use Sensei AI for mock interviews in specific fields?"
       accordion_content: "Absolutely. Whether you're preparing for a technical role, a healthcare position, or another profession, our AI mock interview adapts questions and feedback to match your target field."
       
     - accordion_header: "4. How do AI-powered mock interview tools differ?"

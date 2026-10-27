@@ -1,13 +1,13 @@
 ---
 enable: true
 title: "<span style=\"color:#6366F1;\">Real User Success</span>: What Users Say About Our AI  Interview Copilot"
-description: "From first-time job seekers to career switchers and tech pros, real users are securing real offers with Linkjob AI"
+description: "From first-time job seekers to career switchers and tech pros, real users are securing real offers with Sensei AI"
 
 testimonials:
   - name: "Elijah W"
     designation: "Join xAI "
     avatar: "/images/avatar1.png"
-    content: "I learned about this AI interview assistant tool through an article on xAI CodeSignal from Linkjob AI. After downloading it, I asked a friend to help me test it out, and I was really surprised when I saw that it was indeed completely stealthy. Anyway, job interviews are a competition, and winning is more important than anything else."
+    content: "I learned about this AI interview assistant tool through an article on xAI CodeSignal from Sensei AI. After downloading it, I asked a friend to help me test it out, and I was really surprised when I saw that it was indeed completely stealthy. Anyway, job interviews are a competition, and winning is more important than anything else."
 
   - name: "I. Rossi"
     designation: "Join Goldman Sachs "
@@ -17,7 +17,7 @@ testimonials:
   - name: "Arjun M."
     designation: "Join Amazon as a SDE"
     avatar: "/images/avatar3.png"
-    content: "This time interviewing with Amazon, I finally got the SDE2, which is L5, offer. The salary is also very satisfactory, nothing much to say, Linkjob AI is definitely the best AI interview assistant."
+    content: "This time interviewing with Amazon, I finally got the SDE2, which is L5, offer. The salary is also very satisfactory, nothing much to say, Sensei AI is definitely the best AI interview assistant."
 
   - name: "Nia H."
     designation: "Join Google "
@@ -29,14 +29,14 @@ videoTestimonials:
     videoMp4: "/videos/testimonials/01.mp4"
     poster: "/videos/testimonials/01-poster.webp"
     jobTitle: "DATA ANALYST"
-    quote: "“Linkjob AI prompted me to clarify the situation first”"
+    quote: "“Sensei AI prompted me to clarify the situation first”"
     ariaLabel: "Play video testimonial 1"
 
   - videoWebm: "/videos/testimonials/02.webm"
     videoMp4: "/videos/testimonials/02.mp4"
     poster: "/videos/testimonials/02-poster.webp"
     jobTitle: "BUSINESS ANALYST"
-    quote: "“Linkjob AI helped me think about more specific things”"
+    quote: "“Sensei AI helped me think about more specific things”"
     ariaLabel: "Play video testimonial 2"
 
   - videoWebm: "/videos/testimonials/03.webm"
@@ -85,7 +85,7 @@ videoTestimonials:
     videoMp4: "/videos/testimonials/09.mp4"
     poster: "/videos/testimonials/09-poster.webp"
     jobTitle: "SOFTWARE ENGINEER"
-    quote: "“Linkjob AI helped me to capture the coding question”"
+    quote: "“Sensei AI helped me to capture the coding question”"
     ariaLabel: "Play video testimonial 9"
 
   - videoWebm: "/videos/testimonials/10.webm"

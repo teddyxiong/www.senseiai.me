@@ -5,7 +5,7 @@ slug: "bytedance-interview"
 featured_image: "https://static.quickcreator.io/static/aaajw3c2xescdfxu/image/86f5336031f24e0ea16f9c8313650822.jpg"
 category: []
 date: "2025-05-30"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # ByteDance Interview Secrets: 15 Must-Know Questions They Always Ask

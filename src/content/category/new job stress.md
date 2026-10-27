@@ -5,7 +5,7 @@ slug: "new-job-stress"
 featured_image: "https://statics.mylandingpages.co/static/aaanxdmf26c522mpaaajw3c2xescdfxu/image/60ebbfe924724128905f849eee1a62b5.png"
 category: []
 date: "2025-06-03"
-author: "Linkjob"
+author: "Sensei"
 ---
 
 # Simple Steps to Conquer New Job Anxiety Today
@@ -89,7 +89,7 @@ Here’s what worked for me:
 *   **Plan your commute**: Knowing how long it takes to get to work can reduce last-minute stress.
     
 
-I also practiced introducing myself and answering common questions about my background. Tools like Linkjob helped me refine my responses through [AI-powered mock interviews](https://www.senseiai.me/blog/how-ai-can-help-you-ace-job-interviews). It simulated realistic scenarios, provided instant feedback, and helped me feel more fluent and prepared.
+I also practiced introducing myself and answering common questions about my background. Tools like Sensei helped me refine my responses through [AI-powered mock interviews](https://www.senseiai.me/blog/how-ai-can-help-you-ace-job-interviews). It simulated realistic scenarios, provided instant feedback, and helped me feel more fluent and prepared.
 
 > **Tip:** If you’re nervous about meeting new colleagues, rehearse a few icebreaker questions. Something simple like, “What’s your favorite part of working here?” can spark a great conversation.
 

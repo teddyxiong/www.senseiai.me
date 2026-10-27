@@ -59,9 +59,9 @@ rclone 同步改为交互式：`predev` / `prebuild` 通过 `node scripts/sync-p
 
 | 语言目录 | `ASTRO_BASE` |
 |---|---|
-| `linkjobai_es` | `/es` |
-| `linkjobai_en` | `/en` |
-| `linkjobai_ja` | `/ja` |
+| `Senseiai_es` | `/es` |
+| `Senseiai_en` | `/en` |
+| `Senseiai_ja` | `/ja` |
 | ... | `/{locale}` |
 
 ```

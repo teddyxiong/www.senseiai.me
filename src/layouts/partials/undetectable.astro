@@ -48,11 +48,6 @@ const items = itemEntries
 const cardBackground = undetectable?.background?.[0]?.image;
 
 const rawTitle = undetectable?.title || "";
-const titleFirstLine = rawTitle
-  .replace(/Technical Interviews/gi, "")
-  .trim()
-  .replace(/\s+$/, "");
-const titleSecondLine = "Technical Interviews";
 const imageDimensions: Record<string, [number, number]> = {
   "/images/undetectable/screensharingproof.webp": [952, 700],
   "/images/undetectable/dock2.webp": [990, 427],
@@ -75,19 +70,13 @@ const imageDimensions: Record<string, [number, number]> = {
           >
             <h2
               class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
-              style="max-width: 600px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
-            >
-              <span set:html={markdownify(titleFirstLine || rawTitle)} />
-              {" "}
-              <span
-                class="text-[#58ACF2]"
-                set:html={markdownify(titleSecondLine)}
-              />
-            </h2>
+              style="max-width: 700px; font-family: Asul, serif; font-weight: 700; line-height: 1.2;"
+              set:html={markdownify(rawTitle)}
+            />
 
             <p
               class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
-              style="max-width: 600px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
+              style="max-width: 1100px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35;"
               set:html={markdownify(undetectable.description || "")}
             />
 
@@ -105,7 +94,7 @@ const imageDimensions: Record<string, [number, number]> = {
                     <!-- lynccontainer -->
                     <img
                       src={undetectable.base_image}
-                      alt="Coding interview screen without Linkjob AI overlay"
+                      alt="Coding interview screen without Sensei AI overlay"
                       class="absolute inset-0 block h-full w-full object-cover pointer-events-none"
                       loading="lazy"
                       decoding="async"
@@ -122,7 +111,7 @@ const imageDimensions: Record<string, [number, number]> = {
                     >
                       <img
                         src={undetectable.overlay_image}
-                        alt="Linkjob AI overlay visible only to you"
+                        alt="Sensei AI overlay visible only to you"
                         class="absolute left-0 top-0 block h-full max-w-none object-cover pointer-events-none"
                         style="width: var(--compare-width, 100%);"
                         loading="lazy"
@@ -227,12 +216,12 @@ const imageDimensions: Record<string, [number, number]> = {
               <div class="undetectable-demo-heading mx-auto mb-[47px] max-sm:mb-9">
                 <h3
                   class="mb-6 mx-auto text-center text-[30px] md:text-[35px] lg:text-[40px] text-dark"
-                  style="max-width: 1000px; font-family: Asul, serif; font-weight: 700; line-height: 1.2; color: #f5f5f5;"
+                  style="max-width: 1200px; font-family: Asul, serif; font-weight: 700; line-height: 1.2; color: #f5f5f5;"
                   set:html={markdownify(demoHeader?.title || "")}
                 />
                 <p
                   class="mb-0 mx-auto text-[15px] md:text-[18px] lg:text-[20px] text-center aos-init aos-animate text-dark"
-                  style="max-width: 600px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35; color: #a1a1aa;"
+                  style="max-width: 750px; font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.35; color: #a1a1aa;"
                   set:html={markdownify(demoHeader?.description || "")}
                 />
               </div>
@@ -348,7 +337,7 @@ const imageDimensions: Record<string, [number, number]> = {
                                 >
                                   <img
                                     src={undetectable.base_image}
-                                    alt="Coding interview screen without Linkjob AI overlay"
+                                    alt="Coding interview screen without Sensei AI overlay"
                                     class="absolute inset-0 block h-full w-full object-cover pointer-events-none"
                                     loading="lazy"
                                     decoding="async"
@@ -363,7 +352,7 @@ const imageDimensions: Record<string, [number, number]> = {
                                   >
                                     <img
                                       src={undetectable.overlay_image}
-                                      alt="Linkjob AI overlay visible only to you"
+                                      alt="Sensei AI overlay visible only to you"
                                       class="absolute left-0 top-0 block h-full max-w-none object-cover pointer-events-none"
                                       style="width: var(--compare-width, 100%);"
                                       loading="lazy"
@@ -554,7 +543,7 @@ const imageDimensions: Record<string, [number, number]> = {
   }
 
   .undetectable-demo-heading {
-    width: min(987px, 100%);
+    width: min(1200px, 100%);
     text-align: center;
   }
 

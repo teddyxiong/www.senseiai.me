@@ -1,15 +1,15 @@
 ---
 title: "Checkout"
-meta_title: "Checkout | Linkjob AI"
+meta_title: "Checkout | Sensei AI"
 description: "Almost There — Just One Step Left"
 ui_text:
   choose_plan_title: "We are here to help you succeed"
-  choose_plan_desc: "Unlock all the features of Linkjob AI to help you land your dream job."
+  choose_plan_desc: "Unlock all the features of Sensei AI to help you land your dream job."
   choose_plan_meta: "Choose a plan to continue checkout."
   subscription_title: "Subscription"
   one_time_title: "One-time payment"
   missing_payment_message: "Payment methods are unavailable. Please contact us."
-  contact_html: "Contact us at support@senseiai.me or join our <a href=\"https://discord.com/invite/PfrcRpt7Sv\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#2563eb;\">community</a>."
+  contact_html: "Contact us at support@senseiai.me or join our <a href=\"https://discord.com/invite/BnAksURmTY\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#2563eb;\">community</a>."
   choose_method_title: "Please choose a payment method"
   choose_method_desc: "Select one payment provider to continue."
   choose_method_status: "Please choose a payment method below."

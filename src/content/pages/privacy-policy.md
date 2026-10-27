@@ -1,11 +1,11 @@
 ---
 title: "Privacy policy"
-meta_title: "Privacy policy of Linkjob AI"
-description: "Privacy policy for Linkjob  AI, the AI-powered interview assistant. Learn how we collect, use, and protect your data."
+meta_title: "Privacy policy of Sensei AI"
+description: "Privacy policy for Sensei  AI, the AI-powered interview assistant. Learn how we collect, use, and protect your data."
 draft: false
 ---
 
-Thank you for choosing Linkjob  AI's products and services ("Service")！This Privacy Policy (“Privacy Policy”) explains how Linkjob  AI ("we", "us", "our") collects, uses, store, shares, and protects user ("you", "your") Personal Information when you visit and interact with our website, services, and software. This privacy policy is closely associated with your use of our services. We strongly recommend that you read and thoroughly understand the entirety of this privacy policy. By using our Services, you agree to the processing of your information in accordance with this Privacy Policy.
+Thank you for choosing Sensei  AI's products and services ("Service")！This Privacy Policy (“Privacy Policy”) explains how Sensei  AI ("we", "us", "our") collects, uses, store, shares, and protects user ("you", "your") Personal Information when you visit and interact with our website, services, and software. This privacy policy is closely associated with your use of our services. We strongly recommend that you read and thoroughly understand the entirety of this privacy policy. By using our Services, you agree to the processing of your information in accordance with this Privacy Policy.
 “Personal Information” means information that identifies, relates to, describes, is reasonably capable of being associated with, or could reasonably be linked, directly or indirectly, with a particular consumer or household.
 
 ## Acceptance of Terms
@@ -63,12 +63,12 @@ We may disclose and/or transfer Personal Information as part of any actual or co
 
 
 ## Cookies
-Cookies can be used to recognize you when you visit Linkjob, remember your preferences, and give you a personalized experience that’s in line with your settings. Cookies also make your interactions with Linkjob faster and more secure. Additionally, cookies allow us to bring you advertising both on and off the Linkjob sites, and bring customized features to you through Linkjob plugins such as our “Share” button.
+Cookies can be used to recognize you when you visit Sensei, remember your preferences, and give you a personalized experience that’s in line with your settings. Cookies also make your interactions with Sensei faster and more secure. Additionally, cookies allow us to bring you advertising both on and off the Sensei sites, and bring customized features to you through Sensei plugins such as our “Share” button.
 When you use this service, we may employ relevant technologies to send one or more cookies or anonymous identifiers to your device in order to collect, identify, and store information about your access to and use of the service. We are committed to not using cookies for any purposes other than those described in this privacy policy.
 
 1. Authentication
 
-If you’re signed in to Linkjob, cookies help us show you the right information and personalize your experience.
+If you’re signed in to Sensei, cookies help us show you the right information and personalize your experience.
 
 2. Security
 
@@ -76,7 +76,7 @@ We use cookies to enable and support our security features, and to help us detec
 
 3. Preferences, features and services
 
-Cookies can tell us which language you prefer and what your communications preferences are. They can help you fill out forms on Linkjob more easily. They also provide you with features, insights, and customized content in conjunction with our plugins. You can learn more about plugins in our Privacy Policy.
+Cookies can tell us which language you prefer and what your communications preferences are. They can help you fill out forms on Sensei more easily. They also provide you with features, insights, and customized content in conjunction with our plugins. You can learn more about plugins in our Privacy Policy.
 
 4. Advertising
 
@@ -101,4 +101,4 @@ If you are a resident of Nevada, you have the right to opt-out of the sale of ce
 In order to provide you with better services, we may update, revise and modify this Privacy Policy from time to time as necessary. These changes shall form an integral part of this privacy policy and hold the same legal effect as this privacy policy. If we make changes, we will notify you by revising the date at the top of the policy and, in some cases, we may provide you with additional notice so that are kept up to date with the latest version of this Privacy Policy. If you choose to continue using our services, you agree to be bound by the updated privacy policy.
 
 ## Contacting us
-If you have any questions about this Privacy Policy, please [contact us](https://www.senseiai.me/contact/) or send us by e-mail: [support@senseiai.me](mailto:support@senseiai.me)
+If you have any questions about this Privacy Policy, please [contact us](https://www.senseiai.me/contact/).

@@ -1,14 +1,14 @@
 ---
 enable: true
 title: "Real-Time AI Interview Copilot for Job Seekers: Accurate Live Answers & Instant Interview Feedback"
-meta_title: "Best Real-Time AI Interview Copilot & Assistant | Linkjob AI"
+meta_title: "Best Real-Time AI Interview Copilot & Assistant | Sensei AI"
 meta_description: "Best real-time AI interview copilot and invisible teleprompter for job seekers. Get live AI answers during interviews powered by latest AI models. Start your free trial."
-description: "Get real-time AI help during job interviews with Linkjob AI. Receive instant, personalized answers for behavioral, technical, and coding interviews. Free to try."
+description: "Get real-time AI help during job interviews with Sensei AI. Receive instant, personalized answers for behavioral, technical, and coding interviews. Free to try."
 image: "/images/feature-2.png"
 # banner
 banner:
   title: "Real-Time **AI Interview Copilot** for Smarter Job Interview Support"
-  content: "Linkjob AI is an [AI interview assistant](/) that helps you answer questions and work through coding problems in real time."
+  content: "Sensei AI is an [AI interview assistant](/) that helps you answer questions and work through coding problems in real time."
   badge: "Built for behavioral, technical, and coding interviews."
   button:
     enable: true
@@ -43,7 +43,7 @@ challenges_section:
 # platform
 platform:
   title: "Tested Daily Across Popular Interview and Meeting Platforms"
-  description: "Daily testing and real-world compatibility checks ensure Linkjob AI works smoothly across popular technical interview and meeting platforms, including Zoom, HackerRank, CodeSignal, CoderPad, Amazon Chime, Microsoft Teams, and more."
+  description: "Daily testing and real-world compatibility checks ensure Sensei AI works smoothly across popular technical interview and meeting platforms, including Zoom, HackerRank, CodeSignal, CoderPad, Amazon Chime, Microsoft Teams, and more."
 
 # explore_section
 explore_section:
@@ -67,7 +67,7 @@ explore_section:
         - Real-time AI assistance during interviews.
 
     - title: "Customizable AI Interview Copilot for Tailored, High-Quality Answers"
-      description: "After uploading your resume, Linkjob AI optimizes responses based on your skills and experience, matching them to job requirements and highlighting your unique strengths to position you as a top contender. Powered by the latest AI models for superior quality, it also allows personalized settings inputs to refine suggestions for even more precise, tailored guidance.Once you upload your profile, the interview copilot optimizes responses by matching your resume to the job requirements. Powered by the latest AI models for superior quality and accuracy, it allows you to customize prompts to refine suggestions—whether you need to adjust answer length, format responses as bullet points or the STAR method, or enable syntax highlighting for coding questions. These personalized settings ensure every suggestion is refined for your specific interview style."
+      description: "After uploading your resume, Sensei AI optimizes responses based on your skills and experience, matching them to job requirements and highlighting your unique strengths to position you as a top contender. Powered by the latest AI models for superior quality, it also allows personalized settings inputs to refine suggestions for even more precise, tailored guidance.Once you upload your profile, the interview copilot optimizes responses by matching your resume to the job requirements. Powered by the latest AI models for superior quality and accuracy, it allows you to customize prompts to refine suggestions—whether you need to adjust answer length, format responses as bullet points or the STAR method, or enable syntax highlighting for coding questions. These personalized settings ensure every suggestion is refined for your specific interview style."
       image: "/images/coding2.png"
       lists:
         - Context-aware intelligent answers.
@@ -84,16 +84,16 @@ inbound_solution:
     link: "https://www.senseiai.me/downloads/"
   solutions:
     - title: "Universal Interview Types"
-      description: Linkjob AI helps across behavioral, technical, coding, system design, and case-style interviews. It adapts to different question formats and provides structured guidance for each stage of the interview process.
+      description: Sensei AI helps across behavioral, technical, coding, system design, and case-style interviews. It adapts to different question formats and provides structured guidance for each stage of the interview process.
       icon: FaArrowsUpDownLeftRight
     - title: "Advanced AI Models Capabilities"
-      description: Powered by advanced AI models including GPT-5.6, Claude Opus 5, Gemini 3.5, Grok 4.6, and other leading systems, Linkjob AI helps you generate clearer, more relevant interview guidance tailored to different scenarios.
+      description: Powered by advanced AI models including GPT-5.6, Claude Opus 5, Gemini 3.5, Grok 4.6, and other leading systems, Sensei AI helps you generate clearer, more relevant interview guidance tailored to different scenarios.
       icon: FaBrain
     - title: "Cross-Industry Interview Coverage"
-      description: Linkjob AI supports interview preparation and live guidance across technology, finance, consulting, product, and other professional fields. It helps users navigate industry-specific topics with more relevant context and structured support.
+      description: Sensei AI supports interview preparation and live guidance across technology, finance, consulting, product, and other professional fields. It helps users navigate industry-specific topics with more relevant context and structured support.
       icon: FaScaleUnbalancedFlip
     - title: "Global Language Support"
-      description: Supporting 29+ languages including English, Chinese, and Spanish, Linkjob AI helps users communicate more clearly in multilingual interview settings with fast and reliable language support.
+      description: Supporting 29+ languages including English, Chinese, and Spanish, Sensei AI helps users communicate more clearly in multilingual interview settings with fast and reliable language support.
       icon: FaPersonRays
 
 # tools
@@ -144,8 +144,8 @@ tools_section:
       logo: /images/logo/zeplin.png
 
 nav_buttons:
-  - label: "Watch Linkjob AI Interview Copilot in Action"
+  - label: "Watch Sensei AI Interview Copilot in Action"
     link: "https://www.youtube.com/embed/tEF3DXagKgQ?si=3k5-nqQKZjHc7ZZV&rel=0&modestbranding=1&playsinline=1"
-  - label: "Watch Linkjob AI Coding Interview Assistant in Action"
+  - label: "Watch Sensei AI Coding Interview Assistant in Action"
     link: "https://www.youtube.com/embed/KX75MMEwQ7A?si=4oTkf2VAYTR9Ja8V&rel=0&modestbranding=1&playsinline=1"
 ---

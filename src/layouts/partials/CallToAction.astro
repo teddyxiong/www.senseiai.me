@@ -58,9 +58,10 @@ const secondaryButton =
               <div class="w-full md:flex-1 md:flex md:flex-col">
                 <h2
                   class="pb-5 mb-8 text-center text-dark md:text-left"
+                  style="max-width: 500px;"
                   set:html={markdownify(CTA.title)}
                 />
-                <div class="flex w-full justify-start md:self-center">
+                {/* <div class="flex w-full justify-start md:self-center">
                   <div class="home-hero download-buttons">
                     <a
                       href={primaryButton.link}
@@ -93,7 +94,7 @@ const secondaryButton =
                       />
                     </a>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div

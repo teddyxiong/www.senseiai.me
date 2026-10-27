@@ -7,7 +7,7 @@ header:
 
 hero_card:
   title: "Real-Time Interview Guidance"
-  description: "Linkjob AI understands interview questions as they happen and provides clear, structured guidance to help you organize your response."
+  description: "Sensei AI understands interview questions as they happen and provides clear, structured guidance to help you organize your response."
   video:
     src: "https://www.youtube.com/embed/tEF3DXagKgQ?si=3k5-nqQKZjHc7ZZV&rel=0&modestbranding=1&playsinline=1"
     title: "Interview Copilot Demo"
@@ -40,7 +40,7 @@ cards:
 
   platform:
     title: "Works Across Interview Platforms"
-    description: "Use Linkjob AI alongside major meeting and interview platforms including Zoom, Google Meet, Microsoft Teams, and more."
+    description: "Use Sensei AI alongside major meeting and interview platforms including Zoom, Google Meet, Microsoft Teams, and more."
 
   interview_types:
     title: "Ready for Different Interview Types"

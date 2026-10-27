@@ -1,19 +1,18 @@
 {
   "site": {
-    "title": "AI Interview Assistant: Real-Time, Invisible, Coding Help｜Linkjob AI",
+    "title": "Sensei AI Copilot | Real-Time AI Interview Assistant",
     "base_url": "https://www.senseiai.me/",
-    "asset_base_url": "https://images.senseiai.me",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/favicon.ico",
     "logo": "/images/logo.png",
     "logo_darkmode": "/images/logo-darkmode.png",
     "logo_width": "155",
-    "logo_height": "65",
+    "logo_height": "60",
     "logo_text": "Interview Assistant",
     "promo_code": "job20",
     "banner_enable": false,
-    "banner_title": "Linkjob coupon code,Linkjob promo_code",
+    "banner_title": "Sensei coupon code,Sensei promo_code",
     "banner_img": "/images/top.png",
     "banner_bgimg": "/images/topbg.png",
     "banner_ad_url": "https://www.senseiai.me/pricing/"
@@ -29,7 +28,7 @@
 
   "params": {
     "contact_form_action": "https://www.senseiai.me/",
-    "copyright": "&copy; All Rights Belong to  [Linkjob AI](https://www.senseiai.me/)",
+    "copyright": "&copy; All Rights Belong to  [Sensei AI](https://www.senseiai.me/)",
     "phone": "(307) 998-9464",
     "email": "support@senseiai.me",
     "address": " 30N Gould St Ste R Sheridan, WY 82801"
@@ -43,13 +42,13 @@
 
   "disqus": {
     "enable": true,
-    "shortname": "Linkjob",
+    "shortname": "Sensei",
     "settings": {}
   },
 
   "metadata": {
-    "meta_author": "LinkjobAI",
+    "meta_author": "SenseiAI",
     "meta_image": "images/og-image.png",
-    "meta_description": "The best AI tool for real-time interviews and coding tests—100% invisible. Get stealthy, live help for job and technical interviews."
+    "meta_description": "Sensei AI Copilot offers real-time interview answers, coding support, personalized guidance and private phone viewing. Download the app and try it free."
   }
 }

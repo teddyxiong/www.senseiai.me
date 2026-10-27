@@ -2,8 +2,8 @@
 title: "Most popular posts"
 featured_post:
   image: "/images/popularposts/post1.webp"
-  title: "Invisible AI Interview Assistant:<br />How Linkjob AI Works"
-  description: "Discover how Linkjob AI works as an invisible AI interview assistant in 2026. Learn about browser sandboxes, screen stealth, and click-through technology."
+  title: "Invisible AI Interview Assistant:<br />How Sensei AI Works"
+  description: "Discover how Sensei AI works as an invisible AI interview assistant in 2026. Learn about browser sandboxes, screen stealth, and click-through technology."
   link: "https://www.senseiai.me/hub/invisible-ai-interview-assistant/"
 
 posts:
@@ -18,7 +18,7 @@ posts:
     image: "/images/popularposts/post3.webp"
 
   - title: "Fuck LeetCode with Invisible AI Coding Interview Copilot | senseiai.me"
-    description: "Tired of LeetCode problems? Check how Linkjob AI helps you fuck LeetCode with an invisible AI coding copilot, real-time answers, and its mock interview helper."
+    description: "Tired of LeetCode problems? Check how Sensei AI helps you fuck LeetCode with an invisible AI coding copilot, real-time answers, and its mock interview helper."
     link: "https://www.senseiai.me/hub/fuck-leetcode/"
     image: "/images/popularposts/post4.webp"
 

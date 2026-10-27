@@ -78,12 +78,15 @@ const showLocalePackageNav =
           </ul>
           <!-- account nav -->
           <div class="order-0 ml-auto shrink-0">
-            <AccountNav
-              client:idle
-              transition:name="account-nav-payment-success"
-              transition:persist
-              menuConfig={accountMenuConfig}
-            />
+            {/* Temporarily hidden: account login */}
+            {false && (
+              <AccountNav
+                client:idle
+                transition:name="account-nav-payment-success"
+                transition:persist
+                menuConfig={accountMenuConfig}
+              />
+            )}
           </div>
         </nav>
       ) : (
@@ -94,7 +97,8 @@ const showLocalePackageNav =
           </div>
 
         <div class="mobile-header-actions order-1 ml-auto flex items-center gap-2">
-          {showLocalePackageNav && (
+          {/* Temporarily hidden: language switcher */}
+          {false && showLocalePackageNav && (
             <div class="mobile-header-locale group relative locale-system-font">
               <button
                 type="button"
@@ -137,12 +141,15 @@ const showLocalePackageNav =
             </div>
           )}
 
-          <AccountNav
-            client:idle
-            transition:name="account-nav-mobile"
-            transition:persist
-            menuConfig={accountMenuConfig}
-          />
+          {/* Temporarily hidden: account login */}
+          {false && (
+            <AccountNav
+              client:idle
+              transition:name="account-nav-mobile"
+              transition:persist
+              menuConfig={accountMenuConfig}
+            />
+          )}
 
           <!-- navbar toggler -->
           <button
@@ -256,7 +263,8 @@ const showLocalePackageNav =
             ))
           }
           {
-            navigation_button.enable && (
+            /* Temporarily hidden: Download Now */
+            false && navigation_button.enable && (
               <li class="mobile-menu-cta">
                 <a class="btn btn-header-primary w-full" href={navigation_button.link}>
                   {navigation_button.label}
@@ -268,7 +276,8 @@ const showLocalePackageNav =
 
         <div class="desktop-header-actions order-1 ml-auto hidden shrink-0 items-center gap-3">
           {
-            showLocalePackageNav && (
+            /* Temporarily hidden: language switcher */
+            false && showLocalePackageNav && (
               <div class="group relative locale-system-font">
                 <button
                   type="button"
@@ -311,13 +320,14 @@ const showLocalePackageNav =
               </div>
             )
           }
-          <AccountNav
+          {/* <AccountNav
             client:idle
             transition:name="account-nav-desktop"
             transition:persist
             menuConfig={accountMenuConfig}
-          />
-          {navigation_button.enable && (
+          /> */}
+          {/* Temporarily hidden: Download Now */}
+          {false && navigation_button.enable && (
             <a class="btn btn-header-primary" href={navigation_button.link}>
               {navigation_button.label}
             </a>
@@ -340,8 +350,7 @@ const showLocalePackageNav =
     const { signal } = w.__headerAbortController;
 
     const header = document.querySelector(".header") as HTMLElement | null;
-    const navbar = header?.querySelector(".navbar") as HTMLElement | null;
-    const compactLayout = window.matchMedia("(max-width: 1343px)");
+    const compactLayout = window.matchMedia("(max-width: 767px)");
     const navbarToggler = document.querySelector(
       ".navbar-toggler"
     ) as HTMLButtonElement | null;
@@ -378,7 +387,7 @@ const showLocalePackageNav =
       if (!compactLayout.matches) {
         setMenuOpen(false);
         navbarMenu?.style.removeProperty("--mobile-nav-top");
-      } else if (navbarMenu.classList.contains("active")) {
+      } else if (navbarMenu?.classList.contains("active")) {
         setMobileMenuTop();
       }
     };
@@ -553,12 +562,12 @@ const showLocalePackageNav =
           const currentElement = e.currentTarget as HTMLElement;
           const targetUrl = currentElement.getAttribute("data-url");
           const promoCode =
-            currentElement.getAttribute("data-code") || "LINKJOB20";
+            currentElement.getAttribute("data-code") || "Sensei20";
 
           copyToClipboard(promoCode).then((success) => {
             const message = success
-              ? `The discount code "${promoCode}"  has been copied！\nYou can apply it to any membership plan.\n\nClick "OK" to upgrade to LinkJob AI Membership `
-              : `Please manually copy the promo code: ${promoCode}\n\nClick "OK" to upgrade to LinkJob AI Membership`;
+              ? `The discount code "${promoCode}"  has been copied！\nYou can apply it to any membership plan.\n\nClick "OK" to upgrade to Sensei AI Membership `
+              : `Please manually copy the promo code: ${promoCode}\n\nClick "OK" to upgrade to Sensei AI Membership`;
 
             if (confirm(message)) {
               if (targetUrl) window.open(targetUrl, "_blank");
@@ -583,7 +592,7 @@ const showLocalePackageNav =
     overscroll-behavior: none;
   }
 
-  @media (min-width: 1344px) {
+  @media (min-width: 768px) {
     .navbar .mobile-header-actions {
       display: none;
     }
@@ -610,7 +619,7 @@ const showLocalePackageNav =
     }
   }
 
-  @media (max-width: 1343px) {
+  @media (max-width: 767px) {
     .navbar {
     .navbar-toggler {
       z-index: 70;

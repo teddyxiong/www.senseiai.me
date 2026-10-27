@@ -2,7 +2,7 @@
 enable: true
 title: "AI Coding Interview Copilot: Undetectable, Invisible, Real-Time AI Assistant for Technical Interviews"
 description: "Best invisible AI coding interview copilot for technical interviews. Get undetectable real-time AI help that bypasses detection. Start your free trial."
-meta_title: "Best AI Coding Interview Copilot for Technical Interviews | Linkjob AI"
+meta_title: "Best AI Coding Interview Copilot for Technical Interviews | Sensei AI"
 meta_description: "Coding Interview Copilot: Your Invisible AI Assistant for Technical Interviews, providing real-time problem-solving logic, precise debugging suggestions, and line-by-line code explanations. 100% Invisible! "
 image: "/images/feature-2.png"
 # challenges_section
@@ -11,13 +11,13 @@ challenges_section:
   description: "Our AI Coding Interview Copilot runs as a native desktop app, operating outside the browser sandbox while seamlessly supporting online assessment platforms, collaborative coding environments, and video conferencing software. It delivers undetectable, real-time AI assistance during technical interviews, remaining invisible to screen sharing, session recording, and proctoring tools."
   challenges:
     - title: "Screen Sharing"
-      description: "Linkjob AI remains completely undetectable during screen sharing, making it perfect for online assessments and technical interviews."
+      description: "Sensei AI remains completely undetectable during screen sharing, making it perfect for online assessments and technical interviews."
       icon: "FaPenRuler"
     - title: "Active Tab Detection"
       description: "A standalone desktop application, specially optimized to bypass active tab detection completely."
       icon: "FaPeopleRobbery"
     - title: "Cursor Tracking"
-      description: "Linkjob AI bypasses cursor tracking via invisible cursor and undetectable global hotkeys."
+      description: "Sensei AI bypasses cursor tracking via invisible cursor and undetectable global hotkeys."
       icon: "FaScrewdriverWrench"
     - title: "Webcam Monitoring"
       description: "Freely drag the transparent floating window on top of your code editor, so your eyes never wander."
@@ -74,7 +74,7 @@ inbound_solution:
     link: "https://www.senseiai.me/downloads/"
   solutions:
     - title: "Unlimited Access"
-      description: LinkJob AI's membership provides unlimited usage of the AI interview copilot, perfect for tackling diverse interview questions.
+      description: Sensei AI's membership provides unlimited usage of the AI interview copilot, perfect for tackling diverse interview questions.
       icon: FaArrowsUpDownLeftRight
     - title: "80+ latest AI Models"
       description: We support GPT, Claude, Gemini, Grok, DeepSeek and more than 80 other mainstream AI models, providing you with the highest quality answers.

@@ -1,266 +1,655 @@
 ---
 import Base from "@/layouts/Base.astro";
 import { markdownify } from "@/lib/utils/textConverter";
-import CallToAction from "@/partials/CallToAction.astro";
 import PageHeader from "@/partials/PageHeader.astro";
+import DownloadButton from "@/components/DownloadButton.astro";
 import { getEntry } from "astro:content";
-import Notice from "@/layouts/shortcodes/Notice";
+import Notice from "@/shortcodes/Notice";
 
 const downloadsIndex = await getEntry("downloads", "-index");
 if (!downloadsIndex) {
   throw new Error("Downloads data not found");
 }
+
 const { 
   meta_title, 
   meta_description, 
   title, 
   description, 
-  last_updated, 
-  current_version, 
   items,
+  size_label,
+  download_icon,
+  check_icon,
+  windows_guide,
 } = downloadsIndex.data;
+
+const macIntel = items.find((item: any) =>
+  String(item?.name ?? "").toLowerCase().includes("intel")
+);
+
+const macSilicon = items.find((item: any) =>
+  String(item?.name ?? "").toLowerCase().includes("apple silicon")
+);
+
+const windowsItem = items.find((item: any) =>
+  String(item?.name ?? "").toLowerCase() === "windows"
+);
+
+const linuxItem = items.find((item: any) =>
+  String(item?.name ?? "").toLowerCase() === "linux"
+);
+
+const linuxPackages = Array.isArray(linuxItem?.linux_packages)
+  ? linuxItem.linux_packages
+  : [];
+
+const windowsGuide = windows_guide ?? {
+  title: "",
+  tip_label: "",
+  tip_question: "",
+  tip_assurance: "",
+  tip_reason: "",
+  tip_action: "",
+  image: "",
+  image_alt: "",
+  video_url: "",
+  video_title: "",
+};
 ---
 
-<Base title={meta_title} description={meta_description}>
+<Base title={meta_title} description={meta_description} footerVariant="home">
   <PageHeader title={title} />
   
-
-
-  
   <!-- Downloads Section -->
-  <section class="section py-0 mt-10 mb-10">
+  <section class="section py-0 mt-0 mb-0">
     <div class="container">
-      <div class="row gy-4">
+      <div class="row">
+
         <div class="mx-auto text-center lg:col-12">
-          <!-- <div
-            class="section-heading-shape"
-            aria-label="shape"
-            data-aos="fade-up-sm"
-          >
-          </div> -->
-          <!-- <h2
-            class="mb-6"
+          <h2
+            class="mt-12 mb-6 text-center"
             data-aos="fade-up-sm"
             data-aos-delay="50"
-            set:html={markdownify(title)}
-          /> -->
-          
-          
-          <!-- Version Info -->
-          <!-- <div class="mb-12 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-            {current_version && (
-              <div class="flex items-center gap-2">
-                <span class="font-semibold">Current Version:</span>
-                <span class="rounded-full bg-primary/10 px-3 py-1 text-primary">{current_version}</span>
-              </div>
-            )}
-            {last_updated && (
-              <div class="flex items-center gap-2">
-                <span class="font-semibold">Last Updated:</span>
-                <span>{last_updated}</span>
-              </div>
-            )}
-          </div> -->
+            set:html={markdownify(description || "")}
+          />
         </div>
 
-        <!-- Download Tabs -->
-        <div id="downloadsTabs" class="col-12">
-          <!-- Tab Headers: show image and name -->
-          <div class="flex flex-wrap justify-center gap-3 mb" role="tablist" aria-label="Download platforms">
-            {items.map((item: any, idx: number) => (
-              <button
-                class={`relative inline-flex items-center gap-2 rounded-t-[12px] border-2 px-6 py-3 text-base font-medium transition-shadow duration-300 ease-in-out ${idx === 0 ? 'border-primary bg-primary/10 text-primary shadow-md hover:shadow-lg after:content-[""] after:absolute after:left-0 after:-bottom-0 after:h-[2px] after:w-full after:bg-primary' : 'border-purple-200 bg-white text-dark hover:shadow-md'} tab-btn`}
-                data-index={idx}
-                aria-selected={idx === 0 ? 'true' : 'false'}
-                role="tab"
-              >
-                <img src={item.image} alt={item.name} class="h-6 w-6 object-contain" />
-                <span>{item.name}</span>
-              </button>
-            ))}
-          </div>
-          <div class="border-b-4 border-primary mb-6"></div>
+        <!-- Download Cards -->
+        <div class="col-12">
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
-          <!-- Tab Panels: left/right layout -->
-          <div class="space-y-8">
-            {items.map((item: any, idx: number) => (
-              <div class={`tab-panel ${idx === 0 ? '' : 'hidden'}`} data-panel-index={idx} role="tabpanel">
-                <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                  <!-- Left column: download button, tips and teminal code -->
-                  <div>
-                    <div class="mb-8">
-                      <div class="flex items-center gap-3">
-                        <img src={item.image} alt={item.name} class="h-8 w-8 object-contain" />
-                        <div>
-                          <h3 class="text-2xl font-semibold text-dark">For {item.name} </h3>
-                          <p class="text-sm text-gray-600">{item.description}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <div class="mb-4 text-xs text-gray-500">
-                      <span class="font-medium">Size:</span> {item.file_size}
-                    </div> */}
-
-                    <div class="mb-6">
-                      <a
-                        href={item.url}
-                        class="btn btn-primary block mx-auto w-60 sm:w-66 transition-all duration-300 bg-primary text-white hover:bg-primary hover:text-white download-btn text-center"
-                        download
-                      >
-                        Download({item.file_size})
-                      </a>
-                    </div>
-
-                   <div class="mb-6 rounded-md bg-gray-50 p-4 text-sm text-gray-700 leading-relaxed">
-                       <Notice type="note" className="mt-2"><span class="leading-relaxed" set:html={item.tips}></span>
-                      
-                        
-                      </Notice>
-                      <Notice type="note">{item.tips2 && item.tips2.trim() !== '' ? (
-                          <div class="text-sm text-gray-700 leading-relaxed" set:html={item.tips2}></div>
-                        ) : null}</Notice>
-                    </div>
-
-                    {item.teminal && item.teminal.trim() !== '' ? (
-                      <div>
-                        <h4 class="mb-1 text-sm font-semibold text-dark">Terminal # Run this command in the terminal to fix the issue.
-                        </h4>
-                        <pre class="rounded-md bg-gray-800 px-3 py-2 my-2 text-sm text-gray-50 overflow-auto whitespace-normal">
-                          <code class="block leading-tight m-0">
-                            {item.teminal?.trim().split('\n').filter((l: string) => l.trim().length > 0).map((line: string) => (
-                              <div class="flex items-center whitespace-nowrap leading-tight my-0 py-0">
-                                <span class="flex-1">{line}</span>
-                                <button class="copy-btn shrink-0 text-xs bg-gray-700 hover:bg-gray-600 text-gray-100 rounded px-2 py-0 h-4" data-copy={line} aria-label="Copy this command" title="Copy">Copy</button>
-                              </div>
-                            ))}
-                          </code>
-                        </pre>
-                        <script is:inline>
-                          document.addEventListener('click', (e) => {
-                            const btn = e.target.closest('button.copy-btn');
-                            if (!btn) return;
-                            const text = btn.getAttribute('data-copy') || '';
-                            if (!text) return;
-                            const updateBtn = (label) => { try { btn.textContent = label; } catch {} };
-                            if (navigator.clipboard && navigator.clipboard.writeText) {
-                              navigator.clipboard.writeText(text).then(() => {
-                                updateBtn('Copyed!');
-                                setTimeout(() => updateBtn('Copy'), 1500);
-                              }).catch(() => {
-                                updateBtn('Copy failed');
-                                setTimeout(() => updateBtn('Copy'), 1500);
-                              });
-                            } else {
-                              const textarea = document.createElement('textarea');
-                              textarea.value = text;
-                              textarea.style.position = 'fixed';
-                              textarea.style.opacity = '0';
-                              document.body.appendChild(textarea);
-                              textarea.focus();
-                              textarea.select();
-                              try {
-                                document.execCommand('copy');
-                                updateBtn('Copied');
-                              } catch {
-                                updateBtn('Copy failed');
-                              } finally {
-                                document.body.removeChild(textarea);
-                                setTimeout(() => updateBtn('Copy'), 1500);
-                              }
-                            }
-                          });
-                        </script>
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <!-- Right column: embedded video -->
-                  <div>
-                    <div class="relative w-full overflow-hidden rounded-lg h-[315px] md:h-[360px] border border-gray-200">
-                      <iframe
-                        src={item.video_url}
-                        title={`${item.name} Installation Video`}
-                        class="absolute inset-0 h-full w-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen
-                      ></iframe>
-                    </div>
-                  </div>
+            <!-- Mac Card -->
+            <div
+              class="relative overflow-hidden rounded-[22px] border border-[#BBD9FF] bg-white px-6 py-5 lg:min-h-[390px]"
+            >
+              <!-- Platform Icon -->
+              <div class="mb-5 flex justify-center">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F7FF]">
+                  <img
+                    src={macIntel?.image}
+                    alt={macIntel?.name}
+                    class="h-9 w-9 object-contain"
+                  />
                 </div>
               </div>
-            ))}
-          </div>
 
-          <!-- Tabs interaction script -->
-          <script>
-            document.addEventListener('DOMContentLoaded', () => {
-              const root = document.getElementById('downloadsTabs');
-              if (!root) return;
-              const tabs = root.querySelectorAll('.tab-btn');
-              const panels = root.querySelectorAll('.tab-panel');
-              tabs.forEach((btn) => {
-                btn.addEventListener('click', () => {
-                  const idx = btn.getAttribute('data-index');
-                  tabs.forEach((b) => {
-                    b.classList.remove('border-primary', 'bg-primary/10', 'text-primary', 'shadow-md', 'after:content-[""]', 'after:absolute', 'after:left-0', 'after:-bottom-2', 'after:h-[2px]', 'after:w-full', 'after:bg-primary');
-                    b.classList.add('border-purple-200', 'bg-white', 'text-dark', 'hover:shadow-sm');
-                    b.setAttribute('aria-selected', 'false');
-                  });
-                  btn.classList.add('border-primary', 'bg-primary/10', 'text-primary', 'shadow-md', 'after:content-[""]', 'after:absolute', 'after:left-0', 'after:-bottom-2', 'after:h-[2px]', 'after:w-full', 'after:bg-primary');
-                  btn.classList.remove('border-purple-200', 'bg-white', 'text-dark', 'hover:shadow-sm');
-                  btn.setAttribute('aria-selected', 'true');
-                  panels.forEach((p) => {
-                    if (p.getAttribute('data-panel-index') === idx) {
-                      p.classList.remove('hidden');
-                    } else {
-                      p.classList.add('hidden');
-                    }
-                  });
-                });
-              });
-            });
-          </script>
-        </div>
-        
-        <!-- {description && (
-            <p
-              class="mb-8 text-lg text-dark"
-              // data-aos="fade-up-sm"
-              // data-aos-delay="100"
-              set:html={markdownify(description)}
-            />
-          )} -->
-          
-        <!-- Additional Info -->
-        <!-- <div class="col-12">
-          <div class="mx-auto mt-12 max-w-4xl text-center">
-            <div class="rounded-lg bg-gray-50 p-6">
-              <h3 class="mb-4 text-lg font-semibold">System Requirements</h3>
-              <div class="grid grid-cols-1 gap-4 text-sm text-gray-600 md:grid-cols-2 lg:grid-cols-3">
-                <div>
-                  <strong>Mac Intel:</strong><br>
-                  macOS 10.14 or later
-                </div>
-                <div>
-                  <strong>Mac Apple Silicon:</strong><br>
-                  macOS 11.0 or later
-                </div>
-                <div>
-                  <strong>Windows:</strong><br>
-                  Windows 10/11 (64-bit)
-                </div>
-                <div>
-                  <strong>Linux:</strong><br>
-                  Ubuntu 18.04+ or equivalent
-                </div>
+              <!-- Platform Info -->
+              <div class="text-center">
+                <h3 class="mb-2 text-lg font-semibold text-dark">
+                  {macIntel?.name}
+                </h3>
+
+                <p class="mx-auto mb-4 max-w-[330px] text-sm leading-5 text-gray-600">
+                  {macIntel?.description}
+                </p>
+              </div>
+
+              <DownloadButton
+                href={macIntel?.url}
+                label={macIntel?.button_text}
+                fileSize={macIntel?.file_size}
+                sizeLabel={size_label}
+                icon={download_icon}
+              />
+
+              <div class="my-4 h-px bg-gray-200"></div>
+
+              <div class="text-center">
+                <h3 class="mb-2 text-lg font-semibold text-dark">
+                  {macSilicon?.name}
+                </h3>
+
+                <p class="mx-auto mb-4 max-w-[330px] text-sm leading-5 text-gray-600">
+                  {macSilicon?.description}
+                </p>
+              </div>
+
+              <DownloadButton
+                href={macSilicon?.url}
+                label={macSilicon?.button_text}
+                fileSize={macSilicon?.file_size}
+                sizeLabel={size_label}
+                icon={download_icon}
+              />
             </div>
+
+            <!-- Windows Card -->
+            <div
+              class="relative overflow-hidden rounded-[22px] border border-[#BBD9FF] bg-white px-6 py-5 lg:min-h-[390px]"
+            >
+              <div class="mb-5 flex justify-center">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F7FF]">
+                  <img
+                    src={windowsItem?.image}
+                    alt={windowsItem?.name}
+                    class="h-9 w-9 object-contain"
+                  />
+                </div>
+              </div>
+
+              <div class="text-center">
+                <h3 class="mb-2 text-lg font-semibold text-dark">
+                  {windowsItem?.name}
+                </h3>
+
+                <p class="mx-auto mb-6 max-w-[330px] text-sm leading-5 text-gray-600">
+                  {windowsItem?.description}
+                </p>
+              </div>
+
+              <DownloadButton
+                href={windowsItem?.url}
+                label={windowsItem?.button_text}
+                fileSize={windowsItem?.file_size}
+                sizeLabel={size_label}
+                icon={download_icon}
+              />
+
+              <div class="my-4 h-px bg-gray-200"></div>
+
+              <div class="flex items-start gap-3 px-1 text-left text-sm leading-5 text-dark">
+                <img
+                  src={check_icon}
+                  alt=""
+                  aria-hidden="true"
+                  class="mt-0.5 h-6 w-6 shrink-0 object-contain"
+                />
+
+                <p set:html={windowsItem?.download_notice} />
+              </div>
+            </div>
+
+            <!-- Linux Card -->
+            <div
+              class="relative overflow-hidden rounded-[22px] border border-[#BBD9FF] bg-white px-6 py-5 lg:min-h-[390px]"
+            >
+              <div class="mb-5 flex justify-center">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F7FF]">
+                  <img
+                    src={linuxItem?.image}
+                    alt={linuxItem?.name}
+                    class="h-9 w-9 object-contain"
+                  />
+                </div>
+              </div>
+
+              <div class="text-center">
+                <h3 class="mb-2 text-lg font-semibold text-dark">
+                  {linuxItem?.name}
+                </h3>
+
+                <p class="mx-auto mb-6 max-w-[330px] text-sm leading-5 text-gray-600">
+                  {linuxItem?.description}
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-3">
+                {linuxPackages.map((pkg: any) => (
+                  <DownloadButton
+                    href={pkg.url}
+                    label={pkg.button_text}
+                    fileSize={pkg.file_size}
+                    sizeLabel={size_label}
+                    icon={download_icon}
+                  />
+                ))}
+              </div>
+            </div>
+
           </div>
-        </div> -->
+        </div>
+
       </div>
     </div>
   </section>
   <!-- /.Downloads Section -->
 
+
+  <!--
+  <div
+    id="trialCodeModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+  >
+    <div
+      class="relative mx-4 min-h-[400px] w-full max-w-2xl rounded-lg bg-white p-10 shadow-xl"
+    >
+
+      <button
+        id="closeTrialModal"
+        class="absolute right-4 top-4 text-gray-400 transition-colors hover:text-gray-600"
+        aria-label="Close modal"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+
+      <div id="loadingState" class="text-center">
+        <div class="mb-4 flex justify-center">
+          <div
+            class="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"
+          ></div>
+        </div>
+
+        <h3 class="mb-2 text-lg font-semibold text-dark">
+          Requesting Free Trial License
+        </h3>
+
+        <p class="text-sm text-gray-600">
+          Please wait, generating your Free Trial License...
+        </p>
+      </div>
+
+      <div id="successState" class="hidden text-center">
+        <div class="mb-4 flex justify-center">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-full"
+            style="background-color: #393294;"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="#FFF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <h3 class="mb-4 text-lg font-semibold text-dark">
+          Request Successful
+        </h3>
+        
+        <div class="mb-10">
+          <label class="mb-2 block text-sm font-medium text-gray-700">
+            Free Trial License
+          </label>
+
+          <div class="relative">
+            <input
+              id="licenseKeyInput"
+              type="text"
+              readonly
+              class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-center font-mono text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder="Generating..."
+            />
+
+            <button
+              id="copyLicenseKey"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-primary"
+              title="Copy License"
+            >
+              <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="mb-4 mt-15 rounded-md p-3"
+          style="background-color: #393294;"
+        >
+          <p class="text-sm text-white">
+            <strong>Free Trial License copied!</strong> 
+          </p>
+
+          <p class="text-sm text-white">
+            Please paste it after software installation to experience all features of Sensei AI.
+          </p>
+        </div>
+
+        <p
+          class="text-large mt-10 text-left"
+          style="color: #393294;"
+        >
+          Each Free Trial License is valid for 10 minutes.You may see a warning during download that senseiai.me is unverified. This is because our software ensures full invisibility during screen sharing by modifying system settings. Rest assured, it's 100% safe.
+        </p>
+      </div>
+
+      <div id="errorState" class="hidden text-center">
+        <div class="mb-4 flex justify-center">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100"
+          >
+            <svg
+              class="h-6 w-6 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <h3 class="mb-4 text-lg font-semibold text-dark">
+          Request Failed
+        </h3>
+
+        <p class="mb-4 text-sm text-gray-600">
+          Unable to obtain Free Trial License, please contact administrator for assistance.
+        </p>
+        
+        <a
+          href="https://discord.com/invite/BnAksURmTY"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-10 inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+        >
+          <svg
+            class="h-4 w-4"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418z"
+            ></path>
+          </svg>
+
+          <span>Join Discord</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+  -->
+
+  <!-- Installation Guide -->
+  <section class="section py-0 mt-0">
+    <div class="container">
+      <div class="mt-6 mb-16 grid grid-cols-1 gap-6">
+
+        <!--
+        <div class="hidden h-full flex-col gap-6">
+
+          <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+            <h3 class="mb-6 text-center text-base font-semibold text-dark">
+              Mac Installation Guide
+            </h3>
+
+            <div class="aspect-video w-full overflow-hidden rounded-lg">
+              <iframe
+                src="https://www.youtube.com/embed/IFrDfVROu_4?si=FzvpkJDznwcOTBDI"
+                title="Mac Installation Video"
+                class="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+
+            <div class="mt-4">
+              <Notice type="tip">
+                Apple could not verify SenseiAI ? Just follow these steps:<br />
+                - Go to <strong>System Settings</strong>.<br />
+                - Click on <strong>Privacy & Security</strong>.<br />
+                - Scroll down to the <strong>Security</strong> section.<br />
+                - You will see "Sensei AI" listed there. Click the <strong>Open Anyway</strong> button next to it.<br />
+              </Notice>
+            </div>
+
+          </div>
+
+          {(() => {
+            const linux = items.find((item: any) =>
+              String(item?.name ?? "").toLowerCase().includes("linux")
+            ) ?? {
+              image: "/images/linux.png",
+              name: "Linux",
+              description: "",
+              linux_packages: [
+                { file_size: "", url: "", button_text: "" },
+                { file_size: "", url: "", button_text: "" },
+                { file_size: "", url: "", button_text: "" },
+              ],
+            };
+
+            const packages = Array.isArray(linux.linux_packages)
+              ? linux.linux_packages
+              : [];
+
+            return (
+              <div
+                class="relative overflow-hidden rounded-xl border-2 border-[#D0E7FB] bg-white p-6 shadow-sm transition-colors duration-300 hover:border-[#005BAC]"
+              >
+                <div class="mb-4 flex justify-center">
+                  <div
+                    class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#005BAC]/10 to-[#005BAC]/5"
+                  >
+                    <img
+                      src={linux.image}
+                      alt={linux.name}
+                      class="h-8 w-8 object-contain"
+                    />
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <h3 class="mb-2 text-lg font-semibold text-dark">
+                    {linux.name}
+                  </h3>
+
+                  <p
+                    class="mb-4 text-sm text-gray-600"
+                    set:html={markdownify(linux.description ?? "")}
+                  />
+                </div>
+
+                <div class="mb-4 flex flex-col gap-1 text-xs text-gray-500">
+                  {packages.map((pkg: any, i: number) => {
+                    const label = ["RPM", "AppImage", "DEB"][i] ?? "";
+
+                    return (
+                      <div class="text-center">
+                        <span class="font-medium">{label} Size:</span>
+                        {" "}
+                        {pkg.file_size}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div class="flex flex-col gap-3">
+                  {packages.map((pkg: any) => {
+                    const buttonText =
+                      String(pkg.button_text ?? "").trim() || "Download";
+
+                    const href =
+                      String(pkg.url ?? "").trim() || "#";
+
+                    return (
+                      <a
+                        href={href}
+                        class="btn btn-primary btn-sm download-btn w-full justify-center text-center transition-all duration-300 hover:bg-primary hover:text-white"
+                        download
+                      >
+                        {buttonText}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+        </div>
+        -->
+
+
+        <!-- Windows Guide -->
+        <div
+          class="rounded-[22px] border border-gray-200 bg-white px-5 py-6 md:px-8 md:py-7"
+        >
+          <h3 class="mb-8 text-center text-2xl font-semibold text-dark">
+            {windowsGuide.title}
+          </h3>
+
+          <div
+            class="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-[0.72fr_1.28fr]"
+          >
+
+            <!-- Tip -->
+            <div
+              class="flex h-full flex-col rounded-2xl border border-emerald-400 bg-white p-5 md:p-6"
+            >
+              <div class="mb-5 flex items-center gap-3 text-emerald-500">
+                <img
+                  src={check_icon}
+                  alt=""
+                  aria-hidden="true"
+                  class="h-6 w-6 shrink-0 object-contain"
+                />
+
+                <span class="text-lg font-semibold">
+                  {windowsGuide.tip_label}
+                </span>
+              </div>
+
+              <p class="mb-6 text-lg leading-7 text-dark">
+                {windowsGuide.tip_question}
+              </p>
+
+              <p class="mb-6 text-lg font-semibold leading-7 text-dark">
+                {windowsGuide.tip_assurance}
+              </p>
+
+              <p class="mb-6 text-base leading-7 text-dark">
+                – {windowsGuide.tip_reason}
+              </p>
+
+              <p
+                class="text-base leading-7 text-dark"
+                set:html={`– ${windowsGuide.tip_action}`}
+              />
+            </div>
+
+
+            <!-- Image + Video -->
+            <div class="flex flex-col gap-6">
+              <img
+                src={windowsGuide.image}
+                alt={windowsGuide.image_alt}
+                class="w-full rounded-lg object-contain"
+              />
+
+              <div
+                class="aspect-video w-full overflow-hidden rounded-xl border border-gray-200 bg-white"
+              >
+                <iframe
+                  src={windowsGuide.video_url}
+                  title={windowsGuide.video_title}
+                  class="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- GA4 Download Tracking -->
+  <script>
+    (function () {
+      document.addEventListener(
+        "click",
+        function (e: MouseEvent) {
+          const target = e.target;
+
+          const link =
+            target instanceof Element
+              ? target.closest("a.download-btn, a[download]")
+              : null;
+
+          if (!(link instanceof HTMLAnchorElement)) return;
+
+          const href = link.getAttribute("href");
+
+          if (!href) return;
+
+          const urlObj = (() => {
+            try {
+              return new URL(href);
+            } catch (_) {
+              return null;
+            }
+          })();
+
+          const fileName = urlObj
+            ? urlObj.pathname.split("/").pop() || ""
+            : "";
+
+          const fileExtension = fileName.includes(".")
+            ? fileName.split(".").pop()?.toLowerCase()
+            : "";
+
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "file_download", {
+              file_name: fileName,
+              file_extension: fileExtension,
+              link_url: href,
+              link_text: (link.textContent || "").trim(),
+            });
+          }
+        },
+        true
+      );
+    })();
+  </script>
+
 </Base>
-            

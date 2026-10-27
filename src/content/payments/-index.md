@@ -1,8 +1,8 @@
 ---
-meta_title: "Payment Options | Linkjob AI"
-meta_description: "Choose your preferred payment method for Linkjob AI subscription. We support Stripe, LemonSqueezy, PayPal, and USDT payments for your convenience."
+meta_title: "Payment Options | Sensei AI"
+meta_description: "Choose your preferred payment method for Sensei AI subscription. We support Stripe, LemonSqueezy, PayPal, and USDT payments for your convenience."
 title: "Choose Your Payment Method"
-description: "Select your preferred payment option to complete your Linkjob AI subscription"
+description: "Select your preferred payment option to complete your Sensei AI subscription"
 
 # Payment Methods Configuration
 payment_methods:
@@ -20,7 +20,7 @@ payment_methods:
       payment_name: "LemonSqueezy Checkout"
       payment_logo: "/images/payments/lemonsqueezy-logo.svg"
       payment_description: "Simple and secure payment processing"
-      payment_link: "https://linkjob.lemonsqueezy.com/checkout/monthly"
+      payment_link: "https://Sensei.lemonsqueezy.com/checkout/monthly"
       is_active: false
       is_visible: false
       display_order: 2
@@ -29,7 +29,7 @@ payment_methods:
       payment_name: "PayPal"
       payment_logo: "/images/payments/paypal-logo.svg"
       payment_description: "Pay with your PayPal account or credit card"
-      payment_link: "https://paypal.com/linkjob/monthly"
+      payment_link: "https://paypal.com/Sensei/monthly"
       is_active: false
       is_visible: false
       display_order: 3
@@ -102,7 +102,7 @@ payment_methods:
       payment_name: "LemonSqueezy Checkout"
       payment_logo: "/images/payments/lemonsqueezy-logo.svg"
       payment_description: "Simple and secure payment processing"
-      payment_link: "https://linkjob.lemonsqueezy.com/checkout/quarterly"
+      payment_link: "https://Sensei.lemonsqueezy.com/checkout/quarterly"
       is_active: false
       is_visible: false
       display_order: 2
@@ -111,7 +111,7 @@ payment_methods:
       payment_name: "PayPal"
       payment_logo: "/images/payments/paypal-logo.svg"
       payment_description: "Pay with your PayPal account or credit card"
-      payment_link: "https://paypal.com/linkjob/quarterly"
+      payment_link: "https://paypal.com/Sensei/quarterly"
       is_active: false
       is_visible: false
       display_order: 3
@@ -139,7 +139,7 @@ payment_methods:
       payment_name: "LemonSqueezy Checkout"
       payment_logo: "/images/payments/lemonsqueezy-logo.svg"
       payment_description: "Simple and secure payment processing"
-      payment_link: "https://linkjob.lemonsqueezy.com/checkout/annually"
+      payment_link: "https://Sensei.lemonsqueezy.com/checkout/annually"
       is_active: false
       is_visible: false
       display_order: 2
@@ -148,7 +148,7 @@ payment_methods:
       payment_name: "PayPal"
       payment_logo: "/images/payments/paypal-logo.svg"
       payment_description: "Pay with your PayPal account or credit card"
-      payment_link: "https://paypal.com/linkjob/annually"
+      payment_link: "https://paypal.com/Sensei/annually"
       is_active: false
       is_visible: false
       display_order: 3

@@ -19,15 +19,15 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
 ---
 
 <Base title={title} meta_title={meta_title} description={description} image={image}>
-  <PageHeader title={title} />
+  <PageHeader title={title} compact />
 
-  <section class="section section-gradient rounded-none">
+  <section class="section section-gradient rounded-none pb-0">
     <div class="container">
-      <div class="mb-10 rounded-md bg-white p-6 lg:mb-20 lg:px-10 lg:py-10">
+      <div class="mb-4 rounded-md bg-white p-6 lg:mb-8 lg:px-10 lg:py-10">
         <div class="row">
-          <div class="order-2 lg:col-7 lg:order-1">
+          <div class="order-2 lg:col-7">
             <div
-              class="gradient gradient-sky max-lg:gradient-to-center lg:gradient-to-bottom max-lg:gradient-horizontal lg:gradient-vertical after:right-0 max-lg:mt-10 max-lg:pt-10 max-lg:after:top-0 lg:pe-10"
+              class="gradient gradient-sky max-lg:gradient-to-center lg:gradient-to-bottom max-lg:gradient-horizontal lg:gradient-vertical max-lg:mt-10 max-lg:pt-10 max-lg:after:top-0 lg:after:left-0 lg:ps-10"
             >
               <form method="post" class="row gy-4" id="contactForm" data-form-messages={JSON.stringify({
                 sendingText: form.sending_text,
@@ -45,7 +45,7 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
                     placeholder={form.name_placeholder}
                     name="name"
                     id="name"
-                    class="form-input w-1/2"
+                    class="form-input w-full"
                     required
                   />
                 </div>
@@ -56,7 +56,7 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
                     placeholder={form.email_placeholder}
                     name="email"
                     id="email"
-                    class="form-input w-1/2"
+                    class="form-input w-full"
                     required
                   />
                 </div>
@@ -127,7 +127,7 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ name, email, message }),
                     }),
-                    // 3b: Send notification email to linkjobai@gmail.com via the EmailJS REST API
+                    // 3b: Send notification email to Senseiai@gmail.com via the EmailJS REST API
                     fetch("https://api.emailjs.com/api/v1.0/email/send", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
@@ -178,11 +178,11 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
             initContactForm();
           </script>
 
-          <div class="order-1 lg:col-5 lg:order-2">
+          <div class="order-1 lg:col-5">
             <div>
               <h2 class="mb-6">{info.title}</h2>
               <p class="mb-4 lg:mb-8" set:html={markdownify(info.description)} />
-              <ul class="mt-12 flex flex-wrap gap-y-6 gap-x-6 justify-between">
+              <!-- <ul class="mt-12 flex flex-wrap gap-y-6 gap-x-6 justify-between">
                 <li class="flex items-start gap-x-4 w-full lg:w-auto">
                   <div class="mt-1"><FaPhone /></div>
                   <div>
@@ -204,13 +204,13 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
                     <span class="text-sm">{address}</span>
                   </div>
                 </li>
-              </ul>
+              </ul> -->
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row gy-4">
+      <!-- <div class="row gy-4">
         <div class="md:col-6 lg:col-4">
           <div class="bg-gradient-primary flex min-h-full flex-col items-center gap-y-4 rounded-xl px-7 py-6 text-center text-white sm:px-14 sm:py-10">
             <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-xl">
@@ -238,7 +238,7 @@ const { title, description, meta_title, image, form, info, cards } = (contact?.d
             <p class="opacity-80" set:html={markdownify(cards.resources.description)} />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 </Base>

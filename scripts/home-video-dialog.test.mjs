@@ -67,17 +67,11 @@ test("home video dialog opens the YouTube embed and closes from the backdrop", a
   assert.equal(overlay.removed, true);
 });
 
-test("the local close icon path survives the production asset rewrite", async () => {
+test("the close icon stays on the site origin", async () => {
   const source = await readFile("public/js/video-dialog.js", "utf8");
-  const productionSource = source.replace(
-    /(["'`])\/(?:[a-z]{2}(?:-[a-z]+)?\/)?(images|fonts|videos)\//g,
-    "$1https://images.senseiai.me/$2/",
-  );
 
-  assert.doesNotMatch(
-    productionSource,
-    /https:\/\/images\.linkjob\.ai\/images\/icons\/close\.svg/,
-  );
+  assert.match(source, /\/images\/icons\/close\.svg/);
+  assert.doesNotMatch(source, /https:\/\/images\./);
 });
 
 test("the homepage platform card keeps its authored rich copy", async () => {
